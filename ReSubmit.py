@@ -71,9 +71,9 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
 
         #check if whole run is done
     if OnlyTwoPt:
-        boolcheck = Check2ptCorr(icfg,[ism],jsmlist)
+        boolcheck = Check2ptCorr(icfg,[ism],jsmlist,twoptinterps[0])
     else:
-        boolcheck = Check2ptCorr(icfg,[ism],jsmlist) and Check3ptCorr(icfg,[ism],it_sst,ProjectorList,DSList)
+        boolcheck = Check2ptCorr(icfg,[ism],jsmlist,twoptinterps[0]) and Check3ptCorr(icfg,[ism],it_sst,ProjectorList,DSList)
 
     if boolcheck:
         RemoveProp(icfg,[ism])
