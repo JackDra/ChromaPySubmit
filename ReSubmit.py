@@ -57,23 +57,23 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         
 
     if Errored == 'Failed':
-        RemoveProp(icfg,gfos,ismlist)
-        RemoveGaugeField(icfg,gfos)
-        Remove2ptCorr(icfg,gfos,ismlist,jsmlist)
-        Remove3ptCorr(icfg,gfos,ismlist,it_sst,Projectorlist,DSlist)
-        if icfg<fcfg:
-            RunNext(icfg+1,fcfg,gfos,Start=True)
-            return
+        print 'Error on config' + icfg
+        RemoveProp(icfg,ismlist)
+        # RemoveGaugeField(icfg)
+        Remove2ptCorr(icfg,ismlist,jsmlist)
+        Remove3ptCorr(icfg,ismlist,it_sst,ProjectorList,DSList)
+        if icfg<fcfg and not ExitOnFail:
+            RunNext(icfg+1,fcfg,Start=True)
         else:
             print 'All Complete'
-            return
+        return
         
 
         #check if whole run is done
     if OnlyTwoPt:
-        boolcheck = Check2ptCorr(icfg,gfos,[ism],jsmlist)
+        boolcheck = Check2ptCorr(icfg,[ism],jsmlist)
     else:
-        boolcheck = Check2ptCorr(icfg,gfos,[ism],jsmlist) and Check3ptCorr(icfg,gfos,[ism],it_sst,ProjectorList,DSList)
+        boolcheck = Check2ptCorr(icfg,[ism],jsmlist) and Check3ptCorr(icfg,[ism],it_sst,ProjectorList,DSList)
 
     if boolcheck:
         RemoveProp(icfg,[ism])

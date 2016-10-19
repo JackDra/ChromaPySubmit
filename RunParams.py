@@ -50,6 +50,7 @@ if len(codedir) == 0:
 
 ChromaFileFlag = 'params_run1'
 
+ExitOnFail = False
 Submit = False
 # Submit = True
 #james prop gf source index parameter
