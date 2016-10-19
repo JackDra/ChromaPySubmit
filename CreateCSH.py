@@ -48,17 +48,17 @@ def CreateCSHList(icfg,fcfg,ism,jobid,stage,tsink='',Proj='',DS=''):
     outlist.append(r''+inputfile)
     outlist.append(r'EOF')
     if 'twopt' in stage:
-        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+' '.join([icfg,fcfg,stage,ism,'Error']))
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,ism,'Error'])+"'")
     elif 'threept' in stage:
-        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+' '.join([icfg,fcfg,stage,ism,'Error',tsink,Proj,DS]))
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,ism,'Error',tsink,Proj,DS])+"'")
     outlist.append(r'        exit 1')
     outlist.append(r'    endif')
     outlist.append(r'    echo "finished "`date`')
     outlist.append('')
     if 'twopt' in stage:
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+' '.join([icfg,fcfg,stage,ism,'Complete']))
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,ism,'Complete'])+"'")
     elif 'threept' in stage:
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+' '.join([icfg,fcfg,stage,ism,'Complete',tsink,Proj,DS]))
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,ism,'Complete',tsink,Proj,DS])+"'")
     return outlist
 
 
