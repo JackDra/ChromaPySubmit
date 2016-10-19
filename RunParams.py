@@ -5,8 +5,9 @@ import os, sys
 
 if not os.path.isdir(JackLibDir):
     print JackLibDir , 'not found, please set in PararmsGAM.py to point to jacks libary'
-    print 'jacks libary can be found at https://github.com/JackDra/LQCDPythonAnalysis.git'
-    print 'run "./Setup.py default" to set up jacks libary'
+    print 'Jacks libary can be found at https://github.com/JackDra/LQCDPythonAnalysis.git'
+    print 'Run "./Setup.py default" within the directory to set up jacks libary'
+    print 'Then make JackLibDir in RunParams.py point to this directory'
     sys.exit()
 
 sys.path.append(JackLibDir)
@@ -20,7 +21,7 @@ import numpy as np
 
 THISMACHINE = socket.gethostname()
 
-if '.rc' in THISMACHINE:
+if 'phoenix.rc' in THISMACHINE:
     thismachine = 'phoenixold'
     basedir = '/home/a1193348/'
     scratchdir = '/data/cssm/jdragos/'
@@ -42,7 +43,10 @@ elif 'JackLappy' in THISMACHINE:
     codedir = '/home/jackdra/PHD/CHROMA/install/'
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
-    exit()
+    # exit()
+
+if len(codedir) == 0:
+    raise EnvironmentError('No code directory set for '+thismachine+'. Go into RunParams.py and add where chroma is into codedir')
 
 ChromaFileFlag = 'params_run1'
 
@@ -83,8 +87,6 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 # SRCZ = [ 0, 16,  0, 16,  0, 16,  0, 16,  0, 16 ]#16  0 16  0 16  0 )
 # SRCT = [ 0,  4, 32, 60, 24, 48, 12, 28, 20, 36 ]#40 56 16 44  8 52 )
 
-def GetSourceString(icfg):
-    return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(SRCT[icfg])
 
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
 OnlyTwoPt = False ## Only calculates two-point correlation functions.
@@ -120,6 +122,11 @@ ProjectorList = [4,3]
 DSList = ['doub','sing']
 # GFFormat = 'ILDG'
 GFFormat = 'UNIT'
+
+def GetSourceString(icfg):
+    return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(SRCT[icfg])
+    # return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(it)
+
 
 def DStoUD(DS):
     if 'doub' in DS:
@@ -179,7 +186,7 @@ FermBC = 'SIMPLE_FERMBC'
 bx = 1.0
 by = 1.0
 bz = 1.0
-bt = 0.0
+bt = -1.0
 # boundstr = str(bx) + ' ' +str(by) + ' ' +str(bz) + ' ' +str(bt)
 boundstr = str(int(bx)) + ' ' +str(int(by)) + ' ' +str(int(bz)) + ' ' +str(int(bt))
 u0 = 1.0

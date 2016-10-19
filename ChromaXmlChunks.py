@@ -17,11 +17,14 @@ def AddToIM(thisdict,elemnum,AddFun,AddParams):
     thisdict['chroma']['Param']['InlineMeasurements']['elem'+str(elemnum)] = AddFun(*AddParams)
     return thisdict
 
+def AlphaToChromaWidth(alpha,nsmear):
+    return np.sqrt(2*int(nsmear)*float(alpha)/3)
+
 def Add_SmearingParam(wvf_param,wvfIntPar,no_smear_dir,IsAlpha=True):
     thisdict = OrdDict()
     thisdict['wvf_kind'] = SmKind
     if IsAlpha:
-        thisdict['wvf_param'] = np.sqrt(2*int(wvfIntPar)*float(wvf_param)/3)
+        thisdict['wvf_param'] = AlphaToChromaWidth(float(wvf_param),int(wvfIntPar))
     else:
         thisdict['wvf_param'] = wvf_param
     thisdict['wvfIntPar'] = wvfIntPar

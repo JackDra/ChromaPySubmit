@@ -43,7 +43,7 @@ def IncrementRun(stage,ism,tsink,Projector,DS):
             tsink = it_sst[it_sst.index(tsink)+1]
         return stage,ism,tsink,Projector,DS
 
-def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],tsink=it_sst[0],Projector=ProjectorList[0],DS=DSList[0],Start=False):
+def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=it_sst[0],Projector=ProjectorList[0],DS=DSList[0],Start=False):
     
     icfg,fcfg,ism,tsink,Projector = map(int,[icfg,fcfg,ism,tsink,Projector])
     RemoveCSH(icfg,ism,stage,tsink=tsink,Proj=Projector,DS=DS)
@@ -55,9 +55,27 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],tsink=it_sst[0],Projector
     elif 'threeptcorr' in stage:
         Remove3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism],[DS],[Projector],[tsink])    
         
-    #check if whole run is done
-    
-    if Check2ptCorr(icfg,[ism],jsmlist,twoptinterps[0]) and Check3ptCorr(icfg,[ism],it_sst,ProjectorList,DSList):
+
+    if Errored == 'Failed':
+        RemoveProp(icfg,gfos,ismlist)
+        RemoveGaugeField(icfg,gfos)
+        Remove2ptCorr(icfg,gfos,ismlist,jsmlist)
+        Remove3ptCorr(icfg,gfos,ismlist,it_sst,Projectorlist,DSlist)
+        if icfg<fcfg:
+            RunNext(icfg+1,fcfg,gfos,Start=True)
+            return
+        else:
+            print 'All Complete'
+            return
+        
+
+        #check if whole run is done
+    if OnlyTwoPt:
+        boolcheck = Check2ptCorr(icfg,gfos,[ism],jsmlist)
+    else:
+        boolcheck = Check2ptCorr(icfg,gfos,[ism],jsmlist) and Check3ptCorr(icfg,gfos,[ism],it_sst,ProjectorList,DSList)
+
+    if boolcheck:
         RemoveProp(icfg,[ism])
         if ism == ismlist[-1]:
             # RemoveGaugeField(icfg)
