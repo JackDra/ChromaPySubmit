@@ -24,7 +24,9 @@ def CreateCfgList():
 
 def GetIcfgTOFcfg(nproc,nconf):
     confbreak = nconf/nproc
-    outarray = []
+    if confbreak == 0:
+        return [1,1]
+    outarray = []    
     for istart,iend in zip(range(1,nconf+1,confbreak),range(confbreak,nconf+1+confbreak,confbreak)):
         outarray.append((istart,iend))
     return outarray

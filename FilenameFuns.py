@@ -15,12 +15,14 @@ def Get2ptCorrOutput(icfg,ism,jsm,interp):
     return (cfdir+'/'+CreateCfg(icfg)+'_k'+str(kud)+'_tsrc'+str(it)+'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf.lime')
 
 def Get3ptCorr(icfg,ism,tsink,Projector,DS,ND):
-    thisREvecDir = REvecFlag+'sm'+str(ism)+'_'+REvecFlag+'nD'+str(PoFShifts)+'GMA'+str(Projector)+'tsink'+str(tsink)+'p'+''.join(map(str,ppvec))+DS+'/'
-    return (cf3ptdir+thisREvecDir+CreateCfg(icfg)+'_k'+str(kud)+'_tsrc'+str(it)+'sm'+str(ism)+'_'+REvecFlag+'nD'+str(PoFShifts)+'GMA'+str(Projector)+
-            'tsink'+str(tsink)+'p'+''.join(map(str,ppvec))+DS+ND+'.3cf.lime')
+    thisREvecDir = (REvecFlag+'sm'+str(ism)+'_'+REvecFlag+'PoF'+str(PoFShifts)+'D'+str(PoFDelta)+
+                    'GMA'+str(Projector)+'tsink'+str(tsink)+'p'+''.join(map(str,ppvec))+DS+'/')
+    return (cf3ptdir+thisREvecDir+CreateCfg(icfg)+'_k'+str(kud)+'_tsrc'+str(it)+'sm'+str(ism)+'_'+REvecFlag+'PoF'+str(PoFShifts)+'D'+str(PoFDelta)+
+            'GMA'+str(Projector)+'tsink'+str(tsink)+'p'+''.join(map(str,ppvec))+DS+ND+'.3cf.lime')
 
 def Get3ptCorrFolder(icfg,ism,tsink,Projector,DS):
-    thisREvecDir = REvecFlag+'sm'+str(ism)+'_'+REvecFlag+'nD'+str(PoFShifts)+'GMA'+str(Projector)+'tsink'+str(tsink)+'p'+''.join(map(str,ppvec))+DS+'/'
+    thisREvecDir = (REvecFlag+'sm'+str(ism)+'_'+REvecFlag+'PoF'+str(PoFShifts)+'D'+str(PoFDelta)
+                    +'GMA'+str(Projector)+'tsink'+str(tsink)+'p'+''.join(map(str,ppvec))+DS+'/')
     return cf3ptdir+thisREvecDir
 
 

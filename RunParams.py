@@ -58,7 +58,7 @@ ChromaFileFlag = 'params_run1'
 ExitOnFail = False
 Submit = False
 Scom = 'sbatch'
-DontRun = False
+DontRun = True
 
 # Submit = True
 #james prop gf source index parameter
@@ -80,6 +80,8 @@ nproc = 4
 exe = 'chroma'
 # ModuleList = ['intel/2015c','OpenMPI/1.8.8-iccifort-2015.3.187','CUDA/7.0.28']
 ModuleList = []
+
+
 
 
 # lattice params, note that cube so no need for ny/nz
