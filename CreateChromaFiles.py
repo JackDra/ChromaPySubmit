@@ -114,7 +114,7 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist,thisDSList,thisProject
 
                         ## create seq source
                         DictOut = AddToIM(DictOut,iterlist.next(),Add_SeqSource,['default_gauge_field',thissiprop,thissiprop,thisseqsource,
-                                                                   DS,Projector,twoptinterps[0],str(int(iTS)+iPoF),jsm])
+                                                                   DS,Projector,twoptinterps[0],str(int(iTS)+(iPoF*PoFDelta)),jsm])
 
                         ## delete sink smeared 2pt source
                         DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])

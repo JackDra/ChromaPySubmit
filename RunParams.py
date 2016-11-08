@@ -109,7 +109,8 @@ RVec = [ 76.3260613436,  -161.5448230802, 264086.1917824702, -321.4016231030, 43
 
 ##n.b. PoFShifts = 1 means 1 tsink value (so no PoF)
 PoFShifts = 1
-PoFList = range(PoFShifts+1)
+PoFDelta = 2
+PoFList = range(PoFShifts)
 
 REvecFlag = 'REPoFto16dt2'
 # REvecFlag = 'REPoFTest'
