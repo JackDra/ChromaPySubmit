@@ -210,6 +210,8 @@ ensemble = 'b5p50kp'+str(kud)+'kp'+str(ks)
 
 #### configuration/file parameters
 scriptdir = basedir+'Scripts/ChromaPySubmit/'
+if scriptdir[:-1] not in os.getcwd():
+    print 'Warning, you are not running from the script dir'
 cshdir = scriptdir+'CSHFiles/'
 paramdir = scriptdir+'ParamFiles/'
 datadir = scratchdir
