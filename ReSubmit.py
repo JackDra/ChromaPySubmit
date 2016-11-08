@@ -120,11 +120,11 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         else:
             [thisjobid] = Create2ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism])
         if Submit:
-            runfile = 'sbatch '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
+            runfile = SubmitCommand+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
         else:
             runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
         print runfile
-        subprocess.call([runfile],cwd=basedir)
+        if not DontRun: subprocess.call([runfile],cwd=basedir)
     elif 'three' in stage:
         [thisjobid] = Create3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism],[DS],[Projector],[tsink])    
         mkdir_p(Get3ptCorrFolder(icfg,ism,tsink,Projector,DS))
@@ -133,7 +133,7 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         else:
             runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage,tsink=tsink,Proj=Projector,DS=DS)
         print runfile
-        subprocess.call([runfile],cwd=basedir)
+        if not DontRun: subprocess.call([runfile],cwd=basedir)
     elif 'Done' in stage:
         if icfg<fcfg:
             RunNext(icfg+1,fcfg,Start=True)

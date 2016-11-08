@@ -57,6 +57,9 @@ ChromaFileFlag = 'params_run1'
 
 ExitOnFail = False
 Submit = False
+Scom = 'sbatch'
+DontRun = False
+
 # Submit = True
 #james prop gf source index parameter
 
