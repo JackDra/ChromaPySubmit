@@ -41,6 +41,11 @@ elif 'JackLappy' in THISMACHINE:
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
     scratchdir = '/home/jackdra/PHD/CHROMA/TestVar/scratch/'
     codedir = '/home/jackdra/PHD/CHROMA/install/'
+elif 'juqueen' in THISMACHINE:
+    thismachine = 'juqueen'
+    basedir = '/homeb/jias40/jias4002/juqueen/'
+    scratchdir = '/work/jias40/jias4002/juqueen/'
+    codedir = '/homeb/jias40/jias4002/juqueen/Chroma/install/'
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
     # exit()
