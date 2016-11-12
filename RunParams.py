@@ -247,7 +247,7 @@ NmaxHB = '1'
 # GFOrPara = '1.0'
 
 def ModuloTsrc(icfg,iPoF):
-    itsrc = SRCT[icfg]+(iPoF*PoFDelta)
+    itsrc = SRCT[icfg]+iPoF
     # if itsrc < 0:
     #     itsrc = itsrc+nt
     if itsrc >= nt:
