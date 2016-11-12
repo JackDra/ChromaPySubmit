@@ -207,8 +207,8 @@ ix = 1 #put at ix,ix,ix
 # ks = 120620
 # kud = 120900 # kappa (quark hopping) params
 # ks = 120900
-kud = 01375400 # kappa (quark hopping) params
-ks = 01364000
+kud = 1375400 # kappa (quark hopping) params
+ks = 1364000
 # Prec = '1.0d-5'
 Prec = '5.0e-11'
 MaxIter = 10000
@@ -327,7 +327,7 @@ OutXml = False
 
 # Configuration data
 # limename = 'qcdsf'
-limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900Kud'+str(kud)+'Ks'+str(kud)+'C1715'
+limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900Kud0'+str(kud)+'Ks0'+str(ks)+'C1715'
 ensemble = 'b5p50kp'+str(kud)+'kp'+str(ks)
 
 #### configuration/file parameters
