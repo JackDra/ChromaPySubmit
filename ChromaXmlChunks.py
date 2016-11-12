@@ -259,7 +259,7 @@ def Add_MesSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp):
     return thisdict
 
 
-def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS):
+def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS,iPoF=iPoF):
     thisdict = OrdDict()
     thisdict['Name'] = 'BAR3PTFN-QCDSF'
     thisdict['Frequency'] = 1
@@ -271,9 +271,9 @@ def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS):
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['prop_id'] = prop_id
-    thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer0')
-    thisdict['NamedObject']['bar3ptfn_1D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer1')
-    thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer2')
+    thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer0',iPoF=iPoF)
+    thisdict['NamedObject']['bar3ptfn_1D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer1',iPoF=iPoF)
+    thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer2',iPoF=iPoF)
     thisdict['NamedObject']['seqprops'] = {'elem':OrdDict()}
     thisdict['NamedObject']['seqprops']['elem']['seqprop_id'] = seqprop_id
     thisdict['NamedObject']['seqprops']['elem']['gamma_insertion'] = 0
