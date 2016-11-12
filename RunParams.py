@@ -2,7 +2,7 @@
 
 ##NB: if changing nx, or nt, MUST remove random list in ParamFiles directory
 
-JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
+JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
 import os, sys
 
 if not os.path.isdir(JackLibDir):
