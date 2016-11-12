@@ -201,8 +201,8 @@ REvecFlag = 'REPoFto16dt2'
 ####COLA PARAMETERS
 
 # Propagator Params
-it = 16 # creation parameters
-ix = 1 #put at ix,ix,ix
+# it = 16 # creation parameters
+# ix = 1 #put at ix,ix,ix
 # kud = 121040 # kappa (quark hopping) params
 # ks = 120620
 # kud = 120900 # kappa (quark hopping) params
