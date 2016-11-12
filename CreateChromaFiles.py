@@ -62,7 +62,9 @@ def Create2ptPropFiles(folder,fileprefix,icfg,thisismlist):
             DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(iPoF),icfg,nism,iPoF])
             DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field','default_source'+str(iPoF),'k_prop'+str(iPoF)])
             DictOut = AddToIM(DictOut,iterlist.next(),Add_WriteNamedObject,['k_prop'+str(iPoF),'LatticePropagator',Get2ptProp(icfg,ism,iPoF=iPoF),'SINGLEFILE'])
-            if iPoF != PoFList[-1]: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['k_prop'+str(iPoF)])
+            if iPoF != PoFList[-1]:
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['k_prop'+str(iPoF)])
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['default_source'+str(iPoF)])
         DictOut['chroma']['RNG'] = Add_RNG()['RNG']
         DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
         WriteChromaXml(thisfile,DictOut)
