@@ -175,9 +175,9 @@ OnlyGauge = False ## Only calculates Gauge field
 NumGFCreate = 10
 # GFFormat = 'ILDG'
 # GFFormat = 'UNIT'
-GFFormat = 'WEAK_FIELD'
+# GFFormat = 'WEAK_FIELD'
 # GFFormat = 'SZIN'
-# GFFormat = 'SZINQIO'
+GFFormat = 'SZINQIO'
 
 
 ##RVec must be len(smlist) * PoFShifts
