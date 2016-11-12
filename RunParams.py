@@ -327,8 +327,9 @@ OutXml = False
 
 # Configuration data
 # limename = 'qcdsf'
-limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900Kud0'+str(kud)+'Ks0'+str(ks)+'C1715'
-ensemble = 'b5p50kp'+str(kud)+'kp'+str(ks)
+kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
+limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
+# ensemble = 'b5p50kp'+str(kud)+'kp'+str(ks)
 
 #### configuration/file parameters
 scriptdir = basedir+'Scripts/ChromaPySubmit/'
@@ -349,10 +350,10 @@ gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.13754ks0.1364/'
 # ##for heavier kappa
 # rdsigfdir = scratchdir+'/gaugefields/qcdsf.655/'
 # gfdir = '/rdsi/PACS-CS/ensemble+'/'
-qpdir = scratchdir+'/qprops/k'+str(kud)+'/'
-cfdir = scratchdir+'/cfun/k'+str(kud)+'/twopt/'
-cf3ptdir = scratchdir+'/cfun/k'+str(kud)+'/threept/'
-debugdir = scratchdir+'/debug/k'+str(kud)+'/'
+qpdir = scratchdir+'/qprops/'+kappastr+'/'
+cfdir = scratchdir+'/cfun/'+kappastr+'/twopt/'
+cf3ptdir = scratchdir+'/cfun/'+kappastr+'/threept/'
+debugdir = scratchdir+'/debug/'+kappastr+'/'
 tempdir = '/tmp/'
 filelists = paramdir
 chromacpu = codedir+'/'+chromafolder+'/bin/'

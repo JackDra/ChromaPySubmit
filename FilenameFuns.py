@@ -3,7 +3,7 @@
 from RunParams import *
 
 def Get2ptProp(icfg,ism):
-    return qpdir+CreateCfg(icfg)+'_k'+str(kud)+'_tsrc'+str(it)+'sm'+str(ism)+'.prop.lime'
+    return qpdir+CreateCfg(icfg)+'_tsrc'+str(it)+'_sm'+str(ism)+'.prop.lime'
 
 def Get2ptCorr(icfg,ism,jsm,interp):
     return (cfdir+'twoptsm'+str(ism)+'si'+str(jsm)+'/'+CreateCfg(icfg)+'_k'+str(kud)+'_tsrc'+str(it)+'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf.lime')
