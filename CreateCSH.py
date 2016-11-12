@@ -79,7 +79,13 @@ def CreateCSHList(icfg,fcfg,ism,jobid,stage,tsink='',Proj='',DS=''):
     if os.path.isfile(outputfile):os.remove(outputfile)
     if os.path.isfile(logfile):os.remove(logfile)
     icfg,fcfg,ism,tsink,Proj = str(icfg),str(fcfg),str(ism),str(tsink),str(Proj)
-
+    if 'twopt' in stage:
+        Jstring = '2pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)
+    elif 'threept' in stage:
+        Jstring = '3pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)+'-ts'+str(tsink)+'-P'+str(Projector)+'-'+DS[0]
+    elif 'gfield' in stage:
+        Jstring = 'GFGen'+str(icfg)+'-'+str(fcfg)
+        
     outlist = []
     outlist.append(r'#! /bin/tcsh')
     outlist.append('')
@@ -141,10 +147,16 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobid,stage,tsink='',Proj='',DS=''):
     if os.path.isfile(outputfile):os.remove(outputfile)
     if os.path.isfile(logfile):os.remove(logfile)
     icfg,fcfg,ism,tsink,Proj = str(icfg),str(fcfg),str(ism),str(tsink),str(Proj)
+    if 'twopt' in stage:
+        Jstring = '2pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)
+    elif 'threept' in stage:
+        Jstring = '3pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)+'-ts'+str(tsink)+'-P'+str(Projector)+'-'+DS[0]
+    elif 'gfield' in stage:
+        Jstring = 'GFGen'+str(icfg)+'-'+str(fcfg)
     outlist = []
     outlist.append(r'#! /bin/tcsh')
     outlist.append('')
-    outlist.append(r'# @ job_name = '+jobid)
+    outlist.append(r'# @ job_name = '+Jstring)
     outlist.append(r'# @ error = $(job_name).$(jobid).out')
     outlist.append(r'# @ output = $(job_name).$(jobid).out')
     outlist.append(r'# @ environment = COPY_ALL')
