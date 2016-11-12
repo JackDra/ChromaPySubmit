@@ -133,7 +133,7 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist,thisDSList,thisProject
                             if njsm == 0:
                                 thisseqsource = totseqsourcelist[0]
                             else:
-                                thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)'_si'+jsm+'_PoF'+str(iPoF)+DS+'_Proj'+Projector+'_tsink'+iTS
+                                thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+'_PoF'+str(iPoF)+DS+'_Proj'+Projector+'_tsink'+iTS
                             ## smear sink
                             DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])
 
