@@ -325,7 +325,7 @@ OutXml = False
 
 # Configuration data
 # limename = 'qcdsf'
-limename = 'RC32x64_B1900Kud'+str(kud)+'Ks'+str(kud)'C1715-a-'
+limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900Kud'+str(kud)+'Ks'+str(kud)+'C1715-a-'
 ensemble = 'b5p50kp'+str(kud)+'kp'+str(ks)
 
 #### configuration/file parameters
