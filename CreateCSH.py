@@ -134,7 +134,7 @@ def CreateCSHList(icfg,fcfg,ism,jobid,stage,tsink='',Proj='',DS=''):
     return outlist
 
 
-def CreateCSHJuqeen(outfile,icfg,fcfg,ism,jobid,stage,tsink='',Proj='',DS=''):
+def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobid,stage,tsink='',Proj='',DS=''):
     inputfile = InputFolder+jobid
     outputfile = OutputFolder+jobid.replace('.xml','.out')
     logfile = OutputFolder+jobid.replace('.xml','.log')
