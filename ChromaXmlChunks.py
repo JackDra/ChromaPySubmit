@@ -259,7 +259,7 @@ def Add_MesSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp):
     return thisdict
 
 
-def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS,iPoF=iPoF):
+def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS,iPoF=0):
     thisdict = OrdDict()
     thisdict['Name'] = 'BAR3PTFN-QCDSF'
     thisdict['Frequency'] = 1
