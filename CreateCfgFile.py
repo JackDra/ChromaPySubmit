@@ -24,6 +24,7 @@ def CreateCfgList():
         # print filelist
         setfilelist = []
         for ifile in filelist:
+            print ifile, limename
             setfilelist.append(ifile.replace(limename,''))
             # if '.lime' in ifile:
                 # setfilelist.append('.'+'.'.join(ifile.split('.')[1:3]))
