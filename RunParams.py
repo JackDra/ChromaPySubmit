@@ -39,6 +39,9 @@ if 'phoenix.rc' in THISMACHINE:
     # nproc = 16
     nx = 32
     nt = 64
+    limefolder = 'qdpxx_cpu_install'
+    chromafolder = 'chroma_alex'
+    chromaGPUfolder = 'chroma_gpu_nprmod_install'
 elif 'phoenix' in THISMACHINE:
     thismachine = 'phoenix'
     basedir = '/home/a1193348/'
@@ -54,6 +57,9 @@ elif 'phoenix' in THISMACHINE:
     # nproc = 16
     nx = 32
     nt = 64
+    limefolder = 'qdpxx_cpu_install'
+    chromafolder = 'chroma_alex'
+    chromaGPUfolder = 'chroma_gpu_nprmod_install'
 elif 'isaac' in THISMACHINE:
     thismachine = 'isaac'
     basedir = '/home/a1193348/'
@@ -69,6 +75,9 @@ elif 'isaac' in THISMACHINE:
     # nproc = 16
     nx = 32
     nt = 64
+    limefolder = 'qdpxx_cpu_install'
+    chromafolder = 'chroma_alex'
+    chromaGPUfolder = 'chroma_gpu_nprmod_install'
 elif 'JackLappy' in THISMACHINE:
     thismachine = 'JackLappy'
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
@@ -87,11 +96,14 @@ elif 'JackLappy' in THISMACHINE:
     # nproc = 16
     nx = 4
     nt = 8
+    limefolder = 'qdpxx_cpu_install'
+    chromafolder = 'chroma_alex'
+    chromaGPUfolder = 'chroma_gpu_nprmod_install'
 elif 'juqueen' in THISMACHINE:
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
-    codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma/install_bgq_clang/chroma/'
+    codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma/install_bgq_clang/'
     Scom = 'llsubmit'
     quetype = 'bluegene'
     mem = ''
@@ -106,6 +118,9 @@ elif 'juqueen' in THISMACHINE:
     if nproc % RPN != 0: raise  EnvironmentError('nproc must be multiple of RPN/ nproc/RPN='+str(nproc)+'/'+str(RPN)+'='+str(nproc/float(RPN)))
     nx = 32
     nt = 64
+    limefolder = 'qdp++'
+    chromafolder = 'chroma'
+    chromaGPUfolder = ''
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
     # exit()
@@ -113,7 +128,7 @@ else:
 if len(codedir) == 0:
     raise EnvironmentError('No code directory set for '+thismachine+'. Go into RunParams.py and add where chroma is into codedir')
 
-ChromaFileFlag = 'params_run1'
+ChromaFileFlag = 'params_run1_'
 
 ExitOnFail = False
 Submit = False
@@ -338,9 +353,9 @@ cf3ptdir = scratchdir+'/cfun/k'+str(kud)+'/threept/'
 debugdir = scratchdir+'/debug/k'+str(kud)+'/'
 tempdir = '/tmp/'
 filelists = paramdir
-chromacpu = codedir+'/chroma_alex/bin/'
-chromagpu = codedir+'/chroma_gpu_nprmod_install/bin/'
-limedir = codedir+'/qdpxx_cpu_install/bin/'
+chromacpu = codedir+'/'+chromafolder+'/bin/'
+chromagpu = codedir+'/'+chromaGPUfolder+'/bin/'
+limedir = codedir+'/'+limefolder+'/bin/'
 
 # gfnum = `head -n $icfg ${filelists}${cfglist} | tail -n 1`
 # cfg = ensemble+str(gfnum)
