@@ -144,7 +144,7 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobid,stage,tsink='',Proj='',DS=''):
     outlist = []
     outlist.append(r'#! /bin/tcsh')
     outlist.append('')
-    outlist.append(r'# @ job_name = '+outfile)
+    outlist.append(r'# @ job_name = '+jobid)
     outlist.append(r'# @ error = $(job_name).$(jobid).out')
     outlist.append(r'# @ output = $(job_name).$(jobid).out')
     outlist.append(r'# @ environment = COPY_ALL')

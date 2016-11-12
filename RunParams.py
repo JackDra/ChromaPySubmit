@@ -117,7 +117,7 @@ ChromaFileFlag = 'params_run1'
 
 ExitOnFail = False
 Submit = False
-DontRun = False
+DontRun = True
 
 # Submit = True
 #james prop gf source index parameter
