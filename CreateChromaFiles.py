@@ -122,14 +122,14 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist,thisDSList,thisProject
                         thisprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)
                         PoFjsmlist = Elongate(PoFList,map(str,jsmlist))
                         totseqsourcelist = ['seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+DS+'_Proj'+Projector+'_tsink'+iTS+'no'+str(i) for i in range(len(PoFjsmlist))]
-                        totseqprop = 'seqprop_id_sm'+ism'_srcPoF'+str(srcPoF)+DS+'_Proj'+Projector+'_tsink'+iTS
+                        totseqprop = 'seqprop_id_sm'+ism+'_srcPoF'+str(srcPoF)+DS+'_Proj'+Projector+'_tsink'+iTS
                         DictOut = SetupDict()
 
                         ## Read 2pt prop in
                         DictOut = AddToIM(DictOut,iterlist.next(),Add_ReadNamedObject,[thisprop,'LatticePropagator',Get2ptProp(icfg,ism,iPoF=srcPoF)])
 
                         for njsm,(iPoF,jsm) in enumerate(PoFjsmlist):
-                            thissiprop = 'prop_id_sm'+ism'_srcPoF'+str(srcPoF)+'_si'+jsm+'_PoF'+str(iPoF)
+                            thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+'_PoF'+str(iPoF)
                             if njsm == 0:
                                 thisseqsource = totseqsourcelist[0]
                             else:
