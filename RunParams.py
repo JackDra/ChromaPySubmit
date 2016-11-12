@@ -325,7 +325,7 @@ OutXml = False
 
 # Configuration data
 # limename = 'qcdsf'
-limename = 'Testing'
+limename = 'RC32x64_B1900Kud'+str(kud)+'Ks'+str(kud)'C1715-a-'
 ensemble = 'b5p50kp'+str(kud)+'kp'+str(ks)
 
 #### configuration/file parameters
@@ -339,9 +339,9 @@ InputFolderPref = 'InputFiles'
 InputFolder = scriptdir+InputFolderPref+'/'
 OutputFolderPref = 'OutputFiles'
 OutputFolder = scriptdir+OutputFolderPref+'/'
-# gfdir = scratchdir+'/gaugefields/'+ensemble+'/'
+gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.13754ks0.1364/'
 # gfdir = scratchdir+'/gaugefields/qcdsf.655/'
-gfdir = scratchdir+'/gaugefields/TestWeak/'
+# gfdir = scratchdir+'/gaugefields/TestWeak/'
 # rdsigfdir = '/data/jzanotti/confs/32x64/b5p50kp121040kp120620/'
 # rdsigfdir = scratchdir+'/gaugefields/limes/
 # ##for heavier kappa
@@ -417,7 +417,8 @@ def CreateGFnum(icfg):
 
 def CreateCfg(icfg):
     # return limename+CreateGFnum(icfg)+'.lime'
-    return limename+'.lime'+CreateGFnum(icfg)
+    # return limename+'.lime'+CreateGFnum(icfg)
+    return limename+CreateGFnum(icfg)
 
 
 

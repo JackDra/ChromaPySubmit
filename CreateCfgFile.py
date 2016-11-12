@@ -24,19 +24,12 @@ def CreateCfgList():
         # print filelist
         setfilelist = []
         for ifile in filelist:
-            if '.lime' in ifile:
+            setfilelist.append(ifile.replace(limefile,''))
+            # if '.lime' in ifile:
                 # setfilelist.append('.'+'.'.join(ifile.split('.')[1:3]))
-                setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
+            # setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
         setfilelist = SortConfigs(setfilelist)
-    with  open(filelists+cfgfile,'w') as thisfile:
-    # with  open('./test.txt','w') as thisfile:
-        for iset in setfilelist:
-            if iset.isdigit():
-                thisfile.write(iset+'\n')
-            else:
-                thisfile.write(iset[-1:]+'\n')
-                
-                # np.array().tofile(filelists+cfgfile)
+    setfilelist.tofile(filelists+cfgfile)
     return setfilelist
     
 
