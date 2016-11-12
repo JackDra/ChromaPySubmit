@@ -121,7 +121,7 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist,thisDSList,thisProject
                         filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
                         thisprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)
                         PoFjsmlist = Elongate(PoFList,map(str,jsmlist))
-                        totseqsourcelist = ['seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)DS+'_Proj'+Projector+'_tsink'+iTS+'no'+str(i) for i in range(len(PoFjsmlist))]
+                        totseqsourcelist = ['seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+DS+'_Proj'+Projector+'_tsink'+iTS+'no'+str(i) for i in range(len(PoFjsmlist))]
                         totseqprop = 'seqprop_id_sm'+ism'_srcPoF'+str(srcPoF)+DS+'_Proj'+Projector+'_tsink'+iTS
                         DictOut = SetupDict()
 
