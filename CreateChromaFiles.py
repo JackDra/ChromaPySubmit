@@ -219,7 +219,7 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist,thisjsmlist,thisDSL
 
                             ## Tie up FS prop to make 3pt corr                        
                             DictOut = AddToIM(DictOut,iterlist.next(),Add_Bar3ptTieUpjsm, ['default_gauge_field',thisprop,thisseqprop,icfg,ism,jsm,
-                                                                                           iTS,Projector,DS,iPoF=srcPoF])
+                                                                                           iTS,Projector,DS,srcPoF])
 
                             ## delete total sequential source propagator
                             DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thisseqprop])
