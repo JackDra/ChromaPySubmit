@@ -194,7 +194,7 @@ RVec = [ 0.5,  0.5  ]
 ##n.b. PoFShifts = 1 means 1 tsink value (so no PoF)
 PoFShifts = 1
 PoFDelta = 2
-PoFList = range(PoFShifts)
+PoFList = range(0,PoFShifts*PoFDelta+1,PoFDelta)
 
 REvecFlag = 'REPoFto16dt2'
 # REvecFlag = 'REPoFTest'
@@ -246,8 +246,16 @@ NmaxHB = '1'
 # GFDoOr = 'false'
 # GFOrPara = '1.0'
 
-def GetSourceString(icfg):
-    return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(SRCT[icfg])
+def ModuloTsrc(icfg,iPoF):
+    itsrc = SRCT[icfg]+(iPoF*PoFDelta)
+    # if itsrc < 0:
+    #     itsrc = itsrc+nt
+    if itsrc >= nt:
+        itsrc = itsrc-nt
+    return itsrc
+    
+def GetSourceString(icfg,iPoF=0):
+    return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(ModuloTsrc(icfg,iPoF))
     # return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(it)
 
 

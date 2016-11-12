@@ -52,7 +52,7 @@ def Add_Displacement():
     return thisdict
 
 
-def Add_Source(gauge_id,source_id,icfg,sm):
+def Add_Source(gauge_id,source_id,icfg,sm,iPoF=0):
     thisdict = OrdDict()
     thisdict['Name'] = 'MAKE_SOURCE'
     thisdict['Frequency'] = 1
@@ -62,7 +62,7 @@ def Add_Source(gauge_id,source_id,icfg,sm):
     thisdict['Param']['Source']['version'] = 3
     thisdict['Param']['Source']['SourceType'] = SmSourceType
     thisdict['Param']['Source']['j_decay'] = 3
-    thisdict['Param']['Source']['t_srce'] = GetSourceString(icfg)
+    thisdict['Param']['Source']['t_srce'] = GetSourceString(icfg,iPoF=iPoF)
     thisdict['Param']['Source']['quark_smear_lastP'] = 'false'
     thisdict['Param']['Source']['SmearingParam'] = Add_SmearingParam(alpha,sm,3)
     thisdict['Param']['Source']['Displacement'] = Add_Displacement()
@@ -209,7 +209,7 @@ def Add_SeqSource(gauge_id,prop_id1,prop_id2,seqsource_id,DS,Proj,Interp,t_sink,
     return thisdict
 
 
-def Add_BarSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp):
+def Add_BarSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp,iPoF=0):
     thisdict = OrdDict()
     thisdict['Name'] = 'BARYON_SPECTRUM-QCDSF'
     thisdict['Frequency'] = 1
@@ -229,8 +229,8 @@ def Add_BarSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp):
     thisdict['NamedObject']['sink_pairs'] = {'elem':OrdDict()}
     thisdict['NamedObject']['sink_pairs']['elem']['first_id'] = k1_prop_id
     thisdict['NamedObject']['sink_pairs']['elem']['second_id'] = k2_prop_id
-    thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp)
-    thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp).replace('.lime','.xml')
+    thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF)
+    thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.lime','.xml')
     return thisdict
 
 
