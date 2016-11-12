@@ -4,14 +4,14 @@ from RunParams import *
 import os,re
 import numpy as np
 
-def SortConfigs(setfilelist):
-    if all([ia.isdigit() for ia in setfilelist]):
-        # sortlist = [int(iset.split('.')[-1]) for iset in setfilelist]
-        # doublist = sorted(zip(setfilelist,sortlist),key=lambda k : k[1])
-        # return [ia for ia,ib in doublist]
-        return map(str,np.sort(map(int,setfilelist)))
-    else:
-        return setfilelist
+# def SortConfigs(setfilelist):
+#     # if all([ia.isdigit() for ia in setfilelist]):
+#     #     # sortlist = [int(iset.split('.')[-1]) for iset in setfilelist]
+#     #     # doublist = sorted(zip(setfilelist,sortlist),key=lambda k : k[1])
+#     #     # return [ia for ia,ib in doublist]
+#     #     return map(str,np.sort(map(int,setfilelist)))
+#     # else:
+#         return np.sort(setfilelist
 
 def CreateCfgList():
     # filelist = os.listdir(rdsigfdir)
@@ -28,7 +28,7 @@ def CreateCfgList():
             # if '.lime' in ifile:
                 # setfilelist.append('.'+'.'.join(ifile.split('.')[1:3]))
             # setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
-        setfilelist = SortConfigs(setfilelist)
+        setfilelist = np.sort(setfilelist)
     np.array([iset+'\n' for iset in setfilelist]).tofile(filelists+cfgfile)
     return setfilelist
     
