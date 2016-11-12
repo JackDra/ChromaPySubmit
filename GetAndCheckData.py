@@ -6,23 +6,10 @@ from shutil import copyfile,move,rmtree
 import subprocess
 from FilenameFuns import *
 
-# def GetGaugeField(icfg):
-#     limefile = CreateLimeCfg(icfg)
-#     limepath = rdsigfdir+limefile
-#     if os.path.isfile(limepath):
-#         if os.path.isfile(gfdir+CreateCfg(icfg)):
-#             print gfdir+CreateCfg(icfg) , ' Already present'
-#         else:
-#             print 'Copying Gf from: '+limepath
-#             copyfile(limepath,gfdir+limefile)
-#             subprocess.call([limedir+"lime_unpack",gfdir+limefile])
-#             move(gfdir+limefile+'.contents/msg01.rec02.ildg-binary-data',gfdir+CreateCfg(icfg))
-#             rmtree(gfdir+limefile+'.contents/')
-#             os.remove(gfdir+limefile)
-#             print 'Copying complete'
-#     else:
-#         print 'Warning: ' , limepath , ' Does not exist'
-
+def GetGaugeField(icfg):
+    return gfdir+CreateCfg(icfg)
+    
+    
 # def RemoveGaugeField(icfg):
 #     gffile = gfdir+CreateCfg(icfg)
 #     if os.path.isfile(gffile):
@@ -31,6 +18,10 @@ from FilenameFuns import *
 #     # else:
 #         # print gffile , ' not present'
 
+def CheckGaugeField(icfg):
+    gffile = gfdir+CreateCfg(icfg)
+    print 'Checking existance of: ', gffile
+    return os.path.isfile(gffile)
 
 def RemoveProp(icfg,thisismlist):
     for ism in thisismlist:

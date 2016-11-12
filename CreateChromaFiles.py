@@ -21,11 +21,33 @@ def Chromaqlist(Minqsqrd,Maxqsqrd):
                 qlist.append(str(iq1) + ' ' + str(iq2) + ' ' + str(iq3))
     return qlist
 
+def RemoveGaugeFieldFiles(folder,fileprefix,icfg):
+    thisfile = folder+'/gfield/'+fileprefix+str(icfg)
+    if os.path.isfile(thisfile+'.xml'):os.remove(thisfile+'.xml')
+
+def CreateGaugeFieldFiles(folder,fileprefix,icfg):
+    mkdir_p(folder+'/gfield/')
+    mkdir_p(folder.replace('Input','Output')+'/gfield/')
+    thisfile = folder+'/gfield/'+fileprefix+str(icfg)
+    if os.path.isfile(thisfile):os.remove(thisfile)
+    filelist = [thisfile.replace(folder+'/','')+'.xml']
+    DictOut = SetupGaugeDict(GaugeType,icfg)
+    
+    # DictOut = AddToIM(DictOut,iterlist.next(),Add_CoulombGF,['default_gauge_field','gfix_id','grot_id'])
+    # DictOut = AddToIM(DictOut,iterlist.next(),Add_WriteNamedObject,['default_gauge_field','Multi1dLatticeColorMatrixD',GetGaugeField(icfg),'SINGLEFILE'])
+    # DictOut = AddToIM(DictOut,iterlist.next(),Add_WriteNamedObject,['gfix_id','Multi1dLatticeColorMatrix',GetGaugeField(icfg).replace('.lime','_gfix.lime'),'SINGLEFILE'])
+    # DictOut = AddToIM(DictOut,iterlist.next(),Add_WriteNamedObject,['grot_id','Multi1dLatticeColorMatrix',GetGaugeField(icfg).replace('.lime','_grot.lime'),'SINGLEFILE'])
+    # DictOut['chroma']['RNG'] = Add_RNG()['RNG']
+    # DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
+    WriteChromaXml(thisfile,DictOut)
+    return filelist
+
+
 def Remove2ptPropFiles(folder,fileprefix,icfg,thisismlist):
     for ism in map(str,thisismlist):
         thisfile = folder+'/prop2pt'+ism+'/'+fileprefix+str(icfg)
         if os.path.isfile(thisfile+'.xml'):os.remove(thisfile+'.xml')
-
+        
 def Create2ptPropFiles(folder,fileprefix,icfg,thisismlist):
     filelistsm = []
     for ism in map(str,thisismlist):
@@ -43,7 +65,7 @@ def Create2ptPropFiles(folder,fileprefix,icfg,thisismlist):
         DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
         WriteChromaXml(thisfile,DictOut)
     return filelistsm
-
+    
 
 def Remove2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     for ism in map(str,thisismlist):

@@ -3,7 +3,10 @@
 from RunParams import *
 from FilenameFuns import *
 from collections import OrderedDict as OrdDict
+from GetAndCheckData import *
 import numpy as np
+
+iterlistchunk = iter(range(50))
 
 def SetupDict():
     outputdict = {'chroma':OrdDict()}
@@ -11,6 +14,17 @@ def SetupDict():
     outputdict['chroma']['Param']['InlineMeasurements'] = OrdDict()
     outputdict['chroma']['Param']['nrow'] = nxtstr
     return outputdict
+
+def SetupGaugeDict(thistype,icfg):
+    outputdict = {thistype:OrdDict()}
+    if 'purgaug' in thistype:
+        outputdict[thistype] = Add_cfg(icfg)
+        hold = Add_MCControl(GetGaugeField(icfg).replace('.lime',''))
+        outputdict[thistype]['MCControl'] = hold['MCControl']
+        hold = Add_HBItr()
+        outputdict[thistype]['HBItr'] = hold['HBItr']
+    return outputdict
+    
 
 
 def AddToIM(thisdict,elemnum,AddFun,AddParams):
@@ -326,10 +340,76 @@ def Add_cfg(icfg):
     thisdict = OrdDict()
     thisdict['Cfg'] = OrdDict()
     thisdict['Cfg']['cfg_type'] = GFFormat
-    if GFFormat == 'UNIT' or 'WEAK' in GFFormat:
+    # if GFFormat == 'UNIT' or 'WEAK' in GFFormat:
+    #     thisdict['Cfg']['cfg_file'] = 'dummy'
+    # else:
+    #     thisdict['Cfg']['cfg_file'] = GetGaugeField(icfg)
+    if GFFormat == 'UNIT' :
         thisdict['Cfg']['cfg_file'] = 'dummy'
     else:
-        thisdict['Cfg']['cfg_file'] = gfdir + CreateCfg(icfg)
+        thisdict['Cfg']['cfg_file'] = GetGaugeField(icfg)
+    thisdict['Cfg']['parallel_io'] = ParaIO
     return thisdict
+
+
+
+def Add_CoulombGF(gauge_id,gfix_id,grot_id):
+    thisdict = OrdDict()
+    thisdict['Name'] = 'COULOMB_GAUGEFIX'
+    thisdict['Frequency'] = 1
+    thisdict['Param'] = OrdDict()
+    thisdict['Param']['version'] = 1
+    thisdict['Param']['GFAccu'] = GFPrec  
+    thisdict['Param']['GFMax'] = GFMaxIter    
+    thisdict['Param']['OrDo'] = GFDoOr
+    thisdict['Param']['OrPara'] = GFOrPara
+    thisdict['Param']['j_decay'] = 3
+    thisdict['NamedObject'] = OrdDict()
+    thisdict['NamedObject']['gauge_id'] = gauge_id
+    thisdict['NamedObject']['gfix_id'] = gfix_id
+    thisdict['NamedObject']['gauge_rot_id'] = grot_id
+    return thisdict
+
+
+
+def Add_MCControl(Pref):
+    thisdict = OrdDict()
+    thisdict['MCControl'] = Add_RNG()
+    thisdict['MCControl']['StartUpdateNum']= StartUpdateNum
+    thisdict['MCControl']['NWarmUpUpdates']= NWarmUpUpdates
+    thisdict['MCControl']['NProductionUpdates']= NProductionUpdates
+    thisdict['MCControl']['NUpdatesThisRun']= NUpdatesThisRun
+    thisdict['MCControl']['SaveInterval']= SaveInterval
+    thisdict['MCControl']['SavePrefix']= Pref
+    thisdict['MCControl']['SaveVolfmt']= 'SINGLEFILE'
+    return thisdict
+
+def Add_HBItr():
+    thisdict = OrdDict()
+    thisdict['HBItr'] = OrdDict()
+    thisdict['HBItr']['GaugeAction'] = OrdDict()
+    thisdict['HBItr']['GaugeAction']['Name'] = GActName
+    thisdict['HBItr']['GaugeAction']['beta'] = beta
+    thisdict['HBItr']['GaugeAction']['AnisoParam'] = OrdDict()
+    thisdict['HBItr']['GaugeAction']['AnisoParam']['anisoP'] = anisoP
+    thisdict['HBItr']['GaugeAction']['AnisoParam']['t_dir'] = t_dir
+    thisdict['HBItr']['GaugeAction']['AnisoParam']['xi_0'] = xi_0
+    thisdict['HBItr']['GaugeAction']['AnisoParam']['nu'] = GFnu
+    thisdict['HBItr']['GaugeAction']['GaugeState'] = OrdDict()
+    thisdict['HBItr']['GaugeAction']['GaugeState']['Name'] = 'SIMPLE_GAUGE_STATE'
+    thisdict['HBItr']['GaugeAction']['GaugeState']['GaugeBC'] = {'Name':GaugeBC}
+    thisdict['HBItr']['HBParams'] = OrdDict()
+    thisdict['HBItr']['HBParams']['nOver'] = nOver
+    thisdict['HBItr']['HBParams']['NmaxHB'] = NmaxHB
+    thisdict['HBItr']['nrow'] = nxtstr
+    return thisdict
+    
+    
+    
+    
+    
+    
+    
+    
 
 

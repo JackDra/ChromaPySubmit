@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+##NB: if changing nx, or nt, MUST remove random list in ParamFiles directory
+
 JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
 import os, sys
 
@@ -19,6 +21,7 @@ import cPickle as pickle
 import numpy as np
 
 
+email = 'jack.dragos@gmail.com'
 THISMACHINE = socket.gethostname()
 
 if 'phoenix.rc' in THISMACHINE:
@@ -26,26 +29,83 @@ if 'phoenix.rc' in THISMACHINE:
     basedir = '/home/a1193348/'
     scratchdir = '/data/cssm/jdragos/'
     codedir = ''
+    Scom = 'sbatch'
+    quetype = 'batch'
+    mem = '120GB'
+    time = '5:00:00'
+    GPU = False
+    # GPU = '4'
+    nproc = 4
+    # nproc = 16
+    nx = 32
+    nt = 64
 elif 'phoenix' in THISMACHINE:
     thismachine = 'phoenix'
     basedir = '/home/a1193348/'
     scratchdir = '/data/cssm/jdragos/'
     codedir = ''
+    Scom = 'sbatch'
+    quetype = 'batch'
+    mem = '120GB'
+    time = '5:00:00'
+    GPU = False
+    # GPU = '4'
+    nproc = 4
+    # nproc = 16
+    nx = 32
+    nt = 64
 elif 'isaac' in THISMACHINE:
     thismachine = 'isaac'
     basedir = '/home/a1193348/'
     scratchdir = '/data/jdragos/'
     codedir = ''
+    Scom = 'sbatch'
+    quetype = 'batch'
+    mem = '120GB'
+    time = '5:00:00'
+    GPU = False
+    # GPU = '4'
+    nproc = 4
+    # nproc = 16
+    nx = 32
+    nt = 64
 elif 'JackLappy' in THISMACHINE:
     thismachine = 'JackLappy'
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
     scratchdir = '/home/jackdra/PHD/CHROMA/TestVar/scratch/'
     codedir = '/home/jackdra/PHD/CHROMA/install/'
+    Scom = 'sbatch'
+    quetype = 'batch'
+    mem = '120GB'
+    time = '5:00:00'
+    GPU = False
+    # GPU = '4'
+    nproc = 4
+    # nproc = 4
+    RPN = 1 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
+    totproc = nproc*RPN
+    # nproc = 16
+    nx = 4
+    nt = 8
 elif 'juqueen' in THISMACHINE:
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
-    codedir = '/homeb/jias40/jias4002/juqueen/Chroma/install/'
+    codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma/install_bgq_clang/chroma/'
+    Scom = 'llsubmit'
+    quetype = 'bluegene'
+    mem = ''
+    time = '00:29:00'
+    GPU = False
+    # GPU = '4'
+    nproc = 128 ## number of nodes
+    RPN = 16 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
+    totproc = nproc*RPN
+    # nproc = 16
+    if RPN not in [16,32,64]: raise  EnvironmentError('RPN (ranks per node) must be 16 (physical), 32 or 64/ RPN='+str(RPN))
+    if n % k != 0: raise  EnvironmentError('nproc must be multiple of RPN/ nproc/RPN='+str(nproc)+'/'+str(RPN)+'='+str(nproc/float(RPN)))
+    nx = 32
+    nt = 64
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
     # exit()
@@ -57,8 +117,7 @@ ChromaFileFlag = 'params_run1'
 
 ExitOnFail = False
 Submit = False
-Scom = 'sbatch'
-DontRun = True
+DontRun = False
 
 # Submit = True
 #james prop gf source index parameter
@@ -69,13 +128,6 @@ DontRun = True
 randlistsize = 2000
 
 ## csh run parameters (slurm)
-quetype = 'batch'
-mem = '120GB'
-time = '5:00:00'
-GPU = False
-# GPU = '4'
-nproc = 4
-# nproc = 16
 
 exe = 'chroma'
 # ModuleList = ['intel/2015c','OpenMPI/1.8.8-iccifort-2015.3.187','CUDA/7.0.28']
@@ -87,10 +139,12 @@ ModuleList = []
 # lattice params, note that cube so no need for ny/nz
 # nx = 32
 # nt = 64
-nx = 4
-nt = 64
 nxtvec = [nx,nx,nx,nt]
 nxtstr = ' '.join(map(str,nxtvec))
+
+GeomPicked = 'EvenSpread' ## closes npx and npt, making npt larger of the two
+# GeomPicked = 'Tsplit' 
+# GeomPicked = 'Spacesplit'
 
 Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 # SRCX = [ 0, 16,  0, 16,  0,  0, 16, 16, 16, 16 ]#0  0  0 16  0 16 )
@@ -101,9 +155,22 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
 OnlyTwoPt = False ## Only calculates two-point correlation functions.
+OnlyGauge = False ## Only calculates Gauge field
+# OnlyGauge = False ## Only calculates Gauge Field
+NumGFCreate = 10
+# GFFormat = 'ILDG'
+# GFFormat = 'UNIT'
+GFFormat = 'WEAK_FIELD'
+# GFFormat = 'SZIN'
+# GFFormat = 'SZINQIO'
 
+
+##RVec must be len(smlist) * PoFShifts
 #Taken from /home/accounts/jdragos/scripts/PythonAnalysis/REvecSave/k12090/PoF1to16dt2LREM.txt
-RVec = [ 76.3260613436,  -161.5448230802, 264086.1917824702, -321.4016231030, 4390.5310121576, -893677.8525444396 ]
+# RVec = [ 76.3260613436,  -161.5448230802, 264086.1917824702, -321.4016231030, 4390.5310121576, -893677.8525444396 ]
+
+#Taken mokup
+RVec = [ 0.5,  0.5  ]
 
 
 # Testing, should be same as tsink sm128
@@ -132,8 +199,35 @@ MaxIter = 10000
 GammaRep = 'sakurai'
 ProjectorList = [4,3]
 DSList = ['doub','sing']
-# GFFormat = 'ILDG'
-GFFormat = 'UNIT'
+
+ParaIO = 'true'
+
+
+### GAUGEFIELD GENERATION PARAMETERS ###
+
+GaugeType = 'purgaug'
+GFexe = GaugeType
+
+StartUpdateNum = 0
+NWarmUpUpdates = 2
+NProductionUpdates = 1000
+NUpdatesThisRun = 100
+SaveInterval = 5
+
+GActName = 'WILSON_GAUGEACT'
+beta = '6.0'
+anisoP = 'true'
+t_dir ='3'
+xi_0 ='2.464'
+GFnu = '1.0'
+GaugeBC = 'PERIODIC_GAUGEBC'
+nOver = '3'
+NmaxHB = '1'
+
+# GFPrec = '5.0e-5'
+# GFMaxIter = 200
+# GFDoOr = 'false'
+# GFOrPara = '1.0'
 
 def GetSourceString(icfg):
     return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(SRCT[icfg])
@@ -162,7 +256,8 @@ invType = 'BICGSTAB_INVERTER'
 
 # SST Propagator Parameters
 # it_sst = '32 35 38' ## ahnialation parameters (momenta)
-it_sst = [26, 27, 28] ## ahnialation parameters (momenta)
+# it_sst = [26, 27, 28] ## ahnialation parameters (momenta)
+it_sst = [4] ## ahnialation parameters (momenta) MUST BE len(it_sst) == len(RVec)/PoFShifts
 # it_sst = [26, 27, 28, 29, 30] ## ahnialation parameters (momenta)
 ppvec = [0,0,0]
 ppstr = ' '.join(map(str,ppvec))
@@ -184,8 +279,11 @@ alphaStout = 0.1
 gfsweeps = 4
 smu0 = 1.0
 smvalues = [32, 64, 128, 'V0']
-ismlist = smvalues[:-1]
-jsmlist = smvalues[:-1]
+# ismlist = smvalues[:-1]
+# jsmlist = smvalues[:-1]
+ismlist = [smvalues[0]]
+jsmlist = [smvalues[0]]
+
 
 # twoptinterps = 'nucleon nucleon2 nucleon_nucleon2 nucleon2_nucleon'
 twoptinterps = ['nucleon']
@@ -211,7 +309,8 @@ OutXml = False
 
 
 # Configuration data
-limename = 'qcdsf'
+# limename = 'qcdsf'
+limename = 'Testing'
 ensemble = 'b5p50kp'+str(kud)+'kp'+str(ks)
 
 #### configuration/file parameters
@@ -226,7 +325,8 @@ InputFolder = scriptdir+InputFolderPref+'/'
 OutputFolderPref = 'OutputFiles'
 OutputFolder = scriptdir+OutputFolderPref+'/'
 # gfdir = scratchdir+'/gaugefields/'+ensemble+'/'
-gfdir = scratchdir+'/gaugefields/qcdsf.655/'
+# gfdir = scratchdir+'/gaugefields/qcdsf.655/'
+gfdir = scratchdir+'/gaugefields/TestWeak/'
 # rdsigfdir = '/data/jzanotti/confs/32x64/b5p50kp121040kp120620/'
 # rdsigfdir = scratchdir+'/gaugefields/limes/
 # ##for heavier kappa
@@ -249,7 +349,7 @@ limedir = codedir+'/qdpxx_cpu_install/bin/'
 # cfglist = "cfglist"+thismachine+str(gfosnum)
 # cfdir3pt = scratchdir+'/cfun/2ndk'+str(kud)+'/source'+str(gfosnum)+'/'
 
-cfgfile = "cfglist"+thismachine
+cfgfile = "cfglist"+thismachine+'.txt'
 
 
 ##Make directories
@@ -288,6 +388,7 @@ def CreateGFnum(icfg):
         raise IOError(filelists+cfgfile + ' not found, run cfglist creation script')
     with open(filelists+cfgfile,'r') as f:
         thisfile = f.readlines()
+        if len(thisfile) == 0: return 'Null'
         if len(thisfile) <= icfg:
             icfg = len(thisfile)-1
         thisgfnum = thisfile[icfg].replace('\n','')
@@ -300,7 +401,8 @@ def CreateGFnum(icfg):
 #     return limename+CreateGFnum(icfg)+'.lime'
 
 def CreateCfg(icfg):
-    return limename+CreateGFnum(icfg)+'.lime'
+    # return limename+CreateGFnum(icfg)+'.lime'
+    return limename+'.lime'+CreateGFnum(icfg)
 
 
 

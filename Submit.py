@@ -7,6 +7,7 @@ from GetAndCheckData import *
 from ReSubmit import RunNext
 import sys
 import subprocess
+import numpy as np
 
 nproc = -1
 for iin in sys.argv[1:]:
@@ -26,6 +27,7 @@ print 'Number of processors = ' , nproc
 
 
 thiscfglist = CreateCfgList()
+# np.array([ithisc+'\n' for ithisc in thiscfglist]).tofile(cfgfile)
 cfgintervals = GetIcfgTOFcfg(nproc,len(thiscfglist))
 for icfg,fcfg in cfgintervals:
     print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)

@@ -11,6 +11,7 @@ from CreateCSH import CreateCSHWrap,RemoveCSH
 DefParams = [it_sst[0],ProjectorList[0],DSList[0]]
 
 def IncrementRun(stage,ism,tsink,Projector,DS):
+    if OnlyGauge: return ['Done',ismlist[0]]+DefParams
     if 'twoptprop' in stage:
         stage = 'twoptcorr'
         return [stage,ism]+DefParams
@@ -48,6 +49,24 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
     icfg,fcfg,ism,tsink,Projector = map(int,[icfg,fcfg,ism,tsink,Projector])
     RemoveCSH(icfg,ism,stage,tsink=tsink,Proj=Projector,DS=DS)
     #removes fort parameter files
+
+    if OnlyGauge:
+        while icfg <=fcfg:
+            if CheckGaugeField(icfg) :
+                icfg += 1
+            else:
+                [thisjobid] = CreateGaugeFieldFiles(InputFolder,ChromaFileFlag,icfg)
+                if Submit:
+                    runfile = Scom+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,'gfield')
+                else:
+                    runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,'gfield')
+                print runfile
+                if not DontRun:subprocess.call([runfile],cwd=basedir)
+                return
+        print 'All Complete'
+        return
+
+
     if 'twoptprop' in stage:
         Remove2ptPropFiles(InputFolder,ChromaFileFlag,icfg,[ism])    
     elif 'twoptcorr' in stage:
@@ -55,7 +74,8 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
     elif 'threeptcorr' in stage:
         Remove3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism],[DS],[Projector],[tsink])    
         
-
+    
+        
     if Errored == 'Failed':
         print 'Error on config' + icfg
         RemoveProp(icfg,ismlist)

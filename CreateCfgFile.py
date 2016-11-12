@@ -1,24 +1,42 @@
 #!/usr/bin/env python
 
 from RunParams import *
-import os
+import os,re
+import numpy as np
 
 def SortConfigs(setfilelist):
-    sortlist = [int(iset.split('.')[-1]) for iset in setfilelist]
-    doublist = sorted(zip(setfilelist,sortlist),key=lambda k : k[1])
-    return [ia for ia,ib in doublist]
+    if all([ia.isdigit() for ia in setfilelist]):
+        # sortlist = [int(iset.split('.')[-1]) for iset in setfilelist]
+        # doublist = sorted(zip(setfilelist,sortlist),key=lambda k : k[1])
+        # return [ia for ia,ib in doublist]
+        return map(str,np.sort(map(int,setfilelist)))
+    else:
+        return setfilelist
 
 def CreateCfgList():
     # filelist = os.listdir(rdsigfdir)
-    filelist = os.listdir(gfdir)
-    setfilelist = []
-    for ifile in filelist:
-        if '.lime' in ifile:
-            setfilelist.append('.'+'.'.join(ifile.split('.')[1:3])+'\n')
-    setfilelist = SortConfigs(setfilelist)
-    thisfile = open(filelists+cfgfile,'w')
-    thisfile.writelines(setfilelist)
-    thisfile.close()
+    if OnlyGauge:
+        # setfilelist = map(str,range(1,NumGFCreate+1))
+        # setfilelist = [n.zfill(5) for n in setfilelist]
+        setfilelist = ['']
+    else:
+        filelist = os.listdir(gfdir)
+        # print filelist
+        setfilelist = []
+        for ifile in filelist:
+            if '.lime' in ifile:
+                # setfilelist.append('.'+'.'.join(ifile.split('.')[1:3]))
+                setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
+        setfilelist = SortConfigs(setfilelist)
+    with  open(filelists+cfgfile,'w') as thisfile:
+    # with  open('./test.txt','w') as thisfile:
+        for iset in setfilelist:
+            if iset.isdigit():
+                thisfile.write(iset+'\n')
+            else:
+                thisfile.write(iset[-1:]+'\n')
+                
+                # np.array().tofile(filelists+cfgfile)
     return setfilelist
     
 
