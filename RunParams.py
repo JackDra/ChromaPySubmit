@@ -398,7 +398,9 @@ def ReadRands(fflag,rsize,thisnx,thisnt):
         outdata = pickle.load( pfile )
         return outdata
 
-SRCX,SRCY,SRCZ,SRCT = ReadRands(ChromaFileFlag,randlistsize,nx,nt)
+## Time is shifted away from nt as the PoF will wrap around the boundary
+## anti-periodic boundary contitions make it weird, so I avoid it.
+SRCX,SRCY,SRCZ,SRCT = ReadRands(ChromaFileFlag,randlistsize,nx,nt-(PoFShifts*PoFDelta))
 
 
 def CreateGFnum(icfg):
