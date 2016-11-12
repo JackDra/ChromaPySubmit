@@ -62,6 +62,7 @@ def Create2ptPropFiles(folder,fileprefix,icfg,thisismlist):
             DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(iPoF),icfg,nism,iPoF])
             DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field','default_source'+str(iPoF),'k_prop'+str(iPoF)])
             DictOut = AddToIM(DictOut,iterlist.next(),Add_WriteNamedObject,['k_prop'+str(iPoF),'LatticePropagator',Get2ptProp(icfg,ism,iPoF=iPoF),'SINGLEFILE'])
+            DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['k_prop'+str(iPoF)])
         DictOut['chroma']['RNG'] = Add_RNG()['RNG']
         DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
         WriteChromaXml(thisfile,DictOut)
@@ -91,6 +92,7 @@ def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
                 DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])
                 DictOut = AddToIM(DictOut,iterlist.next(),Add_BarSpec,['default_gauge_field',thissiprop,thissiprop,icfg,ism,jsm,twoptinterps[0],iPoF])
                 DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
+            DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thisprop])
         DictOut['chroma']['RNG'] = Add_RNG()['RNG']
         DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
         WriteChromaXml(thisfile,DictOut)
