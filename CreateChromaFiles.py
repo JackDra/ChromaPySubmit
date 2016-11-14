@@ -86,7 +86,7 @@ def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
         thisfile = folder+'/corr2pt'+ism+'/'+fileprefix+str(icfg)
         filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
         DictOut = SetupDict()
-        for iPoF in PoFList:
+        for iPoF in map(str,PoFList):
             thisprop = 'prop_id_sm'+ism+'_PoF'+iPoF
             DictOut = AddToIM(DictOut,iterlist.next(),Add_ReadNamedObject,[thisprop,'LatticePropagator',Get2ptProp(icfg,ism,iPoF=iPoF)])
             for jsm in map(str,jsmlist):
