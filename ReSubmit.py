@@ -145,7 +145,7 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         else:
             runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
         print runfile
-        if not DontRun: subprocess.call([runfile],cwd=basedir)
+        # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
     elif 'three' in stage:
         [thisjobid] = Create3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism],[DS],[Projector],[tsink])    
@@ -155,7 +155,7 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         else:
             runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage,tsink=tsink,Proj=Projector,DS=DS)
         print runfile
-        if not DontRun: os.system([runfile],cwd=basedir)
+        # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
     elif 'Done' in stage:
         if icfg<fcfg:
