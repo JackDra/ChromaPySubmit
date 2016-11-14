@@ -140,7 +140,7 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         else:
             [thisjobid] = Create2ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism])
         if Submit:
-            runfile = SCom+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
+            runfile = Scom+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
         else:
             runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
         print runfile
@@ -149,7 +149,7 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         [thisjobid] = Create3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism],[DS],[Projector],[tsink])    
         mkdir_p(Get3ptCorrFolder(icfg,ism,tsink,Projector,DS))
         if Submit:
-            runfile = SCom+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage,tsink=tsink,Proj=Projector,DS=DS)
+            runfile = Scom+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage,tsink=tsink,Proj=Projector,DS=DS)
         else:
             runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage,tsink=tsink,Proj=Projector,DS=DS)
         print runfile
