@@ -131,8 +131,8 @@ if len(codedir) == 0:
 ChromaFileFlag = 'params_run1_'
 
 ExitOnFail = False
-Submit = False
-DontRun = True
+Submit = True
+DontRun = False
 
 # Submit = True
 #james prop gf source index parameter
@@ -169,7 +169,7 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 
 
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
-OnlyTwoPt = False ## Only calculates two-point correlation functions.
+OnlyTwoPt = True ## Only calculates two-point correlation functions.
 OnlyGauge = False ## Only calculates Gauge field
 # OnlyGauge = False ## Only calculates Gauge Field
 NumGFCreate = 10
