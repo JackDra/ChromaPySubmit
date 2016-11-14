@@ -3,7 +3,7 @@
 from RunParams import *
 from GetAndCheckData import *
 from CreateChromaFiles import *
-import sys
+import sys,os
 import subprocess
 import commands
 from CreateCSH import CreateCSHWrap,RemoveCSH
@@ -61,7 +61,7 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
                 else:
                     runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,'gfield')
                 print runfile
-                if not DontRun:subprocess.call([runfile],cwd=basedir)
+                if not DontRun:os.system([runfile],cwd=basedir)
                 return
         print 'All Complete'
         return
@@ -144,7 +144,7 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         else:
             runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
         print runfile
-        if not DontRun: subprocess.call([runfile],cwd=basedir)
+        if not DontRun: os.system([runfile],cwd=basedir)
     elif 'three' in stage:
         [thisjobid] = Create3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism],[DS],[Projector],[tsink])    
         mkdir_p(Get3ptCorrFolder(icfg,ism,tsink,Projector,DS))
@@ -153,7 +153,7 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         else:
             runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage,tsink=tsink,Proj=Projector,DS=DS)
         print runfile
-        if not DontRun: subprocess.call([runfile],cwd=basedir)
+        if not DontRun: os.system([runfile],cwd=basedir)
     elif 'Done' in stage:
         if icfg<fcfg:
             RunNext(icfg+1,fcfg,Start=True)
