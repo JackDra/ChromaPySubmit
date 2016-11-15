@@ -137,7 +137,7 @@ def Add_InvertParam():
     thisdict['MaxBiCGStab'] = MaxIter
     return thisdict
 
-def Add_CloverParams():
+def Add_CloverParams(kin):
     thisdict = OrdDict()
     thisdict['Kappa'] = '0.'+str(kin)
     thisdict['clovCoeff'] = csw
@@ -158,7 +158,7 @@ def Add_Propagator(kin,gauge_id,source_id,prop_id,SeqSource=False):
     # thisdict['Param']['numRetries'] = 1
     thisdict['Param']['FermionAction'] = Add_FermionAction(kin)
     thisdict['Param']['InvertParam'] = Add_InvertParam()
-    thisdict['Param']['CloverParams'] = Add_CloverParams()
+    thisdict['Param']['CloverParams'] = Add_CloverParams(kin)
     thisdict['Param']['AntiPeriodicT'] = anti_t
     
     thisdict['NamedObject'] = OrdDict()
