@@ -81,8 +81,10 @@ def CreateCSHList(icfg,fcfg,ism,jobid,stage):
     icfg,fcfg,ism = str(icfg),str(fcfg),str(ism)
     if 'gfield' in stage:
         Jstring = 'GFGen'+str(icfg)+'-'+str(fcfg)
-    else:
+    elif 'twopt' in stage:
         Jstring = '2pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)
+    elif 'threept' in stage:
+        Jstring = '3pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)
         
     outlist = []
     outlist.append(r'#! /bin/tcsh')
@@ -135,7 +137,7 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobid,stage):
     logfile = OutputFolder+jobid.replace('.xml','.log')
     if os.path.isfile(outputfile):os.remove(outputfile)
     if os.path.isfile(logfile):os.remove(logfile)
-    icfg,fcfg,ism,tsink,Proj = str(icfg),str(fcfg),str(ism),str(tsink),str(Proj)
+    icfg,fcfg,ism = str(icfg),str(fcfg),str(ism)
     if 'twopt' in stage:
         Jstring = '2pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)
     elif 'threept' in stage:
