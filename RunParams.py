@@ -117,7 +117,7 @@ elif 'juqueen' in THISMACHINE:
     time = '00:29:00'
     GPU = False
     # GPU = '4'
-    nproc = 32 ## number of nodes
+    nproc = 16 ## number of nodes
     RPN = 16 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     totproc = nproc*RPN
     # nproc = 16
