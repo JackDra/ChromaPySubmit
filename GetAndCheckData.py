@@ -58,23 +58,27 @@ def Check2ptProp(icfg,thisismlist):
 def Check2ptCorr(icfg,thisismlist,thisjsmlist,interplist):
     Present = True
     for ism in thisismlist:
-        for jsm in thisjsmlist:
-            for iterp in interplist:
-                thisfile = Get2ptCorr(icfg,ism,jsm,iterp)
-                if not os.path.isfile(thisfile): 
-                    Present = False
+        for iPoF in PoFList:
+            for jsm in thisjsmlist:
+                for iterp in interplist:
+                    thisfile = Get2ptCorr(icfg,ism,jsm,iterp,iPoF=iPoF)
+                    if not os.path.isfile(thisfile): 
+                        print 'Not Present: ', thisfile
+                        Present = False
     return Present
 
 def Check3ptCorr(icfg,thisismlist,tsinklist,Projectorlist,DSlist):
     Present = True
     for ism in thisismlist:
-        for tsink in tsinklist:
-            for Projector in Projectorlist:
-                for DS in DSlist:
-                    for iDer in NDerList:
-                        thisfile = Get3ptCorr(icfg,ism,tsink,Projector,DS,iDer)
-                        if not os.path.isfile(thisfile): 
-                            Present = False
+        for iPoF in PoFList:
+            for tsink in tsinklist:
+                for Projector in Projectorlist:
+                    for DS in DSlist:
+                        for iDer in NDerList:
+                            thisfile = Get3ptCorr(icfg,ism,tsink,Projector,DS,iDer,iPoF=iPoF)
+                            if not os.path.isfile(thisfile): 
+                                print 'Not Present: ', thisfile
+                                Present = False
     return Present
 
 

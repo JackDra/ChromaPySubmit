@@ -123,7 +123,8 @@ def CreateCSHList(icfg,fcfg,ism,jobid,stage):
     # outlist.append(r'    endif')
     outlist.append(r'    echo "finished "`date`')
     outlist.append('')
-    nextcfg = str(int(icfg)+1)
+    nextcfg = icfg
+    if 'gfield' in stage: nextcfg = str(int(icfg)+1)
     outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
     return outlist
 

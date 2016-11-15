@@ -18,7 +18,7 @@ def IncrementRun(stage,ism):
                 stage,ism = ['Done',ismlist[0]]
             else:
                 stage,ism = ['twoptcorr',ismlist[ismlist.index(ism)+1]]
-            return stage,ism,tsink,Projector,DS
+            return stage,ism
         else:
             stage = 'threeptcorr'
             return [stage,ism]
@@ -72,9 +72,9 @@ def RunNext(icfg,fcfg,stage='twoptcorr',ism=ismlist[0],Errored='Complete',Start=
 
         #check if whole run is done
     if OnlyTwoPt:
-        boolcheck = Check2ptCorr(icfg,[ism],jsmlist,twoptinterps[0])
+        boolcheck = Check2ptCorr(icfg,[ism],jsmlist,twoptinterps)
     else:
-        boolcheck = Check2ptCorr(icfg,[ism],jsmlist,twoptinterps[0]) and Check3ptCorr(icfg,[ism],it_sst,ProjectorList,DSList)
+        boolcheck = Check2ptCorr(icfg,[ism],jsmlist,twoptinterps) and Check3ptCorr(icfg,[ism],it_sst,ProjectorList,DSList)
 
     if boolcheck:
         RemoveProp(icfg,[ism])
@@ -91,7 +91,7 @@ def RunNext(icfg,fcfg,stage='twoptcorr',ism=ismlist[0],Errored='Complete',Start=
             return
 
     # GetGaugeField(icfg)
-    Move2ptCorr(icfg,[ism],jsmlist,twoptinterps[0])
+    Move2ptCorr(icfg,[ism],jsmlist,twoptinterps)
     prevism = ism
     if not Start: stage,ism = IncrementRun(stage,ism)
         
@@ -99,8 +99,8 @@ def RunNext(icfg,fcfg,stage='twoptcorr',ism=ismlist[0],Errored='Complete',Start=
     while StillInc:
         StillInc = False
         if 'twoptcorr' in stage:
-            Move2ptCorr(icfg,[ism],jsmlist,twoptinterps[0])
-            if Check2ptCorr(icfg,[ism],jsmlist,twoptinterps[0]):
+            Move2ptCorr(icfg,[ism],jsmlist,twoptinterps)
+            if Check2ptCorr(icfg,[ism],jsmlist,twoptinterps):
                 stage,ism, = IncrementRun(stage,ism)
                 if 'Done' not in stage: StillInc = True
         elif 'threeptcorr' in stage:
@@ -122,7 +122,7 @@ def RunNext(icfg,fcfg,stage='twoptcorr',ism=ismlist[0],Errored='Complete',Start=
         if not DontRun: os.system(runfile)
     elif 'three' in stage:
         [thisjobid] = Create3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism])    
-        mkdir_p(Get3ptCorrFolder(icfg,ism))
+        map(mkdir_p,Get3ptCorrFolderList(icfg,ism))
         if Submit:
             runfile = Scom+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
         else:

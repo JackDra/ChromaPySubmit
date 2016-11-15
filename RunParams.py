@@ -98,8 +98,8 @@ elif 'JackLappy' in THISMACHINE:
     # nproc = 16
     nx = 4
     nt = 8
-    kud = 1375400 # kappa (quark hopping) params
-    ks = 1364000
+    kud = 12 # kappa (quark hopping) params
+    ks = 12
     kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
     limename = 'Testing.lime'
     limefolder = 'qdpxx_cpu_install'
@@ -184,7 +184,7 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 
 
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
-OnlyTwoPt = True ## Only calculates two-point correlation functions.
+OnlyTwoPt = False ## Only calculates two-point correlation functions.
 OnlyGauge = False ## Only calculates Gauge field
 # OnlyGauge = False ## Only calculates Gauge Field
 NumGFCreate = 10
@@ -435,7 +435,7 @@ def CreateGFnum(icfg):
         if len(thisfile) == 0: return 'Null'
         if len(thisfile) <= icfg:
             icfg = len(thisfile)-1
-        thisgfnum = thisfile[icfg].replace('\n','')
+        thisgfnum = thisfile[icfg-1].replace('\n','')
     return thisgfnum
 
 # def CreateCfg(icfg):
