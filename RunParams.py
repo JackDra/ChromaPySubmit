@@ -2,7 +2,8 @@
 
 ##NB: if changing nx, or nt, MUST remove random list in ParamFiles directory
 
-JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
+# JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
+JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
 import os, sys
 
 if not os.path.isdir(JackLibDir):
@@ -83,19 +84,24 @@ elif 'JackLappy' in THISMACHINE:
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
     scratchdir = '/home/jackdra/PHD/CHROMA/TestVar/scratch/'
     codedir = '/home/jackdra/PHD/CHROMA/install/'
+    gfdir = scratchdir+'/gaugefields/TestWeak/'
     Scom = 'sbatch'
     quetype = 'batch'
     mem = '120GB'
     time = '5:00:00'
     GPU = False
     # GPU = '4'
-    nproc = 4
+    nproc = 2
     # nproc = 4
     RPN = 1 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     totproc = nproc*RPN
     # nproc = 16
     nx = 4
     nt = 8
+    kud = 1375400 # kappa (quark hopping) params
+    ks = 1364000
+    kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
+    limename = 'Testing.lime'
     limefolder = 'qdpxx_cpu_install'
     chromafolder = 'chroma_alex'
     chromaGPUfolder = 'chroma_gpu_nprmod_install'
@@ -104,6 +110,7 @@ elif 'juqueen' in THISMACHINE:
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
     codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma/install_bgq_clang/'
+    gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.13754ks0.1364/'
     Scom = 'llsubmit'
     quetype = 'bluegene'
     mem = ''
@@ -121,6 +128,12 @@ elif 'juqueen' in THISMACHINE:
     limefolder = 'qdp++'
     chromafolder = 'chroma'
     chromaGPUfolder = ''
+
+    kud = 1375400 # kappa (quark hopping) params
+    ks = 1364000
+    kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
+    limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
+
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
     # exit()
@@ -132,7 +145,7 @@ ChromaFileFlag = 'params_run1_'
 
 ExitOnFail = False ## depreciated
 Submit = False ## submits the script to the que, disable to run on local machine
-DontRun = True ## creates input files but does not run (for looking at .csh and .xml files
+DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 
@@ -209,8 +222,6 @@ REvecFlag = 'REPoFto16dt2'
 # ks = 120620
 # kud = 120900 # kappa (quark hopping) params
 # ks = 120900
-kud = 1375400 # kappa (quark hopping) params
-ks = 1364000
 # Prec = '1.0d-5'
 Prec = '5.0e-11'
 MaxIter = 10000
@@ -255,7 +266,7 @@ NmaxHB = '1'
 # GFOrPara = '1.0'
 
 def ModuloTsrc(icfg,iPoF):
-    itsrc = SRCT[icfg]+iPoF
+    itsrc = int(SRCT[icfg])+int(iPoF)
     # if itsrc < 0:
     #     itsrc = itsrc+nt
     if itsrc >= nt:
@@ -343,8 +354,6 @@ OutXml = False
 
 # Configuration data
 # limename = 'qcdsf'
-kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
-limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
 # ensemble = 'b5p50kp'+str(kud)+'kp'+str(ks)
 
 #### configuration/file parameters
@@ -358,7 +367,6 @@ InputFolderPref = 'InputFiles'
 InputFolder = scriptdir+InputFolderPref+'/'
 OutputFolderPref = 'OutputFiles'
 OutputFolder = scriptdir+OutputFolderPref+'/'
-gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.13754ks0.1364/'
 # gfdir = scratchdir+'/gaugefields/qcdsf.655/'
 # gfdir = scratchdir+'/gaugefields/TestWeak/'
 # rdsigfdir = '/data/jzanotti/confs/32x64/b5p50kp121040kp120620/'
@@ -436,10 +444,14 @@ def CreateGFnum(icfg):
 # def CreateLimeCfg(icfg):
 #     return limename+CreateGFnum(icfg)+'.lime'
 
-def CreateCfg(icfg):
+def CreateCfg(icfg,DelLime=False):
     # return limename+CreateGFnum(icfg)+'.lime'
     # return limename+'.lime'+CreateGFnum(icfg)
-    return limename+CreateGFnum(icfg)
-
+    if DelLime:
+        return (limename+CreateGFnum(icfg)).replace('.lime','')
+    else:
+        return limename+CreateGFnum(icfg)
+        
+    
 
 
