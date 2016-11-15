@@ -137,7 +137,7 @@ def Add_InvertParam():
     thisdict['MaxBiCGStab'] = MaxIter
     return thisdict
 
-def Add_ClvoerParams():
+def Add_CloverParams():
     thisdict = OrdDict()
     thisdict['Kappa'] = '0.'+str(kin)
     thisdict['clovCoeff'] = csw
