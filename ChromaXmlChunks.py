@@ -96,8 +96,9 @@ def Add_FermionBC():
     thisdict = OrdDict()
     thisdict['FermBC'] = FermBC
     thisdict['boundary'] = boundstr
-    thisdict['phases_by_pi'] = phases
-    thisdict['phases_dir'] = phasedirs
+    if 'TWISTED' in FermBC:
+        thisdict['phases_by_pi'] = phases
+        thisdict['phases_dir'] = phasedirs
     return thisdict
 
 
