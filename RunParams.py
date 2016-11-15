@@ -223,8 +223,9 @@ REvecFlag = 'REPoFto16dt2'
 # kud = 120900 # kappa (quark hopping) params
 # ks = 120900
 # Prec = '1.0d-5'
-Prec = '5.0e-11'
-MaxIter = 10000
+# Prec = '5.0e-11'
+Prec = '1.0e-8'
+MaxIter = 5000
 # Projector = 4
 GammaRep = 'sakurai'
 ProjectorList = [4,3]
@@ -252,9 +253,11 @@ SaveInterval = 5
 
 GActName = 'WILSON_GAUGEACT'
 beta = '6.0'
-anisoP = 'true'
+# anisoP = 'true'
+anisoP = 'false'
 t_dir ='3'
-xi_0 ='2.464'
+# xi_0 ='2.464'
+xi_0 ='1.0'
 GFnu = '1.0'
 GaugeBC = 'PERIODIC_GAUGEBC'
 nOver = '3'
@@ -294,7 +297,8 @@ def ProjToPol(Proj):
     else:
         return ''
 
-FermAct = 'UNPRECONDITIONED_SLRC'
+# FermAct = 'UNPRECONDITIONED_SLRC'
+FermAct = 'CLOVER'
 # FermAct = 'SLRC'
 invType = 'BICGSTAB_INVERTER'
 
@@ -307,13 +311,17 @@ ppvec = [0,0,0]
 ppstr = ' '.join(map(str,ppvec))
 qmin = 0
 qmax = 9
+phases = '0 0 0'
+phasedirs = '0 1 2'
+
 NDer = 2
 NDerList = ['NDer'+str(ider) for ider in range(NDer+1)]
 
 # Sm Parameters
 SmSourceType = 'SHELL_SOURCE'
 def GetSmSeqSourceType(interp,DS,Proj):
-    return interp.replace('nucleon','nucl').upper()+'_'+DStoUD(DS).upper()+'_'+ProjToPol(Proj)+'_NONREL'
+    # return interp.replace('nucleon','nucl').upper()+'_'+DStoUD(DS).upper()+'_'+ProjToPol(Proj)+'_NONREL'
+    return interp.replace('nucleon','nucl').upper()+'_'+DStoUD(DS).upper()+'_'+ProjToPol(Proj)
 SmSinkType = 'SHELL_SINK'
 # SmKind = 'GAUGE_INV_JACOBI'
 SmKind = 'GAUGE_INV_GAUSSIAN'
@@ -341,11 +349,14 @@ bx = 1.0
 by = 1.0
 bz = 1.0
 bt = -1.0
+anti_t = 'false'
+if bt == -1: anti_t = 'true'
 # boundstr = str(bx) + ' ' +str(by) + ' ' +str(bz) + ' ' +str(bt)
 boundstr = str(int(bx)) + ' ' +str(int(by)) + ' ' +str(int(bz)) + ' ' +str(int(bt))
 u0 = 1.0
 # csw = 2.65
-csw = 1.0
+# csw = 1.0
+csw = 1.715
 rho = 0.1
 nstout = 1
 

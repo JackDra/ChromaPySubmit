@@ -63,7 +63,7 @@ def Add_Source(gauge_id,source_id,icfg,sm,iPoF=0):
     thisdict['Param']['Source']['SourceType'] = SmSourceType
     thisdict['Param']['Source']['j_decay'] = 3
     thisdict['Param']['Source']['t_srce'] = GetSourceString(icfg,iPoF=iPoF)
-    thisdict['Param']['Source']['quark_smear_lastP'] = 'false'
+    # thisdict['Param']['Source']['quark_smear_lastP'] = 'false'
     thisdict['Param']['Source']['SmearingParam'] = Add_SmearingParam(alpha,sm,3)
     thisdict['Param']['Source']['Displacement'] = Add_Displacement()
     thisdict['NamedObject'] = OrdDict()
@@ -96,12 +96,23 @@ def Add_FermionBC():
     thisdict = OrdDict()
     thisdict['FermBC'] = FermBC
     thisdict['boundary'] = boundstr
+    thisdict['phases_by_pi'] = phases
+    thisdict['phases_dir'] = phasedirs
+    return thisdict
+
+
+def Add_AnisoParam():
+    thisdict = OrdDict()
+    thisdict['anisoP'] = anisoP
+    thisdict['t_dir'] = t_dir
+    thisdict['xi_0'] = xi_0
+    thisdict['nu'] = GFnu
     return thisdict
 
 
 def Add_FermState():
     thisdict = OrdDict()
-    thisdict['Name'] = 'SLIC_FERM_STATE'
+    thisdict['Name'] = 'CLOVER'
     thisdict['n_smear'] = nstout
     thisdict['rho'] = rho
     thisdict['orthog_dir'] = 5
@@ -114,7 +125,8 @@ def Add_FermionAction(kin):
     thisdict['FermAct'] = FermAct
     thisdict['Kappa'] = '0.'+str(kin)
     thisdict['clovCoeff'] = csw
-    thisdict['FermState'] = Add_FermState()
+    thisdict['FermState'] = Add_AnisoParam()
+    thisdict['FermState'] = Add_FermionBC()
     return thisdict
 
 
@@ -125,21 +137,29 @@ def Add_InvertParam():
     thisdict['MaxBiCGStab'] = MaxIter
     return thisdict
 
+def Add_ClvoerParams():
+    thisdict = OrdDict()
+    thisdict['Kappa'] = '0.'+str(kin)
+    thisdict['clovCoeff'] = csw
+    return thisdict
+    
 
 def Add_Propagator(kin,gauge_id,source_id,prop_id,SeqSource=False):
     thisdict = OrdDict()
     thisdict['Name'] = 'PROPAGATOR'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
-    thisdict['Param']['version'] = 9
-    if SeqSource:
-        thisdict['Param']['quarkSpinType'] = 'UPPER'
-    else:
-        thisdict['Param']['quarkSpinType'] = 'FULL'
+    thisdict['Param']['version'] = 10
+    # if SeqSource:
+    #     thisdict['Param']['quarkSpinType'] = 'UPPER'
+    # else:
+    thisdict['Param']['quarkSpinType'] = 'FULL'
     thisdict['Param']['obsvP'] = 'false'
-    thisdict['Param']['numRetries'] = 1
+    # thisdict['Param']['numRetries'] = 1
     thisdict['Param']['FermionAction'] = Add_FermionAction(kin)
     thisdict['Param']['InvertParam'] = Add_InvertParam()
+    thisdict['Param']['CloverParams'] = Add_CloverParams()
+    thisdict['Param']['AntiPeriodicT'] = anti_t
     
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
@@ -180,16 +200,13 @@ def Add_EraseNamedObject(object_id):
 
 def Add_SeqSource(gauge_id,prop_id1,prop_id2,seqsource_id,DS,Proj,Interp,t_sink,sm):
     thisdict = OrdDict()
-    thisdict['Name'] = 'SEQSOURCE-QCDSF'
+    thisdict['Name'] = 'SEQSOURCE'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
-    thisdict['Param']['version'] = 2
-    thisdict['Param']['SeqSource'] = OrdDict()    
-    thisdict['Param']['SeqSource']['version'] = 1
-    thisdict['Param']['SeqSource']['SeqSourceType'] = GetSmSeqSourceType(Interp,DS,Proj)
-    thisdict['Param']['SeqSource']['t_sink'] = t_sink
-    thisdict['Param']['SeqSource']['sink_mom'] = ppstr
-    thisdict['Param']['SeqSource']['j_decay'] = 3
+    thisdict['Param']['version'] = 1
+    thisdict['Param']['seq_src'] = GetSmSeqSourceType(Interp,DS,Proj)
+    thisdict['Param']['t_sink'] = t_sink
+    thisdict['Param']['sink_mom'] = ppstr
     thisdict['PropSink'] = OrdDict()
     thisdict['PropSink']['version'] = 5
     thisdict['PropSink']['Sink'] = OrdDict()    
@@ -261,10 +278,10 @@ def Add_MesSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp):
 
 def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS,iPoF=0):
     thisdict = OrdDict()
-    thisdict['Name'] = 'BAR3PTFN-QCDSF'
+    thisdict['Name'] = 'BAR3PTFN'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
-    thisdict['Param']['version'] = 8
+    thisdict['Param']['version'] = 7
     thisdict['Param']['j_decay'] = 3    
     thisdict['Param']['mom2_max'] = qmax    
     thisdict['Param']['deriv'] = NDer
@@ -272,8 +289,10 @@ def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS,iPoF=0):
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['prop_id'] = prop_id
     thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer0',iPoF=iPoF)
-    thisdict['NamedObject']['bar3ptfn_1D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer1',iPoF=iPoF)
-    thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer2',iPoF=iPoF)
+    if NDer > 0:
+        for iDer in range(1,NDer):
+            thisdict['NamedObject']['bar3ptfn_'+str(iDer)+'D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer'+str(iDer),iPoF=iPoF)
+    # thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer2',iPoF=iPoF)
     thisdict['NamedObject']['seqprops'] = {'elem':OrdDict()}
     thisdict['NamedObject']['seqprops']['elem']['seqprop_id'] = seqprop_id
     thisdict['NamedObject']['seqprops']['elem']['gamma_insertion'] = 0
@@ -281,10 +300,10 @@ def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS,iPoF=0):
 
 def Add_Bar3ptTieUpjsm(gauge_id,prop_id,seqprop_id,icfg,ism,jsm,tsink,Proj,DS):
     thisdict = OrdDict()
-    thisdict['Name'] = 'BAR3PTFN-QCDSF'
+    thisdict['Name'] = 'BAR3PTFN'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
-    thisdict['Param']['version'] = 8
+    thisdict['Param']['version'] = 7
     thisdict['Param']['j_decay'] = 3    
     thisdict['Param']['mom2_max'] = qmax    
     thisdict['Param']['deriv'] = NDer
@@ -292,8 +311,10 @@ def Add_Bar3ptTieUpjsm(gauge_id,prop_id,seqprop_id,icfg,ism,jsm,tsink,Proj,DS):
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['prop_id'] = prop_id
     thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorr(icfg,ism,jsm,tsink,Proj,DS,'NDer0')
-    thisdict['NamedObject']['bar3ptfn_1D_file'] = Get3ptCorr(icfg,ism,jsm,tsink,Proj,DS,'NDer1')
-    thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,jsm,tsink,Proj,DS,'NDer2')
+    if NDer > 0:
+        for iDer in range(1,NDer):
+            thisdict['NamedObject']['bar3ptfn_'+str(iDer)+'D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer'+str(iDer))
+    # thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,jsm,tsink,Proj,DS,'NDer2')
     thisdict['NamedObject']['seqprops'] = {'elem':OrdDict()}
     thisdict['NamedObject']['seqprops']['elem']['seqprop_id'] = seqprop_id
     thisdict['NamedObject']['seqprops']['elem']['gamma_insertion'] = 0
