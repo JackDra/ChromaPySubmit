@@ -43,32 +43,32 @@ def CreateGaugeFieldFiles(folder,fileprefix,icfg):
     return filelist
 
 
-def Remove2ptPropFiles(folder,fileprefix,icfg,thisismlist):
-    for ism in map(str,thisismlist):
-        thisfile = folder+'/prop2pt'+ism+'/'+fileprefix+str(icfg)
-        if os.path.isfile(thisfile+'.xml'):os.remove(thisfile+'.xml')
+# def Remove2ptPropFiles(folder,fileprefix,icfg,thisismlist):
+#     for ism in map(str,thisismlist):
+#         thisfile = folder+'/prop2pt'+ism+'/'+fileprefix+str(icfg)
+#         if os.path.isfile(thisfile+'.xml'):os.remove(thisfile+'.xml')
         
-def Create2ptPropFiles(folder,fileprefix,icfg,thisismlist):
-    filelistsm = []
-    for ism in map(str,thisismlist):
-        nism = ism.replace('sm','')
-        mkdir_p(folder+'/prop2pt'+ism+'/')
-        mkdir_p(folder.replace('Input','Output')+'/prop2pt'+ism+'/')
-        thisfile = folder+'/prop2pt'+ism+'/'+fileprefix+str(icfg)
-        if os.path.isfile(thisfile):os.remove(thisfile)
-        filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
-        DictOut = SetupDict()
-        for iPoF in PoFList:
-            DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(iPoF),icfg,nism,iPoF])
-            DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field','default_source'+str(iPoF),'k_prop'+str(iPoF)])
-            DictOut = AddToIM(DictOut,iterlist.next(),Add_WriteNamedObject,['k_prop'+str(iPoF),'LatticePropagator',Get2ptProp(icfg,ism,iPoF=iPoF),'SINGLEFILE'])
-            if iPoF != PoFList[-1]:
-                DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['k_prop'+str(iPoF)])
-                DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['default_source'+str(iPoF)])
-        DictOut['chroma']['RNG'] = Add_RNG()['RNG']
-        DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
-        WriteChromaXml(thisfile,DictOut)
-    return filelistsm
+# def Create2ptPropFiles(folder,fileprefix,icfg,thisismlist):
+#     filelistsm = []
+#     for ism in map(str,thisismlist):
+#         nism = ism.replace('sm','')
+#         mkdir_p(folder+'/prop2pt'+ism+'/')
+#         mkdir_p(folder.replace('Input','Output')+'/prop2pt'+ism+'/')
+#         thisfile = folder+'/prop2pt'+ism+'/'+fileprefix+str(icfg)
+#         if os.path.isfile(thisfile):os.remove(thisfile)
+#         filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
+#         DictOut = SetupDict()
+#         for iPoF in PoFList:
+#             DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(iPoF),icfg,nism,iPoF])
+#             DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field','default_source'+str(iPoF),'k_prop'+str(iPoF)])
+#             DictOut = AddToIM(DictOut,iterlist.next(),Add_WriteNamedObject,['k_prop'+str(iPoF),'LatticePropagator',Get2ptProp(icfg,ism,iPoF=iPoF),'SINGLEFILE'])
+#             if iPoF != PoFList[-1]:
+#                 DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['k_prop'+str(iPoF)])
+#                 DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['default_source'+str(iPoF)])
+#         DictOut['chroma']['RNG'] = Add_RNG()['RNG']
+#         DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
+#         WriteChromaXml(thisfile,DictOut)
+#     return filelistsm
     
 
 def Remove2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
@@ -81,6 +81,7 @@ def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     filelistsm = []
     thisqlist = Chromaqlist(qmin,qmax)
     for ism in map(str,thisismlist):
+        nism = ism.replace('sm','')
         mkdir_p(folder+'/corr2pt'+ism+'/')
         mkdir_p(folder.replace('Input','Output')+'/corr2pt'+ism+'/')
         thisfile = folder+'/corr2pt'+ism+'/'+fileprefix+str(icfg)
@@ -88,50 +89,57 @@ def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
         DictOut = SetupDict()
         for iPoF in map(str,PoFList):
             thisprop = 'prop_id_sm'+ism+'_PoF'+iPoF
-            DictOut = AddToIM(DictOut,iterlist.next(),Add_ReadNamedObject,[thisprop,'LatticePropagator',Get2ptProp(icfg,ism,iPoF=iPoF)])
+            DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(iPoF),icfg,nism,iPoF])
+            DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field','default_source'+str(iPoF),thisprop])
+            if Save2ptProp: DictOut = AddToIM(DictOut,iterlist.next(),Add_ReadNamedObject,[thisprop,'LatticePropagator',Get2ptProp(icfg,ism,iPoF=iPoF)])
+            if SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['default_source'+str(iPoF)])
             for jsm in map(str,jsmlist):
                 thissiprop = 'prop_id_sm'+ism+'_si'+jsm+'_PoF'+iPoF
                 DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])
                 DictOut = AddToIM(DictOut,iterlist.next(),Add_BarSpec,['default_gauge_field',thissiprop,thissiprop,icfg,ism,jsm,twoptinterps[0],iPoF])
-                DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
-            if iPoF != PoFList[-1]: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thisprop])
+                if SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
+            if iPoF != PoFList[-1] and SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thisprop])
         DictOut['chroma']['RNG'] = Add_RNG()['RNG']
         DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
         WriteChromaXml(thisfile,DictOut)
     return filelistsm
 
 
-def Remove3ptCorrFiles(folder,fileprefix,icfg,thisismlist,thisDSList,thisProjectorList,thisit_sst):
+def Remove3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     for ism in map(str,thisismlist):
-        for DS in thisDSList:
-            for Projector in map(str,thisProjectorList):
-                for iTS in map(str,thisit_sst):                    
-                    thisfolder = folder+'/corr3pt'+ism+'/'+DS+'GMA'+Projector+'tsink'+iTS+'/'
-                    thisfile = thisfolder+fileprefix+str(icfg)
-                    if os.path.isfile(thisfile):os.remove(thisfile)
+        thisfolder = folder+'/corr3pt'+ism+'/'+DS+'GMA'+Projector+'tsink'+iTS+'/'
+        thisfile = thisfolder+fileprefix+str(icfg)
+        if os.path.isfile(thisfile):os.remove(thisfile)
 
 
-def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist,thisDSList,thisProjectorList,thisit_sst):
+def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     filelistsm = []
     for ism in map(str,thisismlist):
+        nism = ism.replace('sm','')
+        thisfolder = folder+'/corr3pt'+ism+'/'
+        mkdir_p(thisfolder)
+        mkdir_p(thisfolder.replace('Input','Output'))
+        thisfile = thisfolder+fileprefix+str(icfg)
+        filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
         for srcPoF in PoFList:
-            for DS in thisDSList:
-                for Projector in map(str,thisProjectorList):
-                    for iTS in map(str,thisit_sst):                    
-                        thisfolder = folder+'/corr3pt'+ism+'/'+DS+'GMA'+Projector+'tsink'+iTS+'/'
-                        mkdir_p(thisfolder)
-                        mkdir_p(thisfolder.replace('Input','Output'))
-                        thisfile = thisfolder+fileprefix+str(icfg)
-                        filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
-                        thisprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)
+            thisprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)
+            ## Read 2pt prop in
+            if Save2ptProp:
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_ReadNamedObject,[thisprop,'LatticePropagator',Get2ptProp(icfg,ism,iPoF=srcPoF)])
+            else:
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(iPoF),icfg,nism,srcPoF])
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field','default_source'+str(srcPoF),thisprop])
+                if SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['default_source'+str(srcPoF)])
+            for DS in DSList:
+                for Projector in map(str,ProjectorList):
+                    for iTS in map(str,it_sst):                    
                         PoFjsmlist = Elongate(PoFList,map(str,jsmlist))
-                        totseqsourcelist = ['seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+DS+'_Proj'+Projector+'_tsink'+iTS+'no'+str(i) for i in range(len(PoFjsmlist))]
+                        totseqsourcelist = ['seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+DS+'_Proj'+Projector+'_tsink'+iTS
+                                            +'_PoF'+str(i) for i in range(len(PoFjsmlist))]
                         totseqprop = 'seqprop_id_sm'+ism+'_srcPoF'+str(srcPoF)+DS+'_Proj'+Projector+'_tsink'+iTS
                         DictOut = SetupDict()
 
-                        ## Read 2pt prop in
-                        DictOut = AddToIM(DictOut,iterlist.next(),Add_ReadNamedObject,[thisprop,'LatticePropagator',Get2ptProp(icfg,ism,iPoF=srcPoF)])
-
+                            
                         for njsm,(iPoF,jsm) in enumerate(PoFjsmlist):
                             thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+'_PoF'+str(iPoF)
                             if njsm == 0:
@@ -186,24 +194,29 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist,thisDSList,thisProject
 def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist,thisjsmlist,thisDSList,thisProjectorList,thisit_sst):
     filelistsm = []
     for ism in map(str,thisismlist):
+        nism = ism.replace('sm','')
+        thisfolder = folder+'/corr3pt'+ism+'/'
+        mkdir_p(thisfolder)
+        mkdir_p(thisfolder.replace('Input','Output'))
+        thisfile = thisfolder+fileprefix+str(icfg)
+        filelistsm.append(InputFolderPref+'/'+thisfile.replace(folder+'/','')+'.xml')
         for srcPoF in PoFList:
+            thisprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)
+            ## Read 2pt prop in
+            if Save2ptProp:
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_ReadNamedObject,[thisprop,'LatticePropagator',Get2ptProp(icfg,ism,iPoF=srcPoF)])
+            else:
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(iPoF),icfg,nism,srcPoF])
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field','default_source'+str(srcPoF),thisprop])
+                if SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['default_source'+str(srcPoF)])
             for jsm in map(str,thisjsmlist):
                 for DS in thisDSList:
                     for Projector in map(str,thisProjectorList):
                         for iTS in map(str,thisit_sst):                    
-                            thisfolder = folder+'/corr3pt'+ism+'/'+DS+'GMA'+Projector+'tsink'+iTS+'/'
-                            mkdir_p(thisfolder)
-                            mkdir_p(thisfolder.replace('Input','Output'))
-                            thisfile = thisfolder+fileprefix+str(icfg)
-                            filelistsm.append(InputFolderPref+'/'+thisfile.replace(folder+'/','')+'.xml')
-                            thisprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)
                             thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm
                             thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
                             thisseqprop = 'seqprop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
                             DictOut = SetupDict()
-
-                            ## Read 2pt prop in
-                            DictOut = AddToIM(DictOut,iterlist.next(),Add_ReadNamedObject,[thisprop,'LatticePropagator',Get2ptProp(icfg,ism,iPoF=srcPoF)])
 
                             ## smear sink
                             DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])

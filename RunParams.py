@@ -130,9 +130,11 @@ if len(codedir) == 0:
 
 ChromaFileFlag = 'params_run1_'
 
-ExitOnFail = False
-Submit = True
-DontRun = False
+ExitOnFail = False ## depreciated
+Submit = False ## submits the script to the que, disable to run on local machine
+DontRun = True ## creates input files but does not run (for looking at .csh and .xml files
+SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
+Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 
 # Submit = True
 #james prop gf source index parameter
@@ -144,7 +146,7 @@ randlistsize = 2000
 
 ## csh run parameters (slurm)
 
-exe = 'chroma'
+Cexe = 'chroma'
 # ModuleList = ['intel/2015c','OpenMPI/1.8.8-iccifort-2015.3.187','CUDA/7.0.28']
 ModuleList = []
 
@@ -224,6 +226,12 @@ ParaIO = 'true'
 
 GaugeType = 'purgaug'
 GFexe = GaugeType
+
+if OnlyGauge:
+    exe = GFexe
+else:
+    exe = Cexe
+
 
 StartUpdateNum = 0
 NWarmUpUpdates = 2

@@ -10,44 +10,29 @@ from CreateCSH import CreateCSHWrap,RemoveCSH
 
 DefParams = [it_sst[0],ProjectorList[0],DSList[0]]
 
-def IncrementRun(stage,ism,tsink,Projector,DS):
-    if OnlyGauge: return ['Done',ismlist[0]]+DefParams
-    if 'twoptprop' in stage:
-        stage = 'twoptcorr'
-        return [stage,ism]+DefParams
+def IncrementRun(stage,ism):
+    if OnlyGauge: return ['Done',ismlist[0]]
     if 'twoptcorr' in stage:
         if OnlyTwoPt:
             if ism == ismlist[-1]:
-                stage,ism,tsink,Projector,DS = ['Done',ismlist[0]]+DefParams
+                stage,ism = ['Done',ismlist[0]]
             else:
-                stage,ism,tsink,Projector,DS = ['twoptprop',ismlist[ismlist.index(ism)+1]]+DefParams
+                stage,ism = ['twoptcorr',ismlist[ismlist.index(ism)+1]]
             return stage,ism,tsink,Projector,DS
         else:
             stage = 'threeptcorr'
-            return [stage,ism]+DefParams
+            return [stage,ism]
     if 'threeptcorr' in stage:
-        if tsink == it_sst[-1]:
-            if Projector == ProjectorList[-1]:
-                if DS == DSList[-1]:
-                    if ism == ismlist[-1]:
-                        stage,ism,tsink,Projector,DS = ['Done',ismlist[0]]+DefParams
-                    else:
-                        stage,ism,tsink,Projector,DS = ['twoptprop',ismlist[ismlist.index(ism)+1]]+DefParams
-                else:
-                    tsink = it_sst[0]
-                    Projector = ProjectorList[0]                    
-                    DS = DSList[DSList.index(DS)+1]
-            else:
-                tsink = it_sst[0]
-                Projector = ProjectorList[ProjectorList.index(Projector)+1]
+        if ism == ismlist[-1]:
+            stage,ism = ['Done',ismlist[0]]
         else:
-            tsink = it_sst[it_sst.index(tsink)+1]
-        return stage,ism,tsink,Projector,DS
+            stage,ism = ['twoptcorr',ismlist[ismlist.index(ism)+1]]
+        return stage,ism
 
-def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=it_sst[0],Projector=ProjectorList[0],DS=DSList[0],Start=False):
+def RunNext(icfg,fcfg,stage='twoptcorr',ism=ismlist[0],Errored='Complete',Start=False):
     
-    icfg,fcfg,ism,tsink,Projector = map(int,[icfg,fcfg,ism,tsink,Projector])
-    RemoveCSH(icfg,ism,stage,tsink=tsink,Proj=Projector,DS=DS)
+    icfg,fcfg,ism = map(int,[icfg,fcfg,ism])
+    RemoveCSH(icfg,ism,stage)
     #removes fort parameter files
 
     if OnlyGauge:
@@ -68,18 +53,13 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         return
 
 
-    if 'twoptprop' in stage:
-        Remove2ptPropFiles(InputFolder,ChromaFileFlag,icfg,[ism])    
-    elif 'twoptcorr' in stage:
+    if 'twoptcorr' in stage:
         Remove2ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism])    
     elif 'threeptcorr' in stage:
-        Remove3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism],[DS],[Projector],[tsink])    
-        
-    
+        Remove3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism])    
         
     if Errored == 'Failed':
         print 'Error on config' + icfg
-        RemoveProp(icfg,ismlist)
         # RemoveGaugeField(icfg)
         Remove2ptCorr(icfg,ismlist,jsmlist)
         Remove3ptCorr(icfg,ismlist,it_sst,ProjectorList,DSList)
@@ -113,33 +93,26 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
     # GetGaugeField(icfg)
     Move2ptCorr(icfg,[ism],jsmlist,twoptinterps[0])
     prevism = ism
-    if not Start: stage,ism,tsink,Projector,DS = IncrementRun(stage,ism,tsink,Projector,DS)
+    if not Start: stage,ism = IncrementRun(stage,ism)
         
     StillInc = True
     while StillInc:
         StillInc = False
-        if 'twoptprop' in stage:
-            if Check2ptProp(icfg,[ism]):
-                stage,ism,tsink,Projector,DS = IncrementRun(stage,ism,tsink,Projector,DS)
-                StillInc = True
-        elif 'twoptcorr' in stage:
+        if 'twoptcorr' in stage:
             Move2ptCorr(icfg,[ism],jsmlist,twoptinterps[0])
             if Check2ptCorr(icfg,[ism],jsmlist,twoptinterps[0]):
-                stage,ism,tsink,Projector,DS = IncrementRun(stage,ism,tsink,Projector,DS)
+                stage,ism, = IncrementRun(stage,ism)
                 if 'Done' not in stage: StillInc = True
         elif 'threeptcorr' in stage:
-            if Check3ptCorr(icfg,[ism],[tsink],[Projector],[DS]):
-                stage,ism,tsink,Projector,DS = IncrementRun(stage,ism,tsink,Projector,DS)
+            if Check3ptCorr(icfg,[ism],it_sst,ProjectorList,DSList):
+                stage,ism = IncrementRun(stage,ism)
                 if 'Done' not in stage: StillInc = True
     if prevism != ism:
         RemoveProp(icfg,[prevism])
 
 
     if 'twopt' in stage:
-        if 'prop' in stage:
-            [thisjobid] = Create2ptPropFiles(InputFolder,ChromaFileFlag,icfg,[ism])
-        else:
-            [thisjobid] = Create2ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism])
+        [thisjobid] = Create2ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism])
         if Submit:
             runfile = Scom+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
         else:
@@ -148,12 +121,12 @@ def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
     elif 'three' in stage:
-        [thisjobid] = Create3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism],[DS],[Projector],[tsink])    
-        mkdir_p(Get3ptCorrFolder(icfg,ism,tsink,Projector,DS))
+        [thisjobid] = Create3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism])    
+        mkdir_p(Get3ptCorrFolder(icfg,ism))
         if Submit:
-            runfile = Scom+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage,tsink=tsink,Proj=Projector,DS=DS)
+            runfile = Scom+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
         else:
-            runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage,tsink=tsink,Proj=Projector,DS=DS)
+            runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
         print runfile
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
