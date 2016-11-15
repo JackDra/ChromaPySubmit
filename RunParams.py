@@ -145,7 +145,7 @@ ChromaFileFlag = 'params_run1_'
 
 ExitOnFail = False ## depreciated
 Submit = True ## submits the script to the que, disable to run on local machine
-DontRun = True ## creates input files but does not run (for looking at .csh and .xml files
+DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 
