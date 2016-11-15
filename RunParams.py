@@ -144,8 +144,8 @@ if len(codedir) == 0:
 ChromaFileFlag = 'params_run1_'
 
 ExitOnFail = False ## depreciated
-Submit = False ## submits the script to the que, disable to run on local machine
-DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
+Submit = True ## submits the script to the que, disable to run on local machine
+DontRun = True ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 
@@ -184,7 +184,7 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 
 
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
-OnlyTwoPt = False ## Only calculates two-point correlation functions.
+OnlyTwoPt = True ## Only calculates two-point correlation functions.
 OnlyGauge = False ## Only calculates Gauge field
 # OnlyGauge = False ## Only calculates Gauge Field
 NumGFCreate = 10
