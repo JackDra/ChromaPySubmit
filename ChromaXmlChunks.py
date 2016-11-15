@@ -59,7 +59,7 @@ def Add_Source(gauge_id,source_id,icfg,sm,iPoF=0):
     thisdict['Param'] = OrdDict()
     thisdict['Param']['version'] = 6
     thisdict['Param']['Source'] = OrdDict()    
-    thisdict['Param']['Source']['version'] = 3
+    thisdict['Param']['Source']['version'] = 1
     thisdict['Param']['Source']['SourceType'] = SmSourceType
     thisdict['Param']['Source']['j_decay'] = 3
     thisdict['Param']['Source']['t_srce'] = GetSourceString(icfg,iPoF=iPoF)
