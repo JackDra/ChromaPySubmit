@@ -131,19 +131,22 @@ def Add_FermionAction(kin):
     return thisdict
 
 
-def Add_InvertParam():
-    thisdict = OrdDict()
-    thisdict['invType'] = invType
-    thisdict['RsdBiCGStab'] = Prec
-    thisdict['MaxBiCGStab'] = MaxIter
-    return thisdict
-
 def Add_CloverParams(kin):
     thisdict = OrdDict()
     thisdict['Kappa'] = '0.'+str(kin)
     thisdict['clovCoeff'] = csw
     return thisdict
     
+
+def Add_InvertParam(kin):
+    thisdict = OrdDict()
+    thisdict['invType'] = invType
+    thisdict['RsdBiCGStab'] = Prec
+    thisdict['MaxBiCGStab'] = MaxIter
+    thisdict['CloverParams'] = Add_CloverParams(kin)
+    thisdict['AntiPeriodicT'] = anti_t
+    return thisdict
+
 
 def Add_Propagator(kin,gauge_id,source_id,prop_id,SeqSource=False):
     thisdict = OrdDict()
@@ -158,10 +161,7 @@ def Add_Propagator(kin,gauge_id,source_id,prop_id,SeqSource=False):
     thisdict['Param']['obsvP'] = 'false'
     # thisdict['Param']['numRetries'] = 1
     thisdict['Param']['FermionAction'] = Add_FermionAction(kin)
-    thisdict['Param']['InvertParam'] = Add_InvertParam()
-    thisdict['Param']['CloverParams'] = Add_CloverParams(kin)
-    thisdict['Param']['AntiPeriodicT'] = anti_t
-    
+    thisdict['Param']['InvertParam'] = Add_InvertParam(kin)    
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['source_id'] = source_id
