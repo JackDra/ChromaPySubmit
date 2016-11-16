@@ -96,7 +96,7 @@ def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
             for jsm in map(str,jsmlist):
                 thissiprop = 'prop_id_sm'+ism+'_si'+jsm+'_PoF'+iPoF
                 DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])
-                DictOut = AddToIM(DictOut,iterlist.next(),Add_BarSpec,['default_gauge_field',thissiprop,thissiprop,icfg,ism,jsm,twoptinterps[0],iPoF])
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_HadSpec,['default_gauge_field',thissiprop,thissiprop,icfg,ism,jsm,twoptinterps[0],iPoF])
                 if SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
             if iPoF != PoFList[-1] and SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thisprop])
         DictOut['chroma']['RNG'] = Add_RNG()['RNG']

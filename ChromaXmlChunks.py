@@ -227,54 +227,59 @@ def Add_SeqSource(gauge_id,prop_id1,prop_id2,seqsource_id,DS,Proj,Interp,t_sink,
     return thisdict
 
 
-def Add_BarSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp,iPoF=0):
+def Add_HadSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp,iPoF=0):
     thisdict = OrdDict()
-    thisdict['Name'] = 'BARYON_SPECTRUM-QCDSF'
+    thisdict['Name'] = 'HADRON_SPECTRUM'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
     thisdict['Param']['version'] = 1
-    thisdict['Param']['fwdbwd_average'] = 'false'
+    thisdict['Param']['MesonP'] = 'true'
+    thisdict['Param']['CurrentP'] = 'true'
+    thisdict['Param']['BaryonP'] = 'true'
     thisdict['Param']['time_rev'] = 'false'    
     thisdict['Param']['mom2_max'] = qmax    
-    thisdict['Param']['avg_equiv_mom'] = 'false'    
-    if OutXml:
-        thisdict['Param']['xml'] = 'true'
+    if AveMom2pt:
+        thisdict['Param']['avg_equiv_mom'] = 'true'    
     else:
-        thisdict['Param']['xml'] = 'false'
-    thisdict['Param']['lime'] = 'true'        
+        thisdict['Param']['avg_equiv_mom'] = 'false'    
+    # if OutXml:
+    #     thisdict['Param']['xml'] = 'true'
+    # else:
+    #     thisdict['Param']['xml'] = 'false'
+    # thisdict['Param']['lime'] = 'true'        
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['sink_pairs'] = {'elem':OrdDict()}
     thisdict['NamedObject']['sink_pairs']['elem']['first_id'] = k1_prop_id
     thisdict['NamedObject']['sink_pairs']['elem']['second_id'] = k2_prop_id
-    thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF)
+    # thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF)
     thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.lime','.xml')
     return thisdict
 
 
-def Add_MesSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp):
-    thisdict = OrdDict()
-    thisdict['Name'] = 'MESON_SPECTRUM-QCDSF'
-    thisdict['Frequency'] = 1
-    thisdict['Param'] = OrdDict()
-    thisdict['Param']['version'] = 1
-    thisdict['Param']['fwdbwd_average'] = 'false'
-    thisdict['Param']['time_rev'] = 'false'    
-    thisdict['Param']['mom2_max'] = qmax    
-    thisdict['Param']['avg_equiv_mom'] = 'false'    
-    if XmlOut:
-        thisdict['Param']['xml'] = 'true'
-    else:
-        thisdict['Param']['xml'] = 'false'
-    thisdict['Param']['lime'] = 'true'        
-    thisdict['NamedObject'] = OrdDict()
-    thisdict['NamedObject']['gauge_id'] = gauge_id
-    thisdict['NamedObject']['sink_pairs'] = {'elem':OrdDict()}
-    thisdict['NamedObject']['sink_pairs']['elem']['first_id'] = k1_prop_id
-    thisdict['NamedObject']['sink_pairs']['elem']['second_id'] = k2_prop_id
-    thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp)
-    thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp).replace('.lime','.xml')
-    return thisdict
+# def Add_MesSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp):
+#     thisdict = OrdDict()
+#     thisdict['Name'] = 'MESON_SPECTRUM-QCDSF'
+#     thisdict['Frequency'] = 1
+#     thisdict['Param'] = OrdDict()
+#     thisdict['Param']['version'] = 1
+#     thisdict['Param']['fwdbwd_average'] = 'false'
+#     thisdict['Param']['time_rev'] = 'false'    
+#     thisdict['Param']['mom2_max'] = qmax    
+#     thisdict['Param']['avg_equiv_mom'] = 'false'    
+#     if XmlOut:
+#         thisdict['Param']['xml'] = 'true'
+#     else:
+#         thisdict['Param']['xml'] = 'false'
+#     thisdict['Param']['lime'] = 'true'        
+#     thisdict['NamedObject'] = OrdDict()
+#     thisdict['NamedObject']['gauge_id'] = gauge_id
+#     thisdict['NamedObject']['sink_pairs'] = {'elem':OrdDict()}
+#     thisdict['NamedObject']['sink_pairs']['elem']['first_id'] = k1_prop_id
+#     thisdict['NamedObject']['sink_pairs']['elem']['second_id'] = k2_prop_id
+#     thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp)
+#     thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp).replace('.lime','.xml')
+#     return thisdict
 
 
 def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS,iPoF=0):

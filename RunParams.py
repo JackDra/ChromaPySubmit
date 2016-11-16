@@ -152,6 +152,7 @@ Submit = True ## submits the script to the que, disable to run on local machine
 DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
+AveMom2pt = True ## Averages over all 2 point propagator momenta for a Q^2
 
 # Submit = True
 #james prop gf source index parameter
