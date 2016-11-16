@@ -112,7 +112,7 @@ def CreateCSHList(icfg,fcfg,ism,jobid,stage):
     outlist.append(r'    if ($? != 0) then')
     outlist.append(r'        echo "Error with: '+inputfile+r'"')
     outlist.append(r'        echo ""')
-    outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.2ptprop')
+    outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.'stage)
     outlist.append(r''+inputfile)
     outlist.append(r'EOF')
     nextcfg = icfg
@@ -170,7 +170,7 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobid,stage):
     outlist.append(r'    if ($? != 0) then')
     outlist.append(r'        echo "Error with: '+inputfile+r'"')
     outlist.append(r'        echo ""')
-    outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.2ptprop')
+    outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.'stage)
     outlist.append(r''+inputfile)
     outlist.append(r'EOF')
     nextcfg = icfg
