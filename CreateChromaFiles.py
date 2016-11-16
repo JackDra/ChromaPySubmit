@@ -141,20 +141,20 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
 
                             
                         for njsm,(iPoF,jsm) in enumerate(PoFjsmlist):
-                            thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+'_PoF'+str(iPoF)
+                            # thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+'_PoF'+str(iPoF)
                             if njsm == 0:
                                 thisseqsource = totseqsourcelist[0]
                             else:
                                 thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+'_PoF'+str(iPoF)+DS+'_Proj'+Projector+'_tsink'+iTS
-                            ## smear sink
-                            DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])
+                            # ## smear sink
+                            # DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])
 
                             ## create seq source
-                            DictOut = AddToIM(DictOut,iterlist.next(),Add_SeqSource,['default_gauge_field',thissiprop,thissiprop,thisseqsource,
+                            DictOut = AddToIM(DictOut,iterlist.next(),Add_SeqSource,['default_gauge_field',thisprop,thisprop,thisseqsource,
                                                                        DS,Projector,twoptinterps[0],str(int(iTS)+iPoF),jsm])
 
-                            ## delete sink smeared 2pt source
-                            DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
+                            # ## delete sink smeared 2pt source
+                            # DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
 
                             ## add to previous seq source with weightings
                             if njsm == 1:
@@ -214,19 +214,19 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist,thisjsmlist,thisDSL
                 for DS in thisDSList:
                     for Projector in map(str,thisProjectorList):
                         for iTS in map(str,thisit_sst):                    
-                            thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm
+                            # thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm
                             thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
                             thisseqprop = 'seqprop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
 
-                            ## smear sink
-                            DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])
+                            # ## smear sink
+                            # DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])
 
                             ## create seq source
-                            DictOut = AddToIM(DictOut,iterlist.next(),Add_SeqSource,['default_gauge_field',thissiprop,thissiprop,thisseqsource,
+                            DictOut = AddToIM(DictOut,iterlist.next(),Add_SeqSource,['default_gauge_field',thisprop,thisprop,thisseqsource,
                                                                                      DS,Projector,twoptinterps[0],iTS,jsm])
 
-                            ## delete sink smeared 2pt propagator
-                            DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
+                            # ## delete sink smeared 2pt propagator
+                            # DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
 
                             ## create FS prop
                             DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field',thisseqsource,thisseqprop,True])

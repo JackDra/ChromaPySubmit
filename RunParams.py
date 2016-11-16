@@ -204,19 +204,25 @@ GFFormat = 'SZINQIO'
 #Taken from /home/accounts/jdragos/scripts/PythonAnalysis/REvecSave/k12090/PoF1to16dt2LREM.txt
 # RVec = [ 76.3260613436,  -161.5448230802, 264086.1917824702, -321.4016231030, 4390.5310121576, -893677.8525444396 ]
 
+# #Taken mokup
+# RVec = [ 0.5,  0.5  ]
+
 #Taken mokup
-RVec = [ 0.5,  0.5  ]
+RVec = [ 1  ]
 
 
 # Testing, should be same as tsink sm128
 # RVec = ( 0.0 0.0 0.0 0.0 0.0 1.0 )
 
 ##n.b. PoFShifts = 1 means 1 tsink value (so no PoF)
-PoFShifts = 1
-PoFDelta = 2
+# PoFShifts = 1
+# PoFDelta = 2
+PoFShifts = 0
+PoFDelta = 1
 PoFList = range(0,PoFShifts*PoFDelta+1,PoFDelta)
 
-REvecFlag = 'REPoFto16dt2'
+REvecFlag = '' ## flag for identiftying variational method parameters (only in filename, not acutally needed)'
+# REvecFlag = 'REPoFto16dt2'
 # REvecFlag = 'REPoFTest'
 ####COLA PARAMETERS
 
@@ -319,7 +325,7 @@ qmax = 9
 phases = '0 0 0'
 phasedirs = '0 1 2'
 
-NDer = 2
+NDer = 0 ## seems like only working for no derivatives
 NDerList = ['NDer'+str(ider) for ider in range(NDer+1)]
 
 # Sm Parameters
@@ -338,8 +344,8 @@ smu0 = 1.0
 smvalues = [32, 64, 128, 'V0']
 # ismlist = smvalues[:-1]
 # jsmlist = smvalues[:-1]
-ismlist = [smvalues[0]]
-jsmlist = [smvalues[0]]
+ismlist = [smvalues[1]]
+jsmlist = [smvalues[1]]
 
 
 # twoptinterps = 'nucleon nucleon2 nucleon_nucleon2 nucleon2_nucleon'

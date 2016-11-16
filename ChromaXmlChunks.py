@@ -126,8 +126,8 @@ def Add_FermionAction(kin):
     thisdict['FermAct'] = FermAct
     thisdict['Kappa'] = '0.'+str(kin)
     thisdict['clovCoeff'] = csw
-    thisdict['FermState'] = Add_AnisoParam()
-    thisdict['FermState'] = Add_FermionBC()
+    thisdict['AnisoParam'] = Add_AnisoParam()
+    thisdict['FermionBC'] = Add_FermionBC()
     return thisdict
 
 
@@ -296,7 +296,7 @@ def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS,iPoF=0):
     thisdict['NamedObject']['prop_id'] = prop_id
     thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer0',iPoF=iPoF)
     if NDer > 0:
-        for iDer in range(1,NDer):
+        for iDer in range(1,NDer+1):
             thisdict['NamedObject']['bar3ptfn_'+str(iDer)+'D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer'+str(iDer),iPoF=iPoF)
     # thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer2',iPoF=iPoF)
     thisdict['NamedObject']['seqprops'] = {'elem':OrdDict()}

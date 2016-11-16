@@ -8,13 +8,13 @@ def Get2ptProp(icfg,ism,iPoF=0):
 
 def Get2ptCorr(icfg,ism,jsm,interp,iPoF=0):
     return (cfdir+'twoptsm'+str(ism)+'si'+str(jsm)+'/'+CreateCfg(icfg,DelLime=True)+'_k'+str(kud)+'_tsrc'+str(iPoF)+
-            'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf.lime')
+            'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf.xml')
 
 def Get2ptCorrFolders(icfg,ism,thisjsmlist):
     return [(cfdir+'twoptsm'+str(ism)+'si'+str(jsm)+'/') for jsm in thisjsmlist]
 
 def Get2ptCorrOutput(icfg,ism,jsm,interp,iPoF=0):
-    return (cfdir+'/'+CreateCfg(icfg,DelLime=True)+'_k'+str(kud)+'_tsrc'+str(iPoF)+'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf.lime')
+    return (cfdir+'/'+CreateCfg(icfg,DelLime=True)+'_k'+str(kud)+'_tsrc'+str(iPoF)+'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf.xml')
 
 
 def Get3ptCorrFolder(icfg,ism,tsink,Projector,DS):
