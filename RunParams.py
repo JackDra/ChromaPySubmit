@@ -117,12 +117,12 @@ elif 'juqueen' in THISMACHINE:
     time = '00:29:00'
     GPU = False
     # GPU = '4'
-    nproc = 16 ## number of nodes
+    nproc = 512
     RPN = 16 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
-    totproc = nproc*RPN
     # nproc = 16
+    totproc = nproc*RPN ## number of nodes
     if RPN not in [16,32,64]: raise  EnvironmentError('RPN (ranks per node) must be 16 (physical), 32 or 64/ RPN='+str(RPN))
-    if nproc % RPN != 0: raise  EnvironmentError('nproc must be multiple of RPN/ nproc/RPN='+str(nproc)+'/'+str(RPN)+'='+str(nproc/float(RPN)))
+    # if totproc % RPN != 0: raise  EnvironmentError('nproc must be multiple of RPN/ nproc/RPN='+str(nproc)+'/'+str(RPN)+'='+str(nproc/float(RPN)))
     nx = 32
     nt = 64
     limefolder = 'qdp++'
