@@ -132,7 +132,6 @@ elif 'juqueen' in THISMACHINE:
     limefolder = 'qdp++'
     chromafolder = 'chroma'
     chromaGPUfolder = ''
-
     kud = 1375400 # kappa (quark hopping) params
     ks = 1364000
     kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
@@ -371,7 +370,7 @@ csw = 1.715
 rho = 0.1
 nstout = 1
 
-OutXml = False
+OutXml = True
 
 
 # Configuration data

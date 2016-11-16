@@ -242,18 +242,21 @@ def Add_HadSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp,iPoF=0):
         thisdict['Param']['avg_equiv_mom'] = 'true'    
     else:
         thisdict['Param']['avg_equiv_mom'] = 'false'    
-    # if OutXml:
-    #     thisdict['Param']['xml'] = 'true'
-    # else:
-    #     thisdict['Param']['xml'] = 'false'
-    # thisdict['Param']['lime'] = 'true'        
+    if OutXml:
+        thisdict['Param']['xml'] = 'true'
+        thisdict['Param']['lime'] = 'false'        
+    else:
+        thisdict['Param']['xml'] = 'false'
+        thisdict['Param']['lime'] = 'true'        
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['sink_pairs'] = {'elem':OrdDict()}
     thisdict['NamedObject']['sink_pairs']['elem']['first_id'] = k1_prop_id
     thisdict['NamedObject']['sink_pairs']['elem']['second_id'] = k2_prop_id
-    # thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF)
-    thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.lime','.xml')
+    if OutXml:
+        thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.lime','.xml')
+    else:
+        thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF)
     return thisdict
 
 
