@@ -256,7 +256,7 @@ def Add_HadSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp,iPoF=0):
     if OutXml:
         thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.lime','.xml')
     else:
-        thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF)
+        thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.xml','.lime')
     return thisdict
 
 

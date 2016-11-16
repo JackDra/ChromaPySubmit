@@ -7,14 +7,22 @@ def Get2ptProp(icfg,ism,iPoF=0):
     return qpdir+CreateCfg(icfg,DelLime=True)+'_tsrc'+str(iPoF)+'_sm'+str(ism)+'.prop.lime'
 
 def Get2ptCorr(icfg,ism,jsm,interp,iPoF=0):
+    if OutXml:
+        fileend = '.xml'
+    else:
+        fileend = '.lime'
     return (cfdir+'twoptsm'+str(ism)+'si'+str(jsm)+'/'+CreateCfg(icfg,DelLime=True)+'_k'+str(kud)+'_tsrc'+str(iPoF)+
-            'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf.xml')
+            'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf'+OutXml)
 
 def Get2ptCorrFolders(icfg,ism,thisjsmlist):
     return [(cfdir+'twoptsm'+str(ism)+'si'+str(jsm)+'/') for jsm in thisjsmlist]
 
 def Get2ptCorrOutput(icfg,ism,jsm,interp,iPoF=0):
-    return (cfdir+'/'+CreateCfg(icfg,DelLime=True)+'_k'+str(kud)+'_tsrc'+str(iPoF)+'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf.xml')
+    if OutXml:
+        fileend = '.xml'
+    else:
+        fileend = '.lime'
+    return (cfdir+'/'+CreateCfg(icfg,DelLime=True)+'_k'+str(kud)+'_tsrc'+str(iPoF)+'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf'+fileend)
 
 
 def Get3ptCorrFolder(icfg,ism,tsink,Projector,DS):
