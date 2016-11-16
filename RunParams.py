@@ -371,6 +371,7 @@ OutXml = False
 scriptdir = basedir+'Scripts/ChromaPySubmit/'
 if scriptdir[:-1] not in os.getcwd():
     print 'Warning, you are not running from the script dir'
+nodeoutputdir = scriptdir+ 'NodeOutput/'
 cshdir = scriptdir+'CSHFiles/'
 paramdir = scriptdir+'ParamFiles/'
 datadir = scratchdir
@@ -408,6 +409,7 @@ cfgfile = "cfglist"+thismachine+'.txt'
 ##Make directories
 
 mkdir_p(datadir)
+mkdir_p(nodeoutputdir)
 mkdir_p(InputFolder)
 mkdir_p(OutputFolder)
 mkdir_p(gfdir)

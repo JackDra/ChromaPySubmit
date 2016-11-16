@@ -100,7 +100,7 @@ def CreateCSHList(icfg,fcfg,ism,jobid,stage):
         for imod in ModuleList:
             outlist.append(r'module load '+imod)
     outlist.append('')
-    outlist.append(r'cd '+scriptdir)
+    outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
     if 'gfield' in stage:
         outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
@@ -162,7 +162,7 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobid,stage):
         for imod in ModuleList:
             outlist.append(r'module load '+imod)
     outlist.append('')
-    outlist.append(r'cd '+scriptdir)
+    outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
     if 'gfield' in stage:
         outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
