@@ -143,7 +143,7 @@ if len(codedir) == 0:
 
 ChromaFileFlag = 'params_run1_'
 
-ExitOnFail = False ## depreciated
+ExitOnFail = True ## Reimplemented: exits if there was a failed run (on for debugging?)
 Submit = True ## submits the script to the que, disable to run on local machine
 DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.

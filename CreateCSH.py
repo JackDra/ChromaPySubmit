@@ -109,24 +109,19 @@ def CreateCSHList(icfg,fcfg,ism,jobid,stage):
     outlist.append(r'    echo "starting "`date`')
     outlist.append(r'    mpirun -np '+str(nproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                    ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
-    # outlist.append(r'    if ($? != 0) then')
-    # outlist.append(r'        echo "Error with: '+inputfile+r'"')
-    # outlist.append(r'        echo ""')
-    # outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.2ptprop')
-    # outlist.append(r''+inputfile)
-    # outlist.append(r'EOF')
-    # if 'twopt' in stage:
-    #     outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,ism,'Error'])+"'")
-    # elif 'threept' in stage:
-    #     outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,ism,'Error',tsink,Proj,DS])+"'")
-    # elif 'gfield' in stage:
-    #     outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([str(int(icfg)+1),fcfg,'gfield',ism,'Error'])+"'")
-    # outlist.append(r'        exit 1')
-    # outlist.append(r'    endif')
-    outlist.append(r'    echo "finished "`date`')
-    outlist.append('')
+    outlist.append(r'    if ($? != 0) then')
+    outlist.append(r'        echo "Error with: '+inputfile+r'"')
+    outlist.append(r'        echo ""')
+    outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.2ptprop')
+    outlist.append(r''+inputfile)
+    outlist.append(r'EOF')
     nextcfg = icfg
     if 'gfield' in stage: nextcfg = str(int(icfg)+1)
+    outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Error'])+"'")
+    outlist.append(r'        exit 1')
+    outlist.append(r'    endif')
+    outlist.append(r'    echo "finished "`date`')
+    outlist.append('')
     outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
     return outlist
 
@@ -172,24 +167,19 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobid,stage):
     outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                    ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
 
-    # outlist.append(r'    if ($? != 0) then')
-    # outlist.append(r'        echo "Error with: '+inputfile+r'"')
-    # outlist.append(r'        echo ""')
-    # outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.2ptprop')
-    # outlist.append(r''+inputfile)
-    # outlist.append(r'EOF')
-    # if 'twopt' in stage:
-    #     outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,ism,'Error'])+"'")
-    # elif 'threept' in stage:
-    #     outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,ism,'Error',tsink,Proj,DS])+"'")
-    # elif 'gfield' in stage:
-    #     outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([str(int(icfg)+1),fcfg,'gfield',ism,'Error'])+"'")
-    # outlist.append(r'        exit 1')
-    # outlist.append(r'    endif')
-    outlist.append(r'    echo "finished "`date`')
-    outlist.append('')
+    outlist.append(r'    if ($? != 0) then')
+    outlist.append(r'        echo "Error with: '+inputfile+r'"')
+    outlist.append(r'        echo ""')
+    outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.2ptprop')
+    outlist.append(r''+inputfile)
+    outlist.append(r'EOF')
     nextcfg = icfg
     if 'gfield' in stage: nextcfg = str(int(icfg)+1)
+    outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Error'])+"'")
+    outlist.append(r'        exit 1')
+    outlist.append(r'    endif')
+    outlist.append(r'    echo "finished "`date`')
+    outlist.append('')
     outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
     return outlist
 
