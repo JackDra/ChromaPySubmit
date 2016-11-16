@@ -5,12 +5,16 @@
 JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
 # JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
 import os, sys
+from shutil import copyfile
+cwd = os.getcwd()
+
+if os.path.isfile(JackLibDir+'/setup.cfg'):copyfile(JackLibDir+'/setup.cfg', cwd)
 
 if not os.path.isdir(JackLibDir):
     print JackLibDir , 'not found, please set in PararmsGAM.py to point to jacks libary'
     print 'Jacks libary can be found at https://github.com/JackDra/LQCDPythonAnalysis.git'
     print 'Run "./Setup.py default" within the directory to set up jacks libary'
-    print 'Then make JackLibDir in RunParams.py point to this directory'
+    print 'Then make JackLibDir in RunParams.py point to correct directory'
     sys.exit()
 
 sys.path.append(JackLibDir)
