@@ -8,7 +8,7 @@ import os, sys
 from shutil import copyfile
 cwd = os.getcwd()
 
-if os.path.isfile(JackLibDir+'/setup.cfg'):copyfile(JackLibDir+'/setup.cfg', cwd)
+if os.path.isfile(JackLibDir+'/setup.cfg'):copyfile(JackLibDir+'/setup.cfg', cwd+'/setup.cfg')
 
 if not os.path.isdir(JackLibDir):
     print JackLibDir , 'not found, please set in PararmsGAM.py to point to jacks libary'
