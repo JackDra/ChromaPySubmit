@@ -189,9 +189,11 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 # SRCZ = [ 0, 16,  0, 16,  0, 16,  0, 16,  0, 16 ]#16  0 16  0 16  0 )
 # SRCT = [ 0,  4, 32, 60, 24, 48, 12, 28, 20, 36 ]#40 56 16 44  8 52 )
 
-
+##### WARNING, if OnlyTwoPt = True, please set DoJsm3pt = False #####
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
 OnlyTwoPt = False ## Only calculates two-point correlation functions.
+if OnlyTwoPt: DoJsm3pt = False
+
 OnlyGauge = False ## Only calculates Gauge field
 # OnlyGauge = False ## Only calculates Gauge Field
 NumGFCreate = 10

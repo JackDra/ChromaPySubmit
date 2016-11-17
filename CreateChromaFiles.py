@@ -74,9 +74,8 @@ def CreateGaugeFieldFiles(folder,fileprefix,icfg):
     
 
 def Remove2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
-    for ism in map(str,thisismlist):
-        thisfile = folder+'/corr2pt'+ism+'/'+fileprefix+str(icfg)
-        if os.path.isfile(thisfile):os.remove(thisfile)
+    thisfile = folder+'/corr2pt/'+fileprefix+str(icfg)
+    if os.path.isfile(thisfile):os.remove(thisfile)
 
 
 
@@ -114,10 +113,9 @@ def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
 
 
 def Remove3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
-    for ism in map(str,thisismlist):
-        thisfolder = folder+'/corr3pt'+ism+'/'
-        thisfile = thisfolder+fileprefix+str(icfg)
-        if os.path.isfile(thisfile):os.remove(thisfile)
+    thisfolder = folder+'/corr3pt/'
+    thisfile = thisfolder+fileprefix+str(icfg)
+    if os.path.isfile(thisfile):os.remove(thisfile)
 
 
 def Create3ptCorrWrap(folder,fileprefix,icfg,fcfg):

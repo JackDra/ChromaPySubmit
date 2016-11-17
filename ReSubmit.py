@@ -36,11 +36,11 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
         for thecfg in range(icfg,fcfg+1):
             RemoveCSH(thecfg,ism,stage)
     #removes fort parameter files
-
-    if 'twoptcorr' in stage:
+    
+    if 'twoptcorr' in stage or DoJsm3pt:
         for thecfg in range(icfg,fcfg+1):
             Remove2ptCorrFiles(InputFolder,ChromaFileFlag,thecfg,ismlist)    
-    elif 'threeptcorr' in stage:
+    elif 'threeptcorr' in stage or DoJsm3pt:
         for thecfg in range(icfg,fcfg+1):
             Remove3ptCorrFiles(InputFolder,ChromaFileFlag,thecfg,ismlist)    
                 
