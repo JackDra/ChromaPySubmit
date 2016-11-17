@@ -25,6 +25,8 @@ def RemoveGaugeFieldFiles(folder,fileprefix,icfg):
     thisfile = folder+'/gfield/'+fileprefix+str(icfg)
     if os.path.isfile(thisfile+'.xml'):os.remove(thisfile+'.xml')
 
+
+
 def CreateGaugeFieldFiles(folder,fileprefix,icfg):
     mkdir_p(folder+'/gfield/')
     mkdir_p(folder.replace('Input','Output')+'/gfield/')
@@ -77,6 +79,13 @@ def Remove2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
         if os.path.isfile(thisfile):os.remove(thisfile)
 
 
+
+def Create2ptCorrWrap(folder,filepref,icfg,fcfg,ism):
+    filelist = []
+    for thecfg in range(icfg,fcfg+1):
+        filelist.append(Create2ptCorrFiles(folder,fileprefix,thecfg,[ism])[0])
+    return filelist
+        
 def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     filelistsm = []
     thisqlist = Chromaqlist(qmin,qmax)
@@ -112,6 +121,13 @@ def Remove3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
         if os.path.isfile(thisfile):os.remove(thisfile)
 
 
+def Create3ptCorrWrap(folder,filepref,icfg,fcfg,ism):
+    filelist = []
+    for thecfg in range(icfg,fcfg+1):
+        filelist.append(Create3ptCorrFiles(folder,fileprefix,thecfg,[ism])[0])
+    return filelist
+
+        
 def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     filelistsm = []
     for ism in map(str,thisismlist):

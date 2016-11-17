@@ -72,10 +72,10 @@ def CreateCSHFile(thisfile,outputlist):
         f.write('\n')
     os.system("chmod u+x "+thisfile)
 
-def CreateCSHList(icfg,fcfg,ism,jobid,stage):
-    inputfile = InputFolder+jobid
-    outputfile = OutputFolder+jobid.replace('.xml','.out')
-    logfile = OutputFolder+jobid.replace('.xml','.log')
+def CreateCSHList(icfg,fcfg,ism,jobidlist,stage):
+    inputfilelist = [InputFolder+jobid for jobid in jobidlist]
+    outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
+    logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
     if os.path.isfile(outputfile):os.remove(outputfile)
     if os.path.isfile(logfile):os.remove(logfile)
     icfg,fcfg,ism = str(icfg),str(fcfg),str(ism)
@@ -106,30 +106,31 @@ def CreateCSHList(icfg,fcfg,ism,jobid,stage):
         outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
     else:
         outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', ism='+ism+', '+stage+' "')
-    outlist.append(r'    echo "starting "`date`')
-    outlist.append(r'    mpirun -np '+str(nproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
-                   ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
-    outlist.append(r'    if ($? != 0) then')
-    outlist.append(r'        echo "Error with: '+inputfile+r'"')
-    outlist.append(r'        echo ""')
-    outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.'+stage)
-    outlist.append(r''+inputfile)
-    outlist.append(r'EOF')
-    nextcfg = icfg
-    if 'gfield' in stage: nextcfg = str(int(icfg)+1)
-    outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Error'])+"'")
-    outlist.append(r'        exit 1')
-    outlist.append(r'    endif')
+    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,range(icfg,fcfg+1)):
+        outlist.append(r'    echo "thiscfg='+thiscfgstarting+' "`date`')
+        outlist.append(r'    mpirun -np '+str(nproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+                       ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
     outlist.append(r'    echo "finished "`date`')
-    outlist.append('')
-    outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
+    # outlist.append(r'    if ($? != 0) then')
+    # outlist.append(r'        echo "Error with: '+inputfile+r'"')
+    # outlist.append(r'        echo ""')
+    # outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.'+stage)
+    # outlist.append(r''+inputfile)
+    # outlist.append(r'EOF')
+    # nextcfg = icfg
+    # if 'gfield' in stage: nextcfg = str(int(icfg)+1)
+    # outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Error'])+"'")
+    # outlist.append(r'        exit 1')
+    # outlist.append(r'    endif')
+    # outlist.append('')
+    # outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
     return outlist
 
 
-def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobid,stage):
-    inputfile = InputFolder+jobid
-    outputfile = OutputFolder+jobid.replace('.xml','.out')
-    logfile = OutputFolder+jobid.replace('.xml','.log')
+def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobidlist,stage):
+    inputfilelist = [InputFolder+jobid for jobid in jobidlist]
+    outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
+    logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
     if os.path.isfile(outputfile):os.remove(outputfile)
     if os.path.isfile(logfile):os.remove(logfile)
     icfg,fcfg,ism = str(icfg),str(fcfg),str(ism)
@@ -163,24 +164,25 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobid,stage):
         outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
     else:
         outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', ism='+ism+', '+stage+' "')
-    outlist.append(r'    echo "starting "`date`')
-    outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
-                   ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,range(icfg,fcfg+1)):
+        outlist.append(r'    echo "thiscfg='+thiscfgstarting+' "`date`')
+        outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+                       ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
 
-    outlist.append(r'    if ($? != 0) then')
-    outlist.append(r'        echo "Error with: '+inputfile+r'"')
-    outlist.append(r'        echo ""')
-    outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.'+stage)
-    outlist.append(r''+inputfile)
-    outlist.append(r'EOF')
-    nextcfg = icfg
-    if 'gfield' in stage: nextcfg = str(int(icfg)+1)
-    outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Error'])+"'")
-    outlist.append(r'        exit 1')
-    outlist.append(r'    endif')
     outlist.append(r'    echo "finished "`date`')
-    outlist.append('')
-    outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
+    # outlist.append(r'    if ($? != 0) then')
+    # outlist.append(r'        echo "Error with: '+inputfile+r'"')
+    # outlist.append(r'        echo ""')
+    # outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.'+stage)
+    # outlist.append(r''+inputfile)
+    # outlist.append(r'EOF')
+    # nextcfg = icfg
+    # if 'gfield' in stage: nextcfg = str(int(icfg)+1)
+    # outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Error'])+"'")
+    # outlist.append(r'        exit 1')
+    # outlist.append(r'    endif')
+    # outlist.append('')
+    # outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
     return outlist
 
 
