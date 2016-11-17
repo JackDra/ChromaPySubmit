@@ -107,7 +107,7 @@ elif 'JackLappy' in THISMACHINE:
     time = '5:00:00'
     GPU = False
     # GPU = '4'
-    nproc = 2
+    nproc = 4
     # nproc = 4
     RPN = 1 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     totproc = nproc*RPN
@@ -123,7 +123,7 @@ elif 'JackLappy' in THISMACHINE:
     chromaGPUfolder = 'chroma_gpu_nprmod_install'
     Submit = False ## submits the script to the que, disable to run on local machine
     it_sst = [4] ## ahnialation parameters (momenta) MUST BE len(it_sst) == len(RVec)/PoFShifts
-
+    
 elif 'juqueen' in THISMACHINE:
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
@@ -167,7 +167,7 @@ ExitOnFail = True ## Reimplemented: exits if there was a failed run (on for debu
 DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
-AveMom2pt = False ## Averages over all 2 point propagator momenta for a Q^2
+AveMom2pt = True ## Averages over all 2 point propagator momenta for a Q^2
 DoJsm3pt = True ## Creates n*n matrix for the three point correlators, instead of doing sequential source combination trick
 
 # Submit = True
@@ -205,7 +205,7 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 
 ##### WARNING, if OnlyTwoPt = True, please set DoJsm3pt = False #####
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
-OnlyTwoPt = True ## Only calculates two-point correlation functions.
+OnlyTwoPt = False ## Only calculates two-point correlation functions.
 if OnlyTwoPt: DoJsm3pt = False
 
 OnlyGauge = False ## Only calculates Gauge field
@@ -341,7 +341,8 @@ invType = 'BICGSTAB_INVERTER'
 ppvec = [0,0,0]
 ppstr = ' '.join(map(str,ppvec))
 qmin = 0
-qmax = 9
+# qmax = 9
+qmax = 4
 phases = '0 0 0'
 phasedirs = '0 1 2'
 

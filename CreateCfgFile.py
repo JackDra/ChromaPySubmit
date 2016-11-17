@@ -30,7 +30,7 @@ def CreateCfgList():
             # setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
         setfilelist = SortConfigs(setfilelist)
     with open(filelists+cfgfile,'w') as f:
-        f.writelines([iset+'\n' for iset in setfilelist])
+        f.writelines([iset+'\n' for iset in setfilelist*DupCfgs])
     # np.array([iset+'\n' for iset in setfilelist]).tofile(filelists+cfgfile)
     return setfilelist
     
