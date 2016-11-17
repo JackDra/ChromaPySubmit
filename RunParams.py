@@ -292,7 +292,8 @@ def ModuloTsrc(icfg,iPoF):
     return itsrc
     
 def GetSourceString(icfg,iPoF=0):
-    return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(ModuloTsrc(icfg,iPoF))
+    # return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(ModuloTsrc(icfg,iPoF))
+    return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(iPoF)
     # return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(it)
 
 
