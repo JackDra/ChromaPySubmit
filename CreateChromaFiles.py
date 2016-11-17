@@ -267,3 +267,87 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist):
     WriteChromaXml(thisfile,DictOut)
     return filelistsm
 
+
+
+
+
+def RemoveCombCorrFiles(folder,fileprefix,icfg,thisismlist):
+    thisfolder = folder+'/corrComb/'
+    thisfile = thisfolder+fileprefix+str(icfg)
+    if os.path.isfile(thisfile):os.remove(thisfile)
+
+def CreateCombCorrWrap(folder,fileprefix,icfg,fcfg):
+    filelist = []
+    for thecfg in range(icfg,fcfg+1):
+        filelist += CreateCombCorrFiles(folder,fileprefix,thecfg,ismlist)
+    return filelist
+
+    
+def CreateCombCorrFiles(folder,fileprefix,icfg,thisismlist):
+    filelistsm = []
+    thisfolder = folder+'/corrComb/'
+    mkdir_p(thisfolder)
+    mkdir_p(thisfolder.replace('Input','Output'))
+    thisfile = thisfolder+fileprefix+str(icfg)
+    filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
+    DictOut = SetupDict()
+    for ism in map(str,thisismlist):
+        nism = ism.replace('sm','')
+        for srcPoF in PoFList:
+            thisprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)
+            DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(srcPoF),icfg,nism,str(srcPoF)])
+            DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field','default_source'+str(srcPoF),thisprop])
+            if Save2ptProp: DictOut = AddToIM(DictOut,iterlist.next(),Add_ReadNamedObject,[thisprop,'LatticePropagator',Get2ptProp(icfg,ism,iPoF=srcPoF)])
+            if SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['default_source'+str(srcPoF)])
+            for jsm in map(str,jsmlist):
+                thissiprop = 'prop_id_sm'+ism+'_si'+jsm+'_PoF'+str(srcPoF)
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])
+                DictOut = AddToIM(DictOut,iterlist.next(),Add_HadSpec,['default_gauge_field',thissiprop,thissiprop,icfg,ism,jsm,twoptinterps[0],str(srcPoF)])
+                if SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
+            # if str(srcPoF) != PoFList[-1] and SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thisprop])
+
+
+
+            # ## Read 2pt prop in
+            # if Save2ptProp:
+            #     DictOut = AddToIM(DictOut,iterlist.next(),Add_ReadNamedObject,[thisprop,'LatticePropagator',Get2ptProp(icfg,ism,iPoF=srcPoF)])
+            # else:
+            #     DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(srcPoF),icfg,nism,srcPoF])
+            #     DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field','default_source'+str(srcPoF),thisprop])
+            #     if SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['default_source'+str(srcPoF)])
+            for jsm in map(str,jsmlist):
+                for DS in DSList:
+                    for Projector in map(str,ProjectorList):
+                        for iTS in map(str,it_sst):                    
+                            # thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm
+                            thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
+                            thisseqprop = 'seqprop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
+
+                            # ## smear sink
+                            # DictOut = AddToIM(DictOut,iterlist.next(),Add_Sink,['default_gauge_field',thisprop,thissiprop,jsm])
+
+                            ## create seq source
+                            DictOut = AddToIM(DictOut,iterlist.next(),Add_SeqSource,['default_gauge_field',thisprop,thisprop,thisseqsource,
+                                                                                     DS,Projector,twoptinterps[0],iTS,jsm])
+
+                            # ## delete sink smeared 2pt propagator
+                            # DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
+
+                            ## create FS prop
+                            DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field',thisseqsource,thisseqprop,True])
+
+                            ## delete seq source 
+                            DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thisseqsource])
+
+                            ## Tie up FS prop to make 3pt corr                        
+                            DictOut = AddToIM(DictOut,iterlist.next(),Add_Bar3ptTieUpjsm, ['default_gauge_field',thisprop,thisseqprop,icfg,ism,jsm,
+                                                                                           iTS,Projector,DS,srcPoF])
+
+                            ## delete total sequential source propagator
+                            DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thisseqprop])
+
+
+    DictOut['chroma']['RNG'] = Add_RNG()['RNG']
+    DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
+    WriteChromaXml(thisfile,DictOut)
+    return filelistsm

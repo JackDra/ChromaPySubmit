@@ -14,20 +14,20 @@ def IncrementRun(stage,icfg,fcfg):
     if OnlyGauge: return ['Done',ismlist[0]]
     if 'twoptcorr' in stage:
         if OnlyTwoPt:
-            if icfg == fcfg:
+            if icfg >= fcfg:
                 stage,icfg = ['Done',icfg]
             else:
                 stage,icfg = ['twoptcorr',icfg+1]
             return stage,icfg
         else:
             stage = 'threeptcorr'
-            return [stage,icfg]
+            return stage,icfg
     if 'threeptcorr' in stage:
-        if icfg == fcfg:
-            stage,ism = ['Done',icfg]
+        if icfg >= fcfg:
+            stage,icfg = ['Done',icfg]
         else:
-            stage,ism = ['twoptcorr',icfg+1]
-        return stage,ism
+            stage,icfg = ['twoptcorr',icfg+1]
+        return stage,icfg
 
 def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
     
@@ -37,13 +37,16 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
             RemoveCSH(thecfg,ism,stage)
     #removes fort parameter files
     
-    if 'twoptcorr' in stage or DoJsm3pt:
+    if 'twoptcorr' in stage and not DoJsm3pt:
         for thecfg in range(icfg,fcfg+1):
             Remove2ptCorrFiles(InputFolder,ChromaFileFlag,thecfg,ismlist)    
-    elif 'threeptcorr' in stage or DoJsm3pt:
+    elif 'threeptcorr' in stage and not DoJsm3pt:
         for thecfg in range(icfg,fcfg+1):
             Remove3ptCorrFiles(InputFolder,ChromaFileFlag,thecfg,ismlist)    
-                
+    elif DoJsm3pt:
+        for thecfg in range(icfg,fcfg+1):
+            RemoveCombCorrFiles(InputFolder,ChromaFileFlag,thecfg,ismlist)    
+        
 
             ##check if whole run is done
     boolcheck = True
@@ -72,7 +75,7 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
     while StillInc:
         StillInc = False
         if 'twoptcorr' in stage:
-            if Check2ptCorr(icfg,ismlist,jsmlist,twoptinterps):
+            if Check2ptCorr(curricfg,ismlist,jsmlist,twoptinterps):
                 stage,curricfg = IncrementRun(stage,curricfg,fcfg)
                 if 'Done' in stage:
                     print 'All Done'
@@ -81,16 +84,16 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
                     StillInc = True
         elif 'threeptcorr' in stage:
             if DoJsm3pt:
-                if Check3ptCorrjsm(icfg,ismlist,jsmlist,it_sst,ProjectorList,DSList):
-                    stage = IncrementRun(stage,curricfg,fcfg)
+                if Check3ptCorrjsm(curricfg,ismlist,jsmlist,it_sst,ProjectorList,DSList):
+                    stage,curricfg = IncrementRun(stage,curricfg,fcfg)
                     if 'Done' in stage:
                         print 'All Done'
                         return
                     else:
                         StillInc = True
             else:
-                if Check3ptCorr(icfg,ismlist,it_sst,ProjectorList,DSList):
-                    stage = IncrementRun(stage,curricfg,fcfg)
+                if Check3ptCorr(curricfg,ismlist,it_sst,ProjectorList,DSList):
+                    stage,curricfg = IncrementRun(stage,curricfg,fcfg)
                     if 'Done' in stage:
                         print 'All Done'
                         return
@@ -98,7 +101,20 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
                         StillInc = True
 
                 
-    if 'twopt' in stage:
+
+        
+    if DoJsm3pt:
+        thisjoblist = CreateCombCorrWrap(InputFolder,ChromaFileFlag,curricfg,fcfg)    
+        for ism in ismlist:
+            map(mkdir_p,Get3ptCorrFolderjsmList(curricfg,ism))
+        if Submit:
+            runfile = Scom+' '+CreateCSHWrap(curricfg,fcfg,thisjoblist,'Comb')
+        else:
+            runfile = CreateCSHWrap(curricfg,fcfg,thisjoblist,'Comb')
+        print runfile
+        # if not DontRun: subprocess.call([runfile],cwd=basedir)
+        if not DontRun: os.system(runfile)
+    elif 'twopt' in stage:        
         thisjoblist = Create2ptCorrWrap(InputFolder,ChromaFileFlag,curricfg,fcfg)
         if Submit:
             runfile = Scom+' '+CreateCSHWrap(curricfg,fcfg,thisjoblist,stage)
@@ -108,14 +124,9 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
     elif 'three' in stage:
-        if DoJsm3pt:
-            thisjoblist = Create3ptCorrWrapjsm(InputFolder,ChromaFileFlag,curricfg,fcfg)    
-            for ism in ismlist:
-                map(mkdir_p,Get3ptCorrFolderjsmList(curricfg,ism))
-        else:
-            thisjoblist = Create3ptCorrWrap(InputFolder,ChromaFileFlag,curricfg,fcfg)    
-            for ism in ismlist:
-                map(mkdir_p,Get3ptCorrFolderList(curricfg,ism))
+        thisjoblist = Create3ptCorrWrap(InputFolder,ChromaFileFlag,curricfg,fcfg)    
+        for ism in ismlist:
+            map(mkdir_p,Get3ptCorrFolderList(curricfg,ism))
         if Submit:
             runfile = Scom+' '+CreateCSHWrap(curricfg,fcfg,thisjoblist,stage)
         else:
