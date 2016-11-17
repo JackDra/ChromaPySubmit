@@ -7,7 +7,7 @@ from OutputXmlData import WriteChromaXml
 from collections import OrderedDict as OrdDict
 from MiscFuns import Elongate
 from ChromaXmlChunks import *
-
+import shutil
 
 iterlist = iter(range(5000))
 
