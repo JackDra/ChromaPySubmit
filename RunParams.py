@@ -123,8 +123,8 @@ elif 'juqueen' in THISMACHINE:
     time = '00:29:00'
     GPU = False
     # GPU = '4'
-    nproc = 32
-    RPN = 16 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
+    nproc = 128
+    RPN = 64 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     # nproc = 16
     totproc = nproc*RPN ## number of nodes
     if RPN not in [16,32,64]: raise  EnvironmentError('RPN (ranks per node) must be 16 (physical), 32 or 64/ RPN='+str(RPN))
