@@ -133,10 +133,10 @@ elif 'juqueen' in THISMACHINE:
     Scom = 'llsubmit'
     quetype = 'bluegene'
     mem = ''
-    time = '12:00:00'
+    time = '00:29:00'
     GPU = False
     # GPU = '4'
-    nproc = 128
+    nproc = 256
     RPN = 64 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     # nproc = 16
     totproc = nproc*RPN ## number of nodes
