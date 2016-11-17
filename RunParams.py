@@ -3,8 +3,8 @@
 ##NB: if changing nx, or nt, MUST remove random list in ParamFiles directory
 
 # JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
-# JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
-JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
+JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
+# JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
 
 import os, sys
 from shutil import copyfile
@@ -149,7 +149,7 @@ if len(codedir) == 0:
 ChromaFileFlag = 'params_run1_'
 
 ExitOnFail = True ## Reimplemented: exits if there was a failed run (on for debugging?)
-Submit = False ## submits the script to the que, disable to run on local machine
+Submit = True ## submits the script to the que, disable to run on local machine
 DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
