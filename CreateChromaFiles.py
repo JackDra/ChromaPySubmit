@@ -88,13 +88,13 @@ def Create2ptCorrWrap(folder,fileprefix,icfg,fcfg):
         
 def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     filelistsm = []
+    mkdir_p(folder+'/corr2pt/')
+    mkdir_p(folder.replace('Input','Output')+'/corr2pt/')
+    thisfile = folder+'/corr2pt/'+fileprefix+str(icfg)
+    filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
+    DictOut = SetupDict()
     for ism in map(str,thisismlist):
         nism = ism.replace('sm','')
-        mkdir_p(folder+'/corr2pt'+ism+'/')
-        mkdir_p(folder.replace('Input','Output')+'/corr2pt'+ism+'/')
-        thisfile = folder+'/corr2pt'+ism+'/'+fileprefix+str(icfg)
-        filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
-        DictOut = SetupDict()
         for iPoF in map(str,PoFList):
             thisprop = 'prop_id_sm'+ism+'_PoF'+iPoF
             DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(iPoF),icfg,nism,iPoF])
@@ -107,9 +107,9 @@ def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
                 DictOut = AddToIM(DictOut,iterlist.next(),Add_HadSpec,['default_gauge_field',thissiprop,thissiprop,icfg,ism,jsm,twoptinterps[0],iPoF])
                 if SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
             if iPoF != PoFList[-1] and SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thisprop])
-        DictOut['chroma']['RNG'] = Add_RNG()['RNG']
-        DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
-        WriteChromaXml(thisfile,DictOut)
+    DictOut['chroma']['RNG'] = Add_RNG()['RNG']
+    DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
+    WriteChromaXml(thisfile,DictOut)
     return filelistsm
 
 
@@ -129,14 +129,14 @@ def Create3ptCorrWrap(folder,fileprefix,icfg,fcfg):
         
 def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     filelistsm = []
+    thisfolder = folder+'/corr3pt/'
+    mkdir_p(thisfolder)
+    mkdir_p(thisfolder.replace('Input','Output'))
+    thisfile = thisfolder+fileprefix+str(icfg)
+    filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
+    DictOut = SetupDict()
     for ism in map(str,thisismlist):
         nism = ism.replace('sm','')
-        thisfolder = folder+'/corr3pt'+ism+'/'
-        mkdir_p(thisfolder)
-        mkdir_p(thisfolder.replace('Input','Output'))
-        thisfile = thisfolder+fileprefix+str(icfg)
-        filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
-        DictOut = SetupDict()
         for srcPoF in PoFList:
             thisprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)
             ## Read 2pt prop in
@@ -200,9 +200,9 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
                         ## delete total sequential source propagator
                         DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[totseqprop])
 
-                        DictOut['chroma']['RNG'] = Add_RNG()['RNG']
-                        DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
-                        WriteChromaXml(thisfile,DictOut)
+    DictOut['chroma']['RNG'] = Add_RNG()['RNG']
+    DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
+    WriteChromaXml(thisfile,DictOut)
     return filelistsm
 
 
@@ -215,14 +215,14 @@ def Create3ptCorrWrapjsm(folder,fileprefix,icfg,fcfg):
 
 def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist):
     filelistsm = []
+    thisfolder = folder+'/corr3pt/'
+    mkdir_p(thisfolder)
+    mkdir_p(thisfolder.replace('Input','Output'))
+    thisfile = thisfolder+fileprefix+str(icfg)
+    filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
+    DictOut = SetupDict()
     for ism in map(str,thisismlist):
         nism = ism.replace('sm','')
-        thisfolder = folder+'/corr3pt'+ism+'/'
-        mkdir_p(thisfolder)
-        mkdir_p(thisfolder.replace('Input','Output'))
-        thisfile = thisfolder+fileprefix+str(icfg)
-        filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
-        DictOut = SetupDict()
         for srcPoF in PoFList:
             thisprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)
             ## Read 2pt prop in
@@ -264,8 +264,8 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist):
                             DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thisseqprop])
 
 
-                            DictOut['chroma']['RNG'] = Add_RNG()['RNG']
-                            DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
-                            WriteChromaXml(thisfile,DictOut)
+    DictOut['chroma']['RNG'] = Add_RNG()['RNG']
+    DictOut['chroma']['Cfg'] = Add_cfg(icfg)['Cfg']
+    WriteChromaXml(thisfile,DictOut)
     return filelistsm
 

@@ -101,10 +101,10 @@ def CreateCSHList(icfg,fcfg,jobidlist,stage):
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
     outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
-    for inputfile,outputfile,logfile,(thiscfg,ism) in zip(inputfilelist,outputfilelist,logfilelist,Elongate(range(int(icfg),int(fcfg)+1),ismlist)):
+    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,range(int(icfg),int(fcfg)+1)):
         if os.path.isfile(outputfile):os.remove(outputfile)
         if os.path.isfile(logfile):os.remove(logfile)
-        outlist.append(r'    echo "thiscfg='+str(thiscfg)+' ism='+str(ism)+' starting "`date`')
+        outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
         outlist.append(r'    mpirun -np '+str(nproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                        ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
     outlist.append(r'    echo "finished "`date`')
@@ -155,10 +155,10 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,jobidlist,stage):
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
     outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
-    for inputfile,outputfile,logfile,(thiscfg,ism) in zip(inputfilelist,outputfilelist,logfilelist,Elongate(range(int(icfg),int(fcfg)+1),ismlist)):
+    for inputfile,outputfile,logfile,(thiscfg,ism) in zip(inputfilelist,outputfilelist,logfilelist,range(int(icfg),int(fcfg)+1)):
         if os.path.isfile(outputfile):os.remove(outputfile)
         if os.path.isfile(logfile):os.remove(logfile)
-        outlist.append(r'    echo "thiscfg='+str(thiscfg)+' ism='+str(ism)+' starting "`date`')
+        outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
         outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                        ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
 

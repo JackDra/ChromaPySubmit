@@ -52,8 +52,12 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
             boolcheck = boolcheck and Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps)
     else:
         for thecfg in range(icfg,fcfg+1):
-            boolcheck = boolcheck and (Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList))
-
+            if DoJsm3pt:
+                boolcheck = boolcheck and (Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList))
+            else:
+                boolcheck = boolcheck and (Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList))
+                
+            
     if boolcheck:
         for thecfg in range(icfg,fcfg+1):
             RemoveProp(icfg,ismlist)
@@ -76,13 +80,22 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
                 else:
                     StillInc = True
         elif 'threeptcorr' in stage:
-            if Check3ptCorr(icfg,ismlist,it_sst,ProjectorList,DSList):
-                stage = IncrementRun(stage,curricfg,fcfg)
-                if 'Done' in stage:
-                    print 'All Done'
-                    return
-                else:
-                    StillInc = True
+            if DoJsm3pt:
+                if Check3ptCorrjsm(icfg,ismlist,jsmlist,it_sst,ProjectorList,DSList):
+                    stage = IncrementRun(stage,curricfg,fcfg)
+                    if 'Done' in stage:
+                        print 'All Done'
+                        return
+                    else:
+                        StillInc = True
+            else:
+                if Check3ptCorr(icfg,ismlist,it_sst,ProjectorList,DSList):
+                    stage = IncrementRun(stage,curricfg,fcfg)
+                    if 'Done' in stage:
+                        print 'All Done'
+                        return
+                    else:
+                        StillInc = True
 
                 
     if 'twopt' in stage:
