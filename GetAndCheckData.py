@@ -35,6 +35,7 @@ def RemoveProp(icfg,thisismlist):
         #     print thisfile,' not present'
 
 
+## also makes directory
 def Move2ptCorr(icfg,thisismlist,thisjsmlist,interplist):
     for ism in thisismlist:
         map(mkdir_p,Get2ptCorrFolders(icfg,ism,jsmlist))

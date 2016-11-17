@@ -3,8 +3,8 @@
 ##NB: if changing nx, or nt, MUST remove random list in ParamFiles directory
 
 # JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
-JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
-# JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
+# JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
+JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
 
 import os, sys
 from shutil import copyfile
@@ -149,11 +149,12 @@ if len(codedir) == 0:
 ChromaFileFlag = 'params_run1_'
 
 ExitOnFail = True ## Reimplemented: exits if there was a failed run (on for debugging?)
-Submit = True ## submits the script to the que, disable to run on local machine
+Submit = False ## submits the script to the que, disable to run on local machine
 DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 AveMom2pt = False ## Averages over all 2 point propagator momenta for a Q^2
+DoJsm3pt = False ## Creates n*n matrix for the three point correlators, instead of doing sequential source combination trick
 
 # Submit = True
 #james prop gf source index parameter
@@ -190,7 +191,7 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 
 
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
-OnlyTwoPt = True ## Only calculates two-point correlation functions.
+OnlyTwoPt = False ## Only calculates two-point correlation functions.
 OnlyGauge = False ## Only calculates Gauge field
 # OnlyGauge = False ## Only calculates Gauge Field
 NumGFCreate = 10
@@ -205,11 +206,11 @@ GFFormat = 'SZINQIO'
 #Taken from /home/accounts/jdragos/scripts/PythonAnalysis/REvecSave/k12090/PoF1to16dt2LREM.txt
 # RVec = [ 76.3260613436,  -161.5448230802, 264086.1917824702, -321.4016231030, 4390.5310121576, -893677.8525444396 ]
 
-# #Taken mokup
-# RVec = [ 0.5,  0.5  ]
-
 #Taken mokup
-RVec = [ 1  ]
+RVec = [ 0.5,  0.5  ]
+
+# #Taken mokup
+# RVec = [ 1  ]
 
 
 # Testing, should be same as tsink sm128
@@ -345,8 +346,8 @@ smu0 = 1.0
 smvalues = [32, 64, 128, 'V0']
 # ismlist = smvalues[:-1]
 # jsmlist = smvalues[:-1]
-ismlist = [smvalues[1]]
-jsmlist = [smvalues[1]]
+ismlist = smvalues[1:3]
+jsmlist = smvalues[1:3]
 
 
 # twoptinterps = 'nucleon nucleon2 nucleon_nucleon2 nucleon2_nucleon'

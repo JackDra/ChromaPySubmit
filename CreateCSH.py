@@ -2,7 +2,7 @@
 
 import os
 from RunParams import *
-from MiscFuns import mkdir_p
+from MiscFuns import mkdir_p,Elongate
 from operator import itemgetter
 import numpy as np
 
@@ -72,19 +72,17 @@ def CreateCSHFile(thisfile,outputlist):
         f.write('\n')
     os.system("chmod u+x "+thisfile)
 
-def CreateCSHList(icfg,fcfg,ism,jobidlist,stage):
+def CreateCSHList(icfg,fcfg,jobidlist,stage):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
-    if os.path.isfile(outputfile):os.remove(outputfile)
-    if os.path.isfile(logfile):os.remove(logfile)
-    icfg,fcfg,ism = str(icfg),str(fcfg),str(ism)
+    icfg,fcfg = str(icfg),str(fcfg)
     if 'gfield' in stage:
         Jstring = 'GFGen'+str(icfg)+'-'+str(fcfg)
     elif 'twopt' in stage:
-        Jstring = '2pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)
+        Jstring = '2pt-'+str(icfg)+'-'+str(fcfg)
     elif 'threept' in stage:
-        Jstring = '3pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)
+        Jstring = '3pt-'+str(icfg)+'-'+str(fcfg)
         
     outlist = []
     outlist.append(r'#! /bin/tcsh')
@@ -102,12 +100,11 @@ def CreateCSHList(icfg,fcfg,ism,jobidlist,stage):
     outlist.append('')
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
-    if 'gfield' in stage:
-        outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
-    else:
-        outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', ism='+ism+', '+stage+' "')
-    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,range(icfg,fcfg+1)):
-        outlist.append(r'    echo "thiscfg='+thiscfgstarting+' "`date`')
+    outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
+    for inputfile,outputfile,logfile,(thiscfg,ism) in zip(inputfilelist,outputfilelist,logfilelist,Elongate(range(int(icfg),int(fcfg)+1),ismlist)):
+        if os.path.isfile(outputfile):os.remove(outputfile)
+        if os.path.isfile(logfile):os.remove(logfile)
+        outlist.append(r'    echo "thiscfg='+str(thiscfg)+' ism='+str(ism)+' starting "`date`')
         outlist.append(r'    mpirun -np '+str(nproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                        ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
     outlist.append(r'    echo "finished "`date`')
@@ -117,27 +114,24 @@ def CreateCSHList(icfg,fcfg,ism,jobidlist,stage):
     # outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.'+stage)
     # outlist.append(r''+inputfile)
     # outlist.append(r'EOF')
-    # nextcfg = icfg
-    # if 'gfield' in stage: nextcfg = str(int(icfg)+1)
     # outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Error'])+"'")
     # outlist.append(r'        exit 1')
     # outlist.append(r'    endif')
-    # outlist.append('')
-    # outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
+    if 'twopt' in stage and not OnlyTwoPt:
+        outlist.append('')
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,'Complete'])+"'")
     return outlist
 
 
-def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobidlist,stage):
+def CreateCSHJuqueen(outfile,icfg,fcfg,jobidlist,stage):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
-    if os.path.isfile(outputfile):os.remove(outputfile)
-    if os.path.isfile(logfile):os.remove(logfile)
-    icfg,fcfg,ism = str(icfg),str(fcfg),str(ism)
+    icfg,fcfg = str(icfg),str(fcfg)
     if 'twopt' in stage:
-        Jstring = '2pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)
+        Jstring = '2pt-'+str(icfg)+'-'+str(fcfg)
     elif 'threept' in stage:
-        Jstring = '3pt-'+str(icfg)+'-'+str(fcfg)+'-sm'+str(ism)
+        Jstring = '3pt-'+str(icfg)+'-'+str(fcfg)
     elif 'gfield' in stage:
         Jstring = 'GFGen'+str(icfg)+'-'+str(fcfg)
     outlist = []
@@ -160,12 +154,11 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobidlist,stage):
     outlist.append('')
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
-    if 'gfield' in stage:
-        outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
-    else:
-        outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', ism='+ism+', '+stage+' "')
-    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,range(icfg,fcfg+1)):
-        outlist.append(r'    echo "thiscfg='+thiscfgstarting+' "`date`')
+    outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
+    for inputfile,outputfile,logfile,(thiscfg,ism) in zip(inputfilelist,outputfilelist,logfilelist,Elongate(range(int(icfg),int(fcfg)+1),ismlist)):
+        if os.path.isfile(outputfile):os.remove(outputfile)
+        if os.path.isfile(logfile):os.remove(logfile)
+        outlist.append(r'    echo "thiscfg='+str(thiscfg)+' ism='+str(ism)+' starting "`date`')
         outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                        ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
 
@@ -181,22 +174,23 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobidlist,stage):
     # outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Error'])+"'")
     # outlist.append(r'        exit 1')
     # outlist.append(r'    endif')
-    # outlist.append('')
-    # outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
+    if 'twopt' in stage and not OnlyTwoPt:
+        outlist.append('')
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
     return outlist
 
 
 
-def CreateCSHWrap(icfg,fcfg,ism,jobid,stage):
-    icfg,fcfg,ism = str(icfg),str(fcfg),str(ism)
+def CreateCSHWrap(icfg,fcfg,jobid,stage):
+    icfg,fcfg = str(icfg),str(fcfg)
     if 'gfield' in stage:
         outfile = cshdir+'Run'+stage+'cfg'+icfg+'.csh'
     else:
-        outfile = cshdir+'Run'+stage+'cfg'+icfg+'sm'+ism+'.csh'
+        outfile = cshdir+'Run'+stage+'cfg'+icfg+'fcfg'+fcfg+'.csh'
     if 'juqueen' in thismachine:
-        outlist = CreateCSHJuqueen(outfile,icfg,fcfg,ism,jobid,stage)
+        outlist = CreateCSHJuqueen(outfile,icfg,fcfg,jobid,stage)
     else:
-        outlist = CreateCSHList(icfg,fcfg,ism,jobid,stage)
+        outlist = CreateCSHList(icfg,fcfg,jobid,stage)
     CreateCSHFile(outfile,outlist)
     return outfile
 

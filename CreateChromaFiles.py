@@ -9,7 +9,7 @@ from MiscFuns import Elongate
 from ChromaXmlChunks import *
 
 
-iterlist = iter(range(500))
+iterlist = iter(range(5000))
 
 def Chromaqlist(Minqsqrd,Maxqsqrd):
     qlist = []
@@ -80,15 +80,14 @@ def Remove2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
 
 
 
-def Create2ptCorrWrap(folder,filepref,icfg,fcfg,ism):
+def Create2ptCorrWrap(folder,fileprefix,icfg,fcfg):
     filelist = []
     for thecfg in range(icfg,fcfg+1):
-        filelist.append(Create2ptCorrFiles(folder,fileprefix,thecfg,[ism])[0])
+        filelist += Create2ptCorrFiles(folder,fileprefix,thecfg,ismlist)
     return filelist
         
 def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     filelistsm = []
-    thisqlist = Chromaqlist(qmin,qmax)
     for ism in map(str,thisismlist):
         nism = ism.replace('sm','')
         mkdir_p(folder+'/corr2pt'+ism+'/')
@@ -121,10 +120,10 @@ def Remove3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
         if os.path.isfile(thisfile):os.remove(thisfile)
 
 
-def Create3ptCorrWrap(folder,filepref,icfg,fcfg,ism):
+def Create3ptCorrWrap(folder,fileprefix,icfg,fcfg):
     filelist = []
     for thecfg in range(icfg,fcfg+1):
-        filelist.append(Create3ptCorrFiles(folder,fileprefix,thecfg,[ism])[0])
+        filelist += Create3ptCorrFiles(folder,fileprefix,thecfg,ismlist)
     return filelist
 
         
@@ -207,7 +206,14 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     return filelistsm
 
 
-def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist,thisjsmlist,thisDSList,thisProjectorList,thisit_sst):
+
+def Create3ptCorrWrapjsm(folder,fileprefix,icfg,fcfg):
+    filelist = []
+    for thecfg in range(icfg,fcfg+1):
+        filelist += Create3ptCorrFilesjsm(folder,fileprefix,thecfg,ismlist)
+    return filelist
+
+def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist):
     filelistsm = []
     for ism in map(str,thisismlist):
         nism = ism.replace('sm','')
@@ -215,7 +221,7 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist,thisjsmlist,thisDSL
         mkdir_p(thisfolder)
         mkdir_p(thisfolder.replace('Input','Output'))
         thisfile = thisfolder+fileprefix+str(icfg)
-        filelistsm.append(InputFolderPref+'/'+thisfile.replace(folder+'/','')+'.xml')
+        filelistsm.append(thisfile.replace(folder+'/','')+'.xml')
         DictOut = SetupDict()
         for srcPoF in PoFList:
             thisprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)
@@ -226,10 +232,10 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist,thisjsmlist,thisDSL
                 DictOut = AddToIM(DictOut,iterlist.next(),Add_Source,['default_gauge_field','default_source'+str(srcPoF),icfg,nism,srcPoF])
                 DictOut = AddToIM(DictOut,iterlist.next(),Add_Propagator,[kud,'default_gauge_field','default_source'+str(srcPoF),thisprop])
                 if SaveMem: DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,['default_source'+str(srcPoF)])
-            for jsm in map(str,thisjsmlist):
-                for DS in thisDSList:
-                    for Projector in map(str,thisProjectorList):
-                        for iTS in map(str,thisit_sst):                    
+            for jsm in map(str,jsmlist):
+                for DS in DSList:
+                    for Projector in map(str,ProjectorList):
+                        for iTS in map(str,it_sst):                    
                             # thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm
                             thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
                             thisseqprop = 'seqprop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS

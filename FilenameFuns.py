@@ -12,7 +12,7 @@ def Get2ptCorr(icfg,ism,jsm,interp,iPoF=0):
     else:
         fileend = '.lime'
     return (cfdir+'twoptsm'+str(ism)+'si'+str(jsm)+'/'+CreateCfg(icfg,DelLime=True)+'_k'+str(kud)+'_tsrc'+str(iPoF)+
-            'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf'+OutXml)
+            'sm'+str(ism)+'si'+str(jsm)+'_'+interp+'.2cf'+fileend)
 
 def Get2ptCorrFolders(icfg,ism,thisjsmlist):
     return [(cfdir+'twoptsm'+str(ism)+'si'+str(jsm)+'/') for jsm in thisjsmlist]

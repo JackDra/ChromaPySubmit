@@ -253,6 +253,7 @@ def Add_HadSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp,iPoF=0):
     thisdict['NamedObject']['sink_pairs'] = {'elem':OrdDict()}
     thisdict['NamedObject']['sink_pairs']['elem']['first_id'] = k1_prop_id
     thisdict['NamedObject']['sink_pairs']['elem']['second_id'] = k2_prop_id
+    mkdir_p(Get2ptCorrFolders(icfg,ism,[jsm])[0])
     if OutXml:
         thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.lime','.xml')
     else:
@@ -307,7 +308,7 @@ def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS,iPoF=0):
     thisdict['NamedObject']['seqprops']['elem']['gamma_insertion'] = 0
     return thisdict
 
-def Add_Bar3ptTieUpjsm(gauge_id,prop_id,seqprop_id,icfg,ism,jsm,tsink,Proj,DS):
+def Add_Bar3ptTieUpjsm(gauge_id,prop_id,seqprop_id,icfg,ism,jsm,tsink,Proj,DS,iPoF=0):
     thisdict = OrdDict()
     thisdict['Name'] = 'BAR3PTFN'
     thisdict['Frequency'] = 1
@@ -319,10 +320,10 @@ def Add_Bar3ptTieUpjsm(gauge_id,prop_id,seqprop_id,icfg,ism,jsm,tsink,Proj,DS):
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['prop_id'] = prop_id
-    thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorr(icfg,ism,jsm,tsink,Proj,DS,'NDer0')
+    thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorrjsm(icfg,ism,jsm,tsink,Proj,DS,'NDer0',iPoF=iPoF)
     if NDer > 0:
         for iDer in range(1,NDer):
-            thisdict['NamedObject']['bar3ptfn_'+str(iDer)+'D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer'+str(iDer))
+            thisdict['NamedObject']['bar3ptfn_'+str(iDer)+'D_file'] = Get3ptCorrjsm(icfg,ism,jsm,tsink,Proj,DS,'NDer'+str(iDer),iPoF=iPoF)
     # thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,jsm,tsink,Proj,DS,'NDer2')
     thisdict['NamedObject']['seqprops'] = {'elem':OrdDict()}
     thisdict['NamedObject']['seqprops']['elem']['seqprop_id'] = seqprop_id
