@@ -145,7 +145,7 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,jobidlist,stage):
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
     outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
-    for inputfile,outputfile,logfile,(thiscfg,ism) in zip(inputfilelist,outputfilelist,logfilelist,range(int(icfg),int(fcfg)+1)):
+    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,range(int(icfg),int(fcfg)+1)):
         if os.path.isfile(outputfile):os.remove(outputfile)
         if os.path.isfile(logfile):os.remove(logfile)
         outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
