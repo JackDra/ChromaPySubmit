@@ -319,8 +319,8 @@ invType = 'BICGSTAB_INVERTER'
 
 # SST Propagator Parameters
 # it_sst = '32 35 38' ## ahnialation parameters (momenta)
-# it_sst = [26, 27, 28] ## ahnialation parameters (momenta)
-it_sst = [4] ## ahnialation parameters (momenta) MUST BE len(it_sst) == len(RVec)/PoFShifts
+it_sst = [13] ## ahnialation parameters (momenta)
+# it_sst = [4] ## ahnialation parameters (momenta) MUST BE len(it_sst) == len(RVec)/PoFShifts
 # it_sst = [26, 27, 28, 29, 30] ## ahnialation parameters (momenta)
 ppvec = [0,0,0]
 ppstr = ' '.join(map(str,ppvec))
