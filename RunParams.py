@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 ##NB: if changing nx, or nt, MUST remove random list in ParamFiles directory
+import socket
 
 THISMACHINE = socket.gethostname()
 
@@ -26,7 +27,6 @@ if not os.path.isdir(JackLibDir):
 sys.path.append(JackLibDir)
 
 import errno
-import socket
 from MiscFuns import mkdir_p
 import cPickle as pickle
 import numpy as np
@@ -161,7 +161,7 @@ else:
 if len(codedir) == 0:
     raise EnvironmentError('No code directory set for '+thismachine+'. Go into RunParams.py and add where chroma is into codedir')
 
-ChromaFileFlag = 'params_run1_'
+ChromaFileFlag = 'params_run2_'
 
 ExitOnFail = True ## Reimplemented: exits if there was a failed run (on for debugging?)
 DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
