@@ -15,11 +15,11 @@ def SetupDict():
     outputdict['chroma']['Param']['nrow'] = nxtstr
     return outputdict
 
-def SetupGaugeDict(thistype,icfg):
+def SetupGaugeDict(thistype):
     outputdict = {thistype:OrdDict()}
     if 'purgaug' in thistype:
-        outputdict[thistype] = Add_cfg(icfg)
-        hold = Add_MCControl(GetGaugeField(icfg).replace('.lime',''))
+        outputdict[thistype] = Add_cfg(1)
+        hold = Add_MCControl(GetGaugeField(1).replace('.lime',''))
         outputdict[thistype]['MCControl'] = hold['MCControl']
         hold = Add_HBItr()
         outputdict[thistype]['HBItr'] = hold['HBItr']

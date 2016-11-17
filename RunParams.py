@@ -205,17 +205,18 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 
 ##### WARNING, if OnlyTwoPt = True, please set DoJsm3pt = False #####
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
-OnlyTwoPt = False ## Only calculates two-point correlation functions.
+OnlyTwoPt = True ## Only calculates two-point correlation functions.
 if OnlyTwoPt: DoJsm3pt = False
 
 OnlyGauge = False ## Only calculates Gauge field
 # OnlyGauge = False ## Only calculates Gauge Field
-NumGFCreate = 10
+NumGFCreate = 100
 # GFFormat = 'ILDG'
 # GFFormat = 'UNIT'
-# GFFormat = 'WEAK_FIELD'
 # GFFormat = 'SZIN'
 GFFormat = 'SZINQIO'
+
+# GFFormat = 'WEAK_FIELD'
 
 
 ##RVec must be len(smlist) * PoFShifts
@@ -270,14 +271,16 @@ GFexe = GaugeType
 
 if OnlyGauge:
     exe = GFexe
+    GFFormat = 'WEAK_FIELD'
 else:
     exe = Cexe
 
+    
 
 StartUpdateNum = 0
 NWarmUpUpdates = 2
 NProductionUpdates = 1000
-NUpdatesThisRun = 100
+NUpdatesThisRun = 1000
 SaveInterval = 5
 
 GActName = 'WILSON_GAUGEACT'

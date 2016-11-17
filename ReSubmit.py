@@ -32,17 +32,30 @@ def IncrementRun(stage,icfg,fcfg):
 def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
     
     icfg,fcfg = map(int,[icfg,fcfg])
-    for ism in ismlist:
-        for thecfg in range(icfg,fcfg+1):
-            RemoveCSH(thecfg,ism,stage)
+    # for ism in ismlist:
+    #     for thecfg in range(icfg,fcfg+1):
+    #         RemoveCSH(thecfg,ism,stage)
     #removes fort parameter files
+    if OnlyGauge:
+        RemoveGaugeFieldFiles(InputFolder)
+        thisjoblist = CreateGaugeFieldFiles(InputFolder,ChromaFileFlag)
+        if Submit:
+            runfile = Scom+' '+CreateCSHWrap(icfg,fcfg,thisjoblist,'gfield')
+        else:
+            runfile = CreateCSHWrap(icfg,fcfg,thisjoblist,'gfield')
+        print runfile
+        # if not DontRun: subprocess.call([runfile],cwd=basedir)
+        if not DontRun: os.system(runfile)
+        return
+        
+        
     
-    if DoJsm3pt:
-        RemoveCombCorrFiles(InputFolder,ChromaFileFlag)
-    elif 'twoptcorr' in stage:
-        Remove2ptCorrFiles(InputFolder,ChromaFileFlag)    
-    elif 'threeptcorr' in stage:
-        Remove3ptCorrFiles(InputFolder,ChromaFileFlag)
+    # if DoJsm3pt:
+    #     RemoveCombCorrFiles(InputFolder)
+    # elif 'twoptcorr' in stage:
+    #     Remove2ptCorrFiles(InputFolder)    
+    # elif 'threeptcorr' in stage:
+    #     Remove3ptCorrFiles(InputFolder)
         
 
             ##check if whole run is done
@@ -59,8 +72,9 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
                 
             
     if boolcheck:
-        for thecfg in range(icfg,fcfg+1):
-            RemoveProp(icfg,ismlist)
+        if not Save2ptProp:
+            for thecfg in range(icfg,fcfg+1):
+                RemoveProp(icfg,ismlist)
         print 'All Complete'
         return
 
@@ -75,6 +89,9 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
             if Check2ptCorr(curricfg,ismlist,jsmlist,twoptinterps):
                 stage,curricfg = IncrementRun(stage,curricfg,fcfg)
                 if 'Done' in stage:
+                    if not Save2ptProp:
+                        for thecfg in range(icfg,fcfg+1):
+                            RemoveProp(icfg,ismlist)
                     print 'All Done'
                     return
                 else:
@@ -84,6 +101,9 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
                 if Check3ptCorrjsm(curricfg,ismlist,jsmlist,it_sst,ProjectorList,DSList):
                     stage,curricfg = IncrementRun(stage,curricfg,fcfg)
                     if 'Done' in stage:
+                        if not Save2ptProp:
+                            for thecfg in range(icfg,fcfg+1):
+                                RemoveProp(icfg,ismlist)
                         print 'All Done'
                         return
                     else:
@@ -92,6 +112,9 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
                 if Check3ptCorr(curricfg,ismlist,it_sst,ProjectorList,DSList):
                     stage,curricfg = IncrementRun(stage,curricfg,fcfg)
                     if 'Done' in stage:
+                        if not Save2ptProp:
+                            for thecfg in range(icfg,fcfg+1):
+                                RemoveProp(icfg,ismlist)
                         print 'All Done'
                         return
                     else:

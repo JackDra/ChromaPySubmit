@@ -9,7 +9,7 @@ from MiscFuns import Elongate
 from ChromaXmlChunks import *
 import shutil
 
-iterlist = iter(range(5000))
+iterlist = iter(range(10**7))
 
 def Chromaqlist(Minqsqrd,Maxqsqrd):
     qlist = []
@@ -21,19 +21,20 @@ def Chromaqlist(Minqsqrd,Maxqsqrd):
                 qlist.append(str(iq1) + ' ' + str(iq2) + ' ' + str(iq3))
     return qlist
 
-def RemoveGaugeFieldFiles(folder,fileprefix,icfg):
-    thisfile = folder+'/gfield/'+fileprefix+str(icfg)
-    if os.path.isfile(thisfile+'.xml'):os.remove(thisfile+'.xml')
+
+def RemoveGaugeFieldFiles(folder):
+    thisfolder = folder+'/gfield'
+    if os.path.isfile(thisfolder):shutil.rmtree(thisfolder)
 
 
 
-def CreateGaugeFieldFiles(folder,fileprefix,icfg):
+def CreateGaugeFieldFiles(folder,fileprefix):
     mkdir_p(folder+'/gfield/')
     mkdir_p(folder.replace('Input','Output')+'/gfield/')
-    thisfile = folder+'/gfield/'+fileprefix+str(icfg)
+    thisfile = folder+'/gfield/'+fileprefix
     if os.path.isfile(thisfile):os.remove(thisfile)
     filelist = [thisfile.replace(folder+'/','')+'.xml']
-    DictOut = SetupGaugeDict(GaugeType,icfg)
+    DictOut = SetupGaugeDict(GaugeType)
     
     # DictOut = AddToIM(DictOut,iterlist.next(),Add_CoulombGF,['default_gauge_field','gfix_id','grot_id'])
     # DictOut = AddToIM(DictOut,iterlist.next(),Add_WriteNamedObject,['default_gauge_field','Multi1dLatticeColorMatrixD',GetGaugeField(icfg),'SINGLEFILE'])
@@ -73,7 +74,7 @@ def CreateGaugeFieldFiles(folder,fileprefix,icfg):
 #     return filelistsm
     
 
-def Remove2ptCorrFiles(folder,fileprefix):
+def Remove2ptCorrFiles(folder):
     thisfolder = folder+'/corr2pt'
     if os.path.isdir(thisfolder):shutil.rmtree(thisfolder)
 
@@ -112,7 +113,7 @@ def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     return filelistsm
 
 
-def Remove3ptCorrFiles(folder,fileprefix):
+def Remove3ptCorrFiles(folder):
     thisfolder = folder+'/corr3pt'
     if os.path.isdir(thisfolder):shutil.rmtree(thisfolder)
 
@@ -270,7 +271,7 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist):
 
 
 
-def RemoveCombCorrFiles(folder,fileprefix):
+def RemoveCombCorrFiles(folder):
     thisfolder = folder+'/corrComb'
     if os.path.isfile(thisfolder):os.remove(thisfolder)
 

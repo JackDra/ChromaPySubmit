@@ -174,7 +174,7 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,jobidlist,stage):
 def CreateCSHWrap(icfg,fcfg,jobid,stage):
     icfg,fcfg = str(icfg),str(fcfg)
     if 'gfield' in stage:
-        outfile = cshdir+'Run'+stage+'cfg'+icfg+'.csh'
+        outfile = cshdir+'Run'+stage+'.csh'
     else:
         outfile = cshdir+'Run'+stage+'cfg'+icfg+'fcfg'+fcfg+'.csh'
     if 'juqueen' in thismachine:
