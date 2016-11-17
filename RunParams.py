@@ -169,7 +169,7 @@ SaveMem = True ## saves memory in run by deleting sources and propagators when n
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 AveMom2pt = True ## Averages over all 2 point propagator momenta for a Q^2
 DoJsm3pt = True ## Creates n*n matrix for the three point correlators, instead of doing sequential source combination trick
-
+DupCfgs = 1
 # Submit = True
 #james prop gf source index parameter
 
