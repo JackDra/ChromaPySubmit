@@ -37,28 +37,25 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False):
             RemoveCSH(thecfg,ism,stage)
     #removes fort parameter files
     
-    if 'twoptcorr' in stage and not DoJsm3pt:
-        for thecfg in range(icfg,fcfg+1):
-            Remove2ptCorrFiles(InputFolder,ChromaFileFlag,thecfg,ismlist)    
-    elif 'threeptcorr' in stage and not DoJsm3pt:
-        for thecfg in range(icfg,fcfg+1):
-            Remove3ptCorrFiles(InputFolder,ChromaFileFlag,thecfg,ismlist)    
-    elif DoJsm3pt:
-        for thecfg in range(icfg,fcfg+1):
-            RemoveCombCorrFiles(InputFolder,ChromaFileFlag,thecfg,ismlist)    
+    if DoJsm3pt:
+        RemoveCombCorrFiles(InputFolder,ChromaFileFlag)
+    elif 'twoptcorr' in stage:
+        Remove2ptCorrFiles(InputFolder,ChromaFileFlag)    
+    elif 'threeptcorr' in stage:
+        Remove3ptCorrFiles(InputFolder,ChromaFileFlag)
         
 
             ##check if whole run is done
-    boolcheck = True
     if OnlyTwoPt:
-        for thecfg in range(icfg,fcfg+1):
-            boolcheck = boolcheck and Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps)
+        boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) for thecfg in range(icfg,fcfg+1)])
     else:
         for thecfg in range(icfg,fcfg+1):
             if DoJsm3pt:
-                boolcheck = boolcheck and (Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList))
+                boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and
+                                 Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList) for thecfg in range(icfg,fcfg+1)])
             else:
-                boolcheck = boolcheck and (Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList))
+                boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and
+                                 Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList) for thecfg in range(icfg,fcfg+1)])
                 
             
     if boolcheck:

@@ -73,9 +73,9 @@ def CreateGaugeFieldFiles(folder,fileprefix,icfg):
 #     return filelistsm
     
 
-def Remove2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
-    thisfile = folder+'/corr2pt/'+fileprefix+str(icfg)
-    if os.path.isfile(thisfile):os.remove(thisfile)
+def Remove2ptCorrFiles(folder,fileprefix):
+    thisfolder = folder+'/corr2pt'
+    if os.path.isdir(thisfolder):shutil.rmtree(thisfolder)
 
 
 
@@ -112,10 +112,9 @@ def Create2ptCorrFiles(folder,fileprefix,icfg,thisismlist):
     return filelistsm
 
 
-def Remove3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
-    thisfolder = folder+'/corr3pt/'
-    thisfile = thisfolder+fileprefix+str(icfg)
-    if os.path.isfile(thisfile):os.remove(thisfile)
+def Remove3ptCorrFiles(folder,fileprefix):
+    thisfolder = folder+'/corr3pt'
+    if os.path.isdir(thisfolder):shutil.rmtree(thisfolder)
 
 
 def Create3ptCorrWrap(folder,fileprefix,icfg,fcfg):
@@ -271,10 +270,9 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist):
 
 
 
-def RemoveCombCorrFiles(folder,fileprefix,icfg,thisismlist):
-    thisfolder = folder+'/corrComb/'
-    thisfile = thisfolder+fileprefix+str(icfg)
-    if os.path.isfile(thisfile):os.remove(thisfile)
+def RemoveCombCorrFiles(folder,fileprefix):
+    thisfolder = folder+'/corrComb'
+    if os.path.isfile(thisfolder):os.remove(thisfolder)
 
 def CreateCombCorrWrap(folder,fileprefix,icfg,fcfg):
     filelist = []

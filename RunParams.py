@@ -2,9 +2,9 @@
 
 ##NB: if changing nx, or nt, MUST remove random list in ParamFiles directory
 
-JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
+# JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
 # JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
-# JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
+JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
 
 import os, sys
 from shutil import copyfile
@@ -49,6 +49,8 @@ if 'phoenix.rc' in THISMACHINE:
     limefolder = 'qdpxx_cpu_install'
     chromafolder = 'chroma_alex'
     chromaGPUfolder = 'chroma_gpu_nprmod_install'
+    Submit = True
+    it_sst = [13] ## ahnialation parameters (momenta)
 elif 'phoenix' in THISMACHINE:
     thismachine = 'phoenix'
     basedir = '/home/a1193348/'
@@ -67,6 +69,8 @@ elif 'phoenix' in THISMACHINE:
     limefolder = 'qdpxx_cpu_install'
     chromafolder = 'chroma_alex'
     chromaGPUfolder = 'chroma_gpu_nprmod_install'
+    Submit = True
+    it_sst = [13] ## ahnialation parameters (momenta)
 elif 'isaac' in THISMACHINE:
     thismachine = 'isaac'
     basedir = '/home/a1193348/'
@@ -85,6 +89,8 @@ elif 'isaac' in THISMACHINE:
     limefolder = 'qdpxx_cpu_install'
     chromafolder = 'chroma_alex'
     chromaGPUfolder = 'chroma_gpu_nprmod_install'
+    Submit = True
+    it_sst = [13] ## ahnialation parameters (momenta)
 elif 'JackLappy' in THISMACHINE:
     thismachine = 'JackLappy'
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
@@ -111,6 +117,9 @@ elif 'JackLappy' in THISMACHINE:
     limefolder = 'qdpxx_cpu_install'
     chromafolder = 'chroma_alex'
     chromaGPUfolder = 'chroma_gpu_nprmod_install'
+    Submit = False ## submits the script to the que, disable to run on local machine
+    it_sst = [4] ## ahnialation parameters (momenta) MUST BE len(it_sst) == len(RVec)/PoFShifts
+
 elif 'juqueen' in THISMACHINE:
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
@@ -138,6 +147,8 @@ elif 'juqueen' in THISMACHINE:
     ks = 1364000
     kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
     limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
+    Submit = True ## submits the script to the que, disable to run on local machine
+    it_sst = [13] ## ahnialation parameters (momenta)
 
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
@@ -149,12 +160,11 @@ if len(codedir) == 0:
 ChromaFileFlag = 'params_run1_'
 
 ExitOnFail = True ## Reimplemented: exits if there was a failed run (on for debugging?)
-Submit = True ## submits the script to the que, disable to run on local machine
 DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 AveMom2pt = False ## Averages over all 2 point propagator momenta for a Q^2
-DoJsm3pt = True ## Creates n*n matrix for the three point correlators, instead of doing sequential source combination trick
+DoJsm3pt = False ## Creates n*n matrix for the three point correlators, instead of doing sequential source combination trick
 
 # Submit = True
 #james prop gf source index parameter
@@ -320,8 +330,6 @@ invType = 'BICGSTAB_INVERTER'
 
 # SST Propagator Parameters
 # it_sst = '32 35 38' ## ahnialation parameters (momenta)
-it_sst = [13] ## ahnialation parameters (momenta)
-# it_sst = [4] ## ahnialation parameters (momenta) MUST BE len(it_sst) == len(RVec)/PoFShifts
 # it_sst = [26, 27, 28, 29, 30] ## ahnialation parameters (momenta)
 ppvec = [0,0,0]
 ppstr = ' '.join(map(str,ppvec))

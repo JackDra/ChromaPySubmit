@@ -66,6 +66,8 @@ def Check2ptCorr(icfg,thisismlist,thisjsmlist,interplist):
                     if not os.path.isfile(thisfile): 
                         print 'Not Present: ', thisfile
                         Present = False
+                    # else:
+                    #     print 'Present: ', thisfile
     return Present
 
 def Check3ptCorr(icfg,thisismlist,tsinklist,Projectorlist,DSlist):
@@ -80,6 +82,8 @@ def Check3ptCorr(icfg,thisismlist,tsinklist,Projectorlist,DSlist):
                             if not os.path.isfile(thisfile): 
                                 print 'Not Present: ', thisfile
                                 Present = False
+                            # else:
+                            #     print 'Present: ', thisfile
     return Present
 
 def Check3ptCorrjsm(icfg,thisismlist,thisjsmlist,tsinklist,Projectorlist,DSlist):
@@ -95,6 +99,8 @@ def Check3ptCorrjsm(icfg,thisismlist,thisjsmlist,tsinklist,Projectorlist,DSlist)
                                 if not os.path.isfile(thisfile): 
                                     print 'Not Present: ', thisfile
                                     Present = False
+                                # else:
+                                #     print 'Present: ', thisfile
     return Present
 
 

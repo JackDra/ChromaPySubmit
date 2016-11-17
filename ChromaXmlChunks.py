@@ -6,7 +6,7 @@ from collections import OrderedDict as OrdDict
 from GetAndCheckData import *
 import numpy as np
 
-iterlistchunk = iter(range(50))
+iterlistchunk = iter(range(50000))
 
 def SetupDict():
     outputdict = {'chroma':OrdDict()}
