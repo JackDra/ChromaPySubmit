@@ -2,9 +2,13 @@
 
 ##NB: if changing nx, or nt, MUST remove random list in ParamFiles directory
 
-JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
-# JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
-# JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
+THISMACHINE = socket.gethostname()
+
+if 'juqueen' in THISMACHINE:
+    JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
+elif 'JackLappy':
+    # JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
+    JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
 
 import os, sys
 from shutil import copyfile
@@ -29,7 +33,6 @@ import numpy as np
 
 
 email = 'jack.dragos@gmail.com'
-THISMACHINE = socket.gethostname()
 
 if 'phoenix.rc' in THISMACHINE:
     thismachine = 'phoenixold'
@@ -91,6 +94,7 @@ elif 'isaac' in THISMACHINE:
     chromaGPUfolder = 'chroma_gpu_nprmod_install'
     Submit = True
     it_sst = [13] ## ahnialation parameters (momenta)
+
 elif 'JackLappy' in THISMACHINE:
     thismachine = 'JackLappy'
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
