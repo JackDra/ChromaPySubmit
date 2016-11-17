@@ -2,8 +2,8 @@
 
 ##NB: if changing nx, or nt, MUST remove random list in ParamFiles directory
 
-# JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
-JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
+JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
+# JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
 # JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
 
 import os, sys
