@@ -120,7 +120,7 @@ elif 'juqueen' in THISMACHINE:
     Scom = 'llsubmit'
     quetype = 'bluegene'
     mem = ''
-    time = '00:29:00'
+    time = '12:00:00'
     GPU = False
     # GPU = '4'
     nproc = 128
