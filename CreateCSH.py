@@ -159,14 +159,14 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,jobidlist,stage):
     # outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.'+stage)
     # outlist.append(r''+inputfile)
     # outlist.append(r'EOF')
-    # nextcfg = icfg
-    # if 'gfield' in stage: nextcfg = str(int(icfg)+1)
     # outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Error'])+"'")
     # outlist.append(r'        exit 1')
     # outlist.append(r'    endif')
+    # nextcfg = icfg
+    # if 'gfield' in stage: nextcfg = str(int(icfg)+1)
     if 'twopt' in stage and not OnlyTwoPt:
         outlist.append('')
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Complete'])+"'")
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfgcfg,fcfg,stage,ism,'Complete'])+"'")
     return outlist
 
 
