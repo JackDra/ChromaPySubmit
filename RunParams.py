@@ -2,6 +2,7 @@
 
 ##NB: if changing nx, or nt, MUST remove random list in ParamFiles directory
 import socket
+import re
 
 THISMACHINE = socket.gethostname()
 
@@ -133,10 +134,10 @@ elif 'juqueen' in THISMACHINE:
     Scom = 'llsubmit'
     quetype = 'bluegene'
     mem = ''
-    time = '00:29:00'
+    time = '23:50:00'
     GPU = False
     # GPU = '4'
-    nproc = 256
+    nproc = 512
     RPN = 64 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     # nproc = 16
     totproc = nproc*RPN ## number of nodes
@@ -150,7 +151,8 @@ elif 'juqueen' in THISMACHINE:
     kud = 1375400 # kappa (quark hopping) params
     ks = 1364000
     kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
-    limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
+    # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
+    limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-'
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
 
@@ -168,8 +170,8 @@ DontRun = False ## creates input files but does not run (for looking at .csh and
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 AveMom2pt = True ## Averages over all 2 point propagator momenta for a Q^2
-DoJsm3pt = True ## Creates n*n matrix for the three point correlators, instead of doing sequential source combination trick
-DupCfgs = 1
+DoJsm3pt = False ## Creates n*n matrix for the three point correlators, instead of doing sequential source combination trick
+DupCfgs = 5 ## 5 random sources per gauge field
 # Submit = True
 #james prop gf source index parameter
 
@@ -362,7 +364,7 @@ StoutLink = 'T'
 alphaStout = 0.1
 gfsweeps = 4
 smu0 = 1.0
-smvalues = [32, 64, 128, 'V0']
+smvalues = [16, 32, 64, 'V0']
 # ismlist = smvalues[:-1]
 # jsmlist = smvalues[:-1]
 ismlist = smvalues[:-1]
@@ -481,7 +483,7 @@ def CreateGFnum(icfg):
         if len(thisfile) <= icfg:
             icfg = len(thisfile)-1
         thisgfnum = thisfile[icfg-1].replace('\n','')
-    return thisgfnum
+    return re.sub(r'_xsrc.','',thisgfnum),re.findall(r'_xsrc.',thisgfnum)[0]
 
 # def CreateCfg(icfg):
 #     return ensemble+CreateGFnum(icfg)
@@ -492,10 +494,11 @@ def CreateGFnum(icfg):
 def CreateCfg(icfg,DelLime=False):
     # return limename+CreateGFnum(icfg)+'.lime'
     # return limename+'.lime'+CreateGFnum(icfg)
+    gfnum,xsrc = CreateGFnum(icfg)
     if DelLime:
-        return (limename+CreateGFnum(icfg)).replace('.lime','')
+        return limename+gfnum.replace('.lime',''),xsrc
     else:
-        return limename+CreateGFnum(icfg)
+        return limename+gfnum,xsrc
         
     
 

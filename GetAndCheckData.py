@@ -7,7 +7,7 @@ import subprocess
 from FilenameFuns import *
 
 def GetGaugeField(icfg):
-    return gfdir+CreateCfg(icfg)
+    return gfdir+CreateCfg(icfg)[0]
     
     
 # def RemoveGaugeField(icfg):
@@ -19,7 +19,7 @@ def GetGaugeField(icfg):
 #         # print gffile , ' not present'
 
 def CheckGaugeField(icfg):
-    gffile = gfdir+CreateCfg(icfg)
+    gffile = gfdir+CreateCfg(icfg)[0]
     print 'Checking existance of: ', gffile
     return os.path.isfile(gffile)
 
