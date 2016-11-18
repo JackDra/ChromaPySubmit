@@ -207,7 +207,7 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 
 ##### WARNING, if OnlyTwoPt = True, please set DoJsm3pt = False #####
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
-OnlyTwoPt = False ## Only calculates two-point correlation functions.
+OnlyTwoPt = True ## Only calculates two-point correlation functions.
 if OnlyTwoPt: DoJsm3pt = False
 
 OnlyGauge = False ## Only calculates Gauge field
