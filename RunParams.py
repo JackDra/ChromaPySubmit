@@ -163,7 +163,7 @@ else:
 if len(codedir) == 0:
     raise EnvironmentError('No code directory set for '+thismachine+'. Go into RunParams.py and add where chroma is into codedir')
 
-ChromaFileFlag = 'params_run1_'
+ChromaFileFlag = 'params_runTwoPt_'
 
 ExitOnFail = True ## Reimplemented: exits if there was a failed run (on for debugging?)
 DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
