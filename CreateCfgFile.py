@@ -3,6 +3,7 @@
 from RunParams import *
 import os,re
 import numpy as np
+import math
 
 def SortConfigs(setfilelist):
     if all([ia.isdigit() for ia in setfilelist]):
@@ -29,18 +30,27 @@ def CreateCfgList():
                 # setfilelist.append('.'+'.'.join(ifile.split('.')[1:3]))
             # setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
         setfilelist = SortConfigs(setfilelist)
+    outfile = []
+    for iDub in range(1,DupCfgs+1):
+        outfile += [iset+'_xsrc'+str(iDub)+'\n' for iset in setfilelist]
     with open(filelists+cfgfile,'w') as f:
-        for iDub in range(1,DupCfgs+1):
-            f.writelines([iset+'_xsrc'+str(iDub)+'\n' for iset in setfilelist])
+        f.writelines(outfile)
     # np.array([iset+'\n' for iset in setfilelist]).tofile(filelists+cfgfile)
-    return setfilelist
-    
+    return outfile
 
+
+        
 def GetIcfgTOFcfg(nproc,nconf):
-    confbreak = nconf/nproc
+    confbreak = int(math.ceil(nconf/float(nproc)))
+    rem = nconf%nproc
     if confbreak == 0:
-        return [(1,1)]
+        return [[1,1]]
     outarray = []    
-    for istart,iend in zip(range(1,nconf+1,confbreak),range(confbreak,nconf+1+confbreak,confbreak)):
-        outarray.append((istart,iend))
+    startlist = range(1,nconf+1,confbreak)
+    endlist = range(confbreak,nconf+1+confbreak,confbreak)
+    # startlist,endlist = extendstartend(startlist,endlist,rem)
+    for istart,iend in zip(startlist,endlist):
+        outarray.append([istart,iend])
+    outarray[-1][-1] -= 1
     return outarray
+

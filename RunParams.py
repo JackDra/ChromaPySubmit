@@ -480,7 +480,7 @@ def CreateGFnum(icfg):
     with open(filelists+cfgfile,'r') as f:
         thisfile = f.readlines()
         if len(thisfile) == 0: return 'Null'
-        if len(thisfile) <= icfg:
+        if len(thisfile) < icfg:
             icfg = len(thisfile)-1
         thisgfnum = thisfile[icfg-1].replace('\n','')
     return re.sub(r'_xsrc.','',thisgfnum),re.findall(r'_xsrc.',thisgfnum)[0]
@@ -495,10 +495,7 @@ def CreateCfg(icfg,DelLime=False):
     # return limename+CreateGFnum(icfg)+'.lime'
     # return limename+'.lime'+CreateGFnum(icfg)
     gfnum,xsrc = CreateGFnum(icfg)
-    if DelLime:
-        return limename+gfnum.replace('.lime',''),xsrc
-    else:
-        return limename+gfnum,xsrc
+    return limename+gfnum,xsrc
         
     
 

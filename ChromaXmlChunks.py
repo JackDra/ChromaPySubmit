@@ -254,10 +254,10 @@ def Add_HadSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp,iPoF=0):
     thisdict['NamedObject']['sink_pairs']['elem']['first_id'] = k1_prop_id
     thisdict['NamedObject']['sink_pairs']['elem']['second_id'] = k2_prop_id
     mkdir_p(Get2ptCorrFolders(icfg,ism,[jsm])[0])
-    if OutXml:
-        thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.lime','.xml')
-    else:
-        thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.xml','.lime')
+    # if OutXml:
+    thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF)
+    # else:
+    #     thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.xml','.lime')
     return thisdict
 
 
