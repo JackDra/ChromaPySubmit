@@ -307,7 +307,7 @@ def ModuloTsrc(icfg,iPoF):
     # if itsrc < 0:
     #     itsrc = itsrc+nt
     if itsrc >= nt:
-        itsrc = itsrc-nt
+        itsrc = nt - itsrc
     return itsrc
     
 def GetSourceString(icfg,iPoF=0):
