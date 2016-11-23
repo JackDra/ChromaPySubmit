@@ -311,8 +311,8 @@ def ModuloTsrc(icfg,iPoF):
     return itsrc
     
 def GetSourceString(icfg,iPoF=0):
-    # return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(ModuloTsrc(icfg,iPoF))
-    return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(iPoF)
+    return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(ModuloTsrc(icfg,iPoF))
+    # return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(iPoF)
     # return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(it)
 
 
@@ -480,8 +480,8 @@ def CreateGFnum(icfg):
     with open(filelists+cfgfile,'r') as f:
         thisfile = f.readlines()
         if len(thisfile) == 0: return 'Null'
-        if len(thisfile) < icfg:
-            icfg = len(thisfile)-1
+        if len(thisfile) <= icfg:
+            icfg = len(thisfile)
         thisgfnum = thisfile[icfg-1].replace('\n','')
     return re.sub(r'_xsrc.','',thisgfnum),re.findall(r'_xsrc.',thisgfnum)[0]
 
