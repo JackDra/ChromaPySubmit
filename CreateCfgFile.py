@@ -31,6 +31,7 @@ def CreateCfgList(thisDupCfgs=DupCfgs,ncfg=0):
                 # setfilelist.append('.'+'.'.join(ifile.split('.')[1:3]))
             # setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
         setfilelist = SortConfigs(setfilelist)
+        totncfg = len(setfilelist)
         if ncfg != 0 and ncfg <= len(setfilelist):
             setfilelist = setfilelist[:ncfg]
     outfile = []
@@ -39,10 +40,16 @@ def CreateCfgList(thisDupCfgs=DupCfgs,ncfg=0):
     with open(filelists+cfgfile,'w') as f:
         f.writelines(outfile)
     # np.array([iset+'\n' for iset in setfilelist]).tofile(filelists+cfgfile)
-    return outfile
+    return outfile,totncfg
 
 
-        
+
+def GetCfgIndicies(totncfg,ncfg,nsrc):
+    outindicies = []
+    for isrc in range(nsrc):
+        outindicies += range(isrc*totncfg,isrc*totncfg+ncfg)
+    return outindicies
+
 def GetIcfgTOFcfg(nproc,nconf):
     confbreak = int(math.ceil(nconf/float(nproc)))
     rem = nconf%nproc

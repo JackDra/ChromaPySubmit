@@ -72,7 +72,7 @@ def CreateCSHFile(thisfile,outputlist):
         f.write('\n')
     os.system("chmod u+x "+thisfile)
 
-def CreateCSHList(icfg,fcfg,jobidlist,stage):
+def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
@@ -96,7 +96,7 @@ def CreateCSHList(icfg,fcfg,jobidlist,stage):
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
     outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
-    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,range(int(icfg),int(fcfg)+1)):
+    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies[int(icfg)-1:int(fcfg)]):
         if os.path.isfile(outputfile):os.remove(outputfile)
         if os.path.isfile(logfile):os.remove(logfile)
         outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
@@ -145,7 +145,7 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,jobidlist,stage):
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
     outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
-    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,range(int(icfg),int(fcfg)+1)):
+    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies[int(icfg)-1:int(fcfg)]):
         if os.path.isfile(outputfile):os.remove(outputfile)
         if os.path.isfile(logfile):os.remove(logfile)
         outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
@@ -171,16 +171,16 @@ def CreateCSHJuqueen(outfile,icfg,fcfg,jobidlist,stage):
 
 
 
-def CreateCSHWrap(icfg,fcfg,jobid,stage):
+def CreateCSHWrap(cfgindicies,icfg,fcfg,jobid,stage):
     icfg,fcfg = str(icfg),str(fcfg)
     if 'gfield' in stage:
         outfile = cshdir+'Run'+stage+'.csh'
     else:
         outfile = cshdir+'Run'+stage+'cfg'+icfg+'fcfg'+fcfg+'.csh'
     if 'juqueen' in thismachine:
-        outlist = CreateCSHJuqueen(outfile,icfg,fcfg,jobid,stage)
+        outlist = CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobid,stage)
     else:
-        outlist = CreateCSHList(icfg,fcfg,jobid,stage)
+        outlist = CreateCSHList(cfgindicies,icfg,fcfg,jobid,stage)
     CreateCSHFile(outfile,outlist)
     return outfile
 

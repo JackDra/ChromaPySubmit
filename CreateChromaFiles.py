@@ -80,9 +80,9 @@ def Remove2ptCorrFiles(folder):
 
 
 
-def Create2ptCorrWrap(folder,fileprefix,icfg,fcfg):
+def Create2ptCorrWrap(folder,fileprefix,icfg,fcfg,cfgindicies):
     filelist = []
-    for thecfg in range(icfg,fcfg+1):
+    for thecfg in cfgindicies[icfg-1:fcfg]:
         filelist += Create2ptCorrFiles(folder,fileprefix,thecfg,ismlist)
     return filelist
         
@@ -118,9 +118,9 @@ def Remove3ptCorrFiles(folder):
     if os.path.isdir(thisfolder):shutil.rmtree(thisfolder)
 
 
-def Create3ptCorrWrap(folder,fileprefix,icfg,fcfg):
+def Create3ptCorrWrap(folder,fileprefix,icfg,fcfg,cfgindicies):
     filelist = []
-    for thecfg in range(icfg,fcfg+1):
+    for thecfg in cfgindicies[icfg-1:fcfg]:
         filelist += Create3ptCorrFiles(folder,fileprefix,thecfg,ismlist)
     return filelist
 
@@ -275,9 +275,9 @@ def RemoveCombCorrFiles(folder):
     thisfolder = folder+'/corrComb'
     if os.path.isfile(thisfolder):os.remove(thisfolder)
 
-def CreateCombCorrWrap(folder,fileprefix,icfg,fcfg):
+def CreateCombCorrWrap(folder,fileprefix,icfg,fcfg,cfgindicies):
     filelist = []
-    for thecfg in range(icfg,fcfg+1):
+    for thecfg in cfgindicies[icfg-1:fcfg]:
         filelist += CreateCombCorrFiles(folder,fileprefix,thecfg,ismlist)
     return filelist
 
