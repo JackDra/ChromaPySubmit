@@ -171,7 +171,7 @@ SaveMem = True ## saves memory in run by deleting sources and propagators when n
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 AveMom2pt = True ## Averages over all 2 point propagator momenta for a Q^2
 DoJsm3pt = False ## Creates n*n matrix for the three point correlators, instead of doing sequential source combination trick
-DupCfgs = 5 ## 5 random sources per gauge field
+DupCfgs = 20 ## 5 random sources per gauge field
 # Submit = True
 #james prop gf source index parameter
 
@@ -207,7 +207,7 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 
 ##### WARNING, if OnlyTwoPt = True, please set DoJsm3pt = False #####
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
-OnlyTwoPt = True ## Only calculates two-point correlation functions.
+OnlyTwoPt = False ## Only calculates two-point correlation functions.
 if OnlyTwoPt: DoJsm3pt = False
 
 OnlyGauge = False ## Only calculates Gauge field
