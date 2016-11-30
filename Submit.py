@@ -11,11 +11,17 @@ import numpy as np
 
 nproc = -1
 forcecfg = False
+thisnDup=DubCfgs
+thisncfg=0
 for iin in sys.argv[1:]:
     if '-np=' in iin:
         nproc = int(iin.replace('-np=',''))
-    if '-forcecfg=' in iin:
+    elif '-forcecfg=' in iin:
         forcecfg = map(int,iin.replace('-forcecfg=','').split(','))
+    elif '-ncfg=' in iin:
+        thisncfg = map(int,iin.replace('-ncfg=',''))
+    elif '-nDup=' in iin:
+        thisnDup = map(int,iin.replace('-nDup=',''))
         
 if nproc == -1:
     raise IOError('please give number of processors as -np=## ')
@@ -29,7 +35,7 @@ print 'Number of processors = ' , nproc
 # nproc = int(sys.argv[1])
 
 
-thiscfglist = CreateCfgList()
+thiscfglist = CreateCfgList(thisDubCfgs=thisnDup,ncfg=thisncfg)
 # np.array([ithisc+'\n' for ithisc in thiscfglist]).tofile(cfgfile)
 
 
