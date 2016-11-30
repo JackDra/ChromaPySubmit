@@ -64,6 +64,6 @@ def GetIcfgTOFcfg(nproc,nconf):
     # startlist,endlist = extendstartend(startlist,endlist,rem)
     for istart,iend in zip(startlist,endlist):
         outarray.append([istart,iend])
-    outarray[-1][-1] -= 1
+    # outarray[-1][-1] -= 1
     return outarray
 

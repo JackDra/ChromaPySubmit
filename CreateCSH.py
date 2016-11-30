@@ -118,7 +118,7 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
     return outlist
 
 
-def CreateCSHJuqueen(outfile,icfg,fcfg,jobidlist,stage):
+def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
