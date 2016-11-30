@@ -19,9 +19,9 @@ for iin in sys.argv[1:]:
     elif '-forcecfg=' in iin:
         forcecfg = map(int,iin.replace('-forcecfg=','').split(','))
     elif '-ncfg=' in iin:
-        thisncfg = map(int,iin.replace('-ncfg=',''))
+        thisncfg = int(iin.replace('-ncfg=',''))
     elif '-nDup=' in iin:
-        thisnDup = map(int,iin.replace('-nDup=',''))
+        thisnDup = int(iin.replace('-nDup=',''))
         
 if nproc == -1:
     raise IOError('please give number of processors as -np=## ')

@@ -34,7 +34,7 @@ def CreateCfgList(thisDupCfgs=DupCfgs,ncfg=0):
         if ncfg != 0 and ncfg <= len(setfilelist):
             setfilelist = setfilelist[:ncfg]
     outfile = []
-    for iDup in range(1,thisDupCfgs+1):
+    for iDup in range(1,int(thisDupCfgs)+1):
         outfile += [iset+'_xsrc'+str(iDup)+'\n' for iset in setfilelist]
     with open(filelists+cfgfile,'w') as f:
         f.writelines(outfile)
