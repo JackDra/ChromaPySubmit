@@ -199,7 +199,7 @@ GeomPicked = 'EvenSpread' ## closes npx and npt, making npt larger of the two
 # GeomPicked = 'Tsplit' 
 # GeomPicked = 'Spacesplit'
 
-# Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
+Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 # SRCX = [ 0, 16,  0, 16,  0,  0, 16, 16, 16, 16 ]#0  0  0 16  0 16 )
 # SRCY = [ 0, 16,  0,  0, 16, 16,  0,  0, 16, 16 ]#0 16 16  0  0 16 )
 # SRCZ = [ 0, 16,  0, 16,  0, 16,  0, 16,  0, 16 ]#16  0 16  0 16  0 )
