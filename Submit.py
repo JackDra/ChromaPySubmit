@@ -11,7 +11,7 @@ import numpy as np
 
 nproc = -1
 forcecfg = False
-thisnDup=DubCfgs
+thisnDup=DupCfgs
 thisncfg=0
 for iin in sys.argv[1:]:
     if '-np=' in iin:
@@ -35,7 +35,7 @@ print 'Number of processors = ' , nproc
 # nproc = int(sys.argv[1])
 
 
-thiscfglist = CreateCfgList(thisDubCfgs=thisnDup,ncfg=thisncfg)
+thiscfglist = CreateCfgList(thisDupCfgs=thisnDup,ncfg=thisncfg)
 # np.array([ithisc+'\n' for ithisc in thiscfglist]).tofile(cfgfile)
 
 
