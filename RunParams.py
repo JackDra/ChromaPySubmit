@@ -225,8 +225,8 @@ GFFormat = 'SZINQIO'
 #Taken from /home/accounts/jdragos/scripts/PythonAnalysis/REvecSave/k12090/PoF1to16dt2LREM.txt
 # RVec = [ 76.3260613436,  -161.5448230802, 264086.1917824702, -321.4016231030, 4390.5310121576, -893677.8525444396 ]
 
-#Taken mokup
-RVec = [ 0.5,  0.5,  0.5 ]
+#Taken from 
+RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
 
 # #Taken mokup
 # RVec = [ 1  ]
