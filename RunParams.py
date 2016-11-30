@@ -199,7 +199,7 @@ GeomPicked = 'EvenSpread' ## closes npx and npt, making npt larger of the two
 # GeomPicked = 'Tsplit' 
 # GeomPicked = 'Spacesplit'
 
-Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
+# Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 # SRCX = [ 0, 16,  0, 16,  0,  0, 16, 16, 16, 16 ]#0  0  0 16  0 16 )
 # SRCY = [ 0, 16,  0,  0, 16, 16,  0,  0, 16, 16 ]#0 16 16  0  0 16 )
 # SRCZ = [ 0, 16,  0, 16,  0, 16,  0, 16,  0, 16 ]#16  0 16  0 16  0 )
@@ -408,6 +408,7 @@ if scriptdir[:-1] not in os.getcwd():
 nodeoutputdir = scriptdir+ 'NodeOutput/'+ChromaFileFlag+'/'
 cshdir = scriptdir+'CSHFiles/'
 paramdir = scriptdir+'ParamFiles/'
+indexfilename = 'cfgindicies.list'
 datadir = scratchdir
 InputFolderPref = 'InputFiles'
 InputFolder = scriptdir+InputFolderPref+'/'
@@ -464,15 +465,20 @@ def ReadRands(fflag,rsize,thisnx,thisnt):
         intt = np.random.randint(0,thisnt,(rsize))
         with open( thispfile, "wb" ) as pfile:
             pickle.dump( [intx,inty,intz,intt], pfile )
-
     with open(thispfile,'rb') as pfile:
         outdata = pickle.load( pfile )
-        return outdata
+    return outdata
 
 ## Time is shifted away from nt as the PoF will wrap around the boundary
 ## anti-periodic boundary contitions make it weird, so I avoid it.
 SRCX,SRCY,SRCZ,SRCT = ReadRands(ChromaFileFlag,randlistsize,nx,nt-(PoFShifts*PoFDelta))
 
+SRCX2,SRCY2,SRCZ2,SRCT2 = ReadRands(ChromaFileFlag+'Ext',randlistsize*10,nx,nt-(PoFShifts*PoFDelta))
+
+SRCX = SRCX.tolist()+SRCX2.tolist()
+SRCY = SRCY.tolist()+SRCY2.tolist()
+SRCZ = SRCZ.tolist()+SRCZ2.tolist()
+SRCT = SRCT.tolist()+SRCT2.tolist()
 
 def CreateGFnum(icfg):
     if not os.path.isfile(filelists+cfgfile):

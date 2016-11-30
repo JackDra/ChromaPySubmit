@@ -48,6 +48,9 @@ def GetCfgIndicies(totncfg,ncfg,nsrc):
     outindicies = []
     for isrc in range(nsrc):
         outindicies += range(isrc*totncfg,isrc*totncfg+ncfg)
+    with open(paramdir+indexfilename,'w') as f:
+        for iout in outindicies:
+            f.write(str(iout)+'\n')
     return outindicies
 
 def GetIcfgTOFcfg(nproc,nconf):

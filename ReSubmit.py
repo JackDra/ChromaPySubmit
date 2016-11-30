@@ -29,9 +29,12 @@ def IncrementRun(stage,icfg,fcfg):
             stage,icfg = ['twoptcorr',icfg+1]
         return stage,icfg
 
-def RunNext(icfg,fcfg,cfgindicies,stage='twoptcorr',Errored='Complete',Start=False):
+def RunNext(icfg,fcfg,cfgindicies='FromFile',stage='twoptcorr',Errored='Complete',Start=False):
     
     icfg,fcfg = map(int,[icfg,fcfg])
+    if cfgindicies == 'FromFile':
+        with open(paramdir+indexfilename,'r'):
+            cfgindicies = map(int,f.readlines())
     # for ism in ismlist:
     #     for thecfg in cfgindicies[icfg-1:fcfg]:
     #         RemoveCSH(thecfg,ism,stage)
