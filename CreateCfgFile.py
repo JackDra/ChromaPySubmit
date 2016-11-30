@@ -47,7 +47,7 @@ def CreateCfgList(thisDupCfgs=DupCfgs,ncfg=0):
 def GetCfgIndicies(totncfg,ncfg,nsrc):
     outindicies = []
     for isrc in range(nsrc):
-        outindicies += range(isrc*totncfg,isrc*totncfg+ncfg)
+        outindicies += map(round,np.linspace(start=isrc*totncfg, stop=(isrc+1)*totncfg, num=ncfg+1).tolist())[:-1]
     with open(paramdir+indexfilename,'w') as f:
         for iout in outindicies:
             f.write(str(iout)+'\n')
