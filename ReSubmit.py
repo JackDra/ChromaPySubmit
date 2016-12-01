@@ -10,33 +10,24 @@ from CreateCSH import CreateCSHWrap,RemoveCSH
 
 DefParams = [it_sst[0],ProjectorList[0],DSList[0]]
 
-def IncrementRun(stage,icfg,fcfg):
-    if OnlyGauge: return ['Done',ismlist[0]]
+def IncrementRun(stage):
+    if OnlyGauge: return 'Done'
     if 'twoptcorr' in stage:
         if OnlyTwoPt:
-            if icfg >= fcfg:
-                stage,icfg = ['Done',icfg]
-            else:
-                stage,icfg = ['twoptcorr',icfg+1]
-            return stage,icfg
+            return 'Done'
         else:
-            stage = 'threeptcorr'
-            return stage,icfg
+            return  'threeptcorr'
     if 'threeptcorr' in stage:
-        if icfg >= fcfg:
-            stage,icfg = ['Done',icfg]
-        else:
-            stage,icfg = ['twoptcorr',icfg+1]
-        return stage,icfg
+        return 'Done'
 
-def RunNext(icfg,fcfg,cfgindicies='FromFile',stage='twoptcorr',Errored='Complete',Start=False):
+def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False,cfgindicies='FromFile'):
     
     icfg,fcfg = map(int,[icfg,fcfg])
     if cfgindicies == 'FromFile':
-        with open(paramdir+indexfilename,'r'):
+        with open(paramdir+indexfilename,'r') as f:
             cfgindicies = map(int,f.readlines())
     # for ism in ismlist:
-    #     for thecfg in cfgindicies[icfg-1:fcfg]:
+    #     for thecfg in cfgindicies[icfg:fcfg]:
     #         RemoveCSH(thecfg,ism,stage)
     #removes fort parameter files
     # if OnlyGauge:
@@ -63,97 +54,82 @@ def RunNext(icfg,fcfg,cfgindicies='FromFile',stage='twoptcorr',Errored='Complete
 
             ##check if whole run is done
     if OnlyTwoPt:
-        boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) for thecfg in cfgindicies[icfg-1:fcfg]])
+        boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) for thecfg in cfgindicies[icfg:fcfg]])
     else:
-        for thecfg in cfgindicies[icfg-1:fcfg]:
-            if DoJsm3pt:
-                boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and
-                                 Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList) for thecfg in cfgindicies[icfg-1:fcfg]])
-            else:
-                boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and
-                                 Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList) for thecfg in cfgindicies[icfg-1:fcfg]])
+        if DoJsm3pt:
+            boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and
+                             Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList) for thecfg in cfgindicies[icfg:fcfg]])
+        else:
+            boolcheck = all([(Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and
+                             Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList)) for thecfg in cfgindicies[icfg:fcfg]])
                 
             
     if boolcheck:
         if not Save2ptProp:
-            for thecfg in cfgindicies[icfg-1:fcfg]:
+            for thecfg in cfgindicies[icfg:fcfg]:
                 RemoveProp(thecfg,ismlist)
         print 'All Complete'
         return
 
     # GetGaugeField(icfg)
         
-    curricfg = icfg
-    if not Start: stage,curricfg = IncrementRun(stage,curricfg,fcfg)
-    StillInc = True
-    while StillInc:
-        StillInc = False
-        if 'twoptcorr' in stage:
-            if Check2ptCorr(cfgindicies[curricfg],ismlist,jsmlist,twoptinterps):
-                stage,curricfg = IncrementRun(stage,curricfg,fcfg)
-                if 'Done' in stage:
-                    if not Save2ptProp:
-                        for thecfg in cfgindicies[icfg-1:fcfg]:
-                            RemoveProp(thecfg,ismlist)
-                    print 'All Done'
-                    return
+    if not Start: stage = IncrementRun(stage)
+    newstage = stage
+    NewCfgList = []
+    while len(NewCfgList) == 0:
+        NewCfgList = []
+        stage = newstage
+        for thecfg in cfgindicies[icfg:fcfg]:
+            if 'twoptcorr' in stage:
+                if not Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
+                    NewCfgList.append(thecfg)
+            elif 'threeptcorr' in stage:
+                if DoJsm3pt:
+                    if not Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList):
+                        NewCfgList.append(thecfg)
                 else:
-                    StillInc = True
-        elif 'threeptcorr' in stage:
-            if DoJsm3pt:
-                if Check3ptCorrjsm(cfgindicies[curricfg],ismlist,jsmlist,it_sst,ProjectorList,DSList):
-                    stage,curricfg = IncrementRun(stage,curricfg,fcfg)
-                    if 'Done' in stage:
-                        if not Save2ptProp:
-                            for thecfg in cfgindicies[icfg-1:fcfg]:
-                                RemoveProp(thecfg,ismlist)
-                        print 'All Done'
-                        return
-                    else:
-                        StillInc = True
-            else:
-                if Check3ptCorr(cfgindicies[curricfg],ismlist,it_sst,ProjectorList,DSList):
-                    stage,curricfg = IncrementRun(stage,curricfg,fcfg)
-                    if 'Done' in stage:
-                        if not Save2ptProp:
-                            for thecfg in cfgindicies[icfg-1:fcfg]:
-                                RemoveProp(thecfg,ismlist)
-                        print 'All Done'
-                        return
-                    else:
-                        StillInc = True
-
+                    if not Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList):
+                        NewCfgList.append(thecfg)
+            elif 'Done' in stage:
+                break
+        newstage = IncrementRun(stage)
+            
+    if len(NewCfgList) == 0:
+        print 'All Done'
+        return
                 
 
         
     if DoJsm3pt:
-        thisjoblist = CreateCombCorrWrap(InputFolder,ChromaFileFlag,curricfg,fcfg,cfgindicies)    
+        thisjoblist = CreateCombCorrWrap(InputFolder,ChromaFileFlag,NewCfgList)    
         for ism in ismlist:
-            map(mkdir_p,Get3ptCorrFolderjsmList(cfgindicies[curricfg],ism))
+            for curricfg in NewCfgList:
+                map(mkdir_p,Get3ptCorrFolderjsmList(curricfg,ism))
         if Submit:
-            runfile = Scom+' '+CreateCSHWrap(cfgindicies,curricfg,fcfg,thisjoblist,'Comb')
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb')
         else:
-            runfile = CreateCSHWrap(cfgindicies,curricfg,fcfg,thisjoblist,'Comb')
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb')
         print runfile
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
     elif 'twopt' in stage:        
-        thisjoblist = Create2ptCorrWrap(InputFolder,ChromaFileFlag,curricfg,fcfg,cfgindicies)
+        thisjoblist = Create2ptCorrWrap(InputFolder,ChromaFileFlag,NewCfgList)
         if Submit:
-            runfile = Scom+' '+CreateCSHWrap(cfgindicies,curricfg,fcfg,thisjoblist,stage)
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage)
         else:
-            runfile = CreateCSHWrap(cfgindicies,curricfg,fcfg,thisjoblist,stage)
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage)
         print runfile
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
     elif 'three' in stage:
-        thisjoblist = Create3ptCorrWrap(InputFolder,ChromaFileFlag,curricfg,fcfg,cfgindicies)    
+        thisjoblist = Create3ptCorrWrap(InputFolder,ChromaFileFlag,NewCfgList)    
         for ism in ismlist:
-            map(mkdir_p,Get3ptCorrFolderList(cfgindicies[curricfg],ism))
+            for curricfg in NewCfgList:
+                map(mkdir_p,Get3ptCorrFolderList(curricfg,ism))
         if Submit:
-            runfile = Scom+' '+CreateCSHWrap(cfgindicies,curricfg,fcfg,thisjoblist,stage)
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage)
         else:
-            runfile = CreateCSHWrap(cfgindicies,curricfg,fcfg,thisjoblist,stage)
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage)
         print runfile
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)

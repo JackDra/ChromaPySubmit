@@ -96,7 +96,7 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
     outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
-    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies[int(icfg)-1:int(fcfg)]):
+    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies):
         if os.path.isfile(outputfile):os.remove(outputfile)
         if os.path.isfile(logfile):os.remove(logfile)
         outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
@@ -145,7 +145,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
     outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
-    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies[int(icfg)-1:int(fcfg)]):
+    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies):
         if os.path.isfile(outputfile):os.remove(outputfile)
         if os.path.isfile(logfile):os.remove(logfile)
         outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')

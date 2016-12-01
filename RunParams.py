@@ -257,7 +257,7 @@ REvecFlag = '' ## flag for identiftying variational method parameters (only in f
 # Prec = '1.0d-5'
 # Prec = '5.0e-11'
 Prec = '1.0e-8'
-MaxIter = 5000
+MaxIter = 5
 # Projector = 4
 GammaRep = 'sakurai'
 ProjectorList = [4,3]
@@ -486,9 +486,9 @@ def CreateGFnum(icfg):
     with open(filelists+cfgfile,'r') as f:
         thisfile = f.readlines()
         if len(thisfile) == 0: return 'Null'
-        if len(thisfile) <= icfg:
+        if len(thisfile) < icfg:
             icfg = len(thisfile)
-        thisgfnum = thisfile[icfg-1].replace('\n','')
+        thisgfnum = thisfile[icfg].replace('\n','')
     return re.sub(r'_xsrc.','',thisgfnum),re.findall(r'_xsrc.',thisgfnum)[0]
 
 # def CreateCfg(icfg):
