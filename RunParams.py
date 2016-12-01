@@ -489,7 +489,7 @@ def CreateGFnum(icfg):
         if len(thisfile) < icfg:
             icfg = len(thisfile)
         thisgfnum = thisfile[icfg].replace('\n','')
-    return re.sub(r'_xsrc.','',thisgfnum),re.findall(r'_xsrc.',thisgfnum)[0]
+    return re.sub(r'_xsrc.*','',thisgfnum),re.findall(r'_xsrc.*',thisgfnum)[0]
 
 # def CreateCfg(icfg):
 #     return ensemble+CreateGFnum(icfg)
