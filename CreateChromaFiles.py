@@ -154,7 +154,7 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
 
                             
                         for njsm,(iPoF,jsm) in enumerate(PoFjsmlist):
-                            corr_tsink = str(ModuloT(int(iTS)+ int(iPoF)+ int(GetSourceString(icfg,iPoF=srcPoF)[-1])))
+                            corr_tsink = str(ModuloT(int(iTS)+ int(iPoF)+ int(GetSourceString(icfg,iPoF=srcPoF).split()[-1])))
                             # thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+'_PoF'+str(iPoF)
                             if njsm == 0:
                                 thisseqsource = totseqsourcelist[0]
@@ -235,7 +235,7 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist):
                 for DS in DSList:
                     for Projector in map(str,ProjectorList):
                         for iTS in map(str,it_sst):                    
-                            corr_tsink = str(ModuloT(int(iTS) + int(GetSourceString(icfg,iPoF=srcPoF)[-1])))
+                            corr_tsink = str(ModuloT(int(iTS) + int(GetSourceString(icfg,iPoF=srcPoF).split()[-1])))
 
                             # thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm
                             thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
@@ -321,7 +321,7 @@ def CreateCombCorrFiles(folder,fileprefix,icfg,thisismlist):
                 for DS in DSList:
                     for Projector in map(str,ProjectorList):
                         for iTS in map(str,it_sst):                    
-                            corr_tsink = str(ModuloT(int(iTS) + int(GetSourceString(icfg,iPoF=srcPoF)[-1])))
+                            corr_tsink = str(ModuloT(int(iTS) + int(GetSourceString(icfg,iPoF=srcPoF).split()[-1])))
                             # thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm
                             thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
                             thisseqprop = 'seqprop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
