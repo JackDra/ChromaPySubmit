@@ -154,6 +154,7 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
 
                             
                         for njsm,(iPoF,jsm) in enumerate(PoFjsmlist):
+                            corr_tsink = str(ModuloT(int(iTS)+ int(iPoF)+ int(GetSourceString(icfg,iPoF=srcPoF)[-1])))
                             # thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+'_PoF'+str(iPoF)
                             if njsm == 0:
                                 thisseqsource = totseqsourcelist[0]
@@ -164,7 +165,7 @@ def Create3ptCorrFiles(folder,fileprefix,icfg,thisismlist):
 
                             ## create seq source
                             DictOut = AddToIM(DictOut,iterlist.next(),Add_SeqSource,['default_gauge_field',thisprop,thisprop,thisseqsource,
-                                                                       DS,Projector,twoptinterps[0],str(int(iTS)+iPoF),jsm])
+                                                                       DS,Projector,twoptinterps[0],corr_tsink,jsm])
 
                             # ## delete sink smeared 2pt source
                             # DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
@@ -234,6 +235,8 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist):
                 for DS in DSList:
                     for Projector in map(str,ProjectorList):
                         for iTS in map(str,it_sst):                    
+                            corr_tsink = str(ModuloT(int(iTS) + int(GetSourceString(icfg,iPoF=srcPoF)[-1])))
+
                             # thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm
                             thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
                             thisseqprop = 'seqprop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
@@ -243,7 +246,7 @@ def Create3ptCorrFilesjsm(folder,fileprefix,icfg,thisismlist):
 
                             ## create seq source
                             DictOut = AddToIM(DictOut,iterlist.next(),Add_SeqSource,['default_gauge_field',thisprop,thisprop,thisseqsource,
-                                                                                     DS,Projector,twoptinterps[0],iTS,jsm])
+                                                                                     DS,Projector,twoptinterps[0],corr_tsink,jsm])
 
                             # ## delete sink smeared 2pt propagator
                             # DictOut = AddToIM(DictOut,iterlist.next(),Add_EraseNamedObject,[thissiprop])
@@ -318,6 +321,7 @@ def CreateCombCorrFiles(folder,fileprefix,icfg,thisismlist):
                 for DS in DSList:
                     for Projector in map(str,ProjectorList):
                         for iTS in map(str,it_sst):                    
+                            corr_tsink = str(ModuloT(int(iTS) + int(GetSourceString(icfg,iPoF=srcPoF)[-1])))
                             # thissiprop = 'prop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm
                             thisseqsource = 'seqsource_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS
                             thisseqprop = 'seqprop_id_sm'+ism+'_srcPoF'+str(srcPoF)+'_si'+jsm+DS+'_Proj'+Projector+'_tsink'+iTS

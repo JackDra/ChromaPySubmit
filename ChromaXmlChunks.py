@@ -206,7 +206,7 @@ def Add_SeqSource(gauge_id,prop_id1,prop_id2,seqsource_id,DS,Proj,Interp,t_sink,
     thisdict['Param'] = OrdDict()
     thisdict['Param']['version'] = 1
     thisdict['Param']['seq_src'] = GetSmSeqSourceType(Interp,DS,Proj)
-    thisdict['Param']['t_sink'] = t_sink
+    thisdict['Param']['t_sink'] = str(t_sink)
     thisdict['Param']['sink_mom'] = ppstr
     thisdict['PropSink'] = OrdDict()
     thisdict['PropSink']['version'] = 5

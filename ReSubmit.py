@@ -27,7 +27,7 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False,cfgindici
         with open(paramdir+indexfilename,'r') as f:
             cfgindicies = map(int,f.readlines())
     # for ism in ismlist:
-    #     for thecfg in cfgindicies[icfg:fcfg]:
+    #     for thecfg in cfgindicies[icfg-1:fcfg]:
     #         RemoveCSH(thecfg,ism,stage)
     #removes fort parameter files
     # if OnlyGauge:
@@ -54,19 +54,19 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False,cfgindici
 
             ##check if whole run is done
     if OnlyTwoPt:
-        boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) for thecfg in cfgindicies[icfg:fcfg]])
+        boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) for thecfg in cfgindicies[icfg-1:fcfg]])
     else:
         if DoJsm3pt:
             boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and
-                             Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList) for thecfg in cfgindicies[icfg:fcfg]])
+                             Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList) for thecfg in cfgindicies[icfg-1:fcfg]])
         else:
             boolcheck = all([(Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and
-                             Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList)) for thecfg in cfgindicies[icfg:fcfg]])
+                             Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList)) for thecfg in cfgindicies[icfg-1:fcfg]])
                 
             
     if boolcheck:
         if not Save2ptProp:
-            for thecfg in cfgindicies[icfg:fcfg]:
+            for thecfg in cfgindicies[icfg-1:fcfg]:
                 RemoveProp(thecfg,ismlist)
         print 'All Complete'
         return
@@ -79,7 +79,7 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False,cfgindici
     while len(NewCfgList) == 0:
         NewCfgList = []
         stage = newstage
-        for thecfg in cfgindicies[icfg:fcfg]:
+        for thecfg in cfgindicies[icfg-1:fcfg]:
             if 'twoptcorr' in stage:
                 if not Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
                     NewCfgList.append(thecfg)

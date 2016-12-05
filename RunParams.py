@@ -108,7 +108,7 @@ elif 'JackLappy' in THISMACHINE:
     time = '5:00:00'
     GPU = False
     # GPU = '4'
-    nproc = 4
+    nproc = 2
     # nproc = 4
     RPN = 1 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     totproc = nproc*RPN
@@ -123,7 +123,9 @@ elif 'JackLappy' in THISMACHINE:
     chromafolder = 'chroma_alex'
     chromaGPUfolder = 'chroma_gpu_nprmod_install'
     Submit = False ## submits the script to the que, disable to run on local machine
-    it_sst = [4] ## ahnialation parameters (momenta) MUST BE len(it_sst) == len(RVec)/PoFShifts
+    it_sst = [2] ## ahnialation parameters (momenta) MUST BE len(it_sst) == len(RVec)/PoFShifts
+    MaxIter = 20
+    RVec = [ 0.5,0.5,0.5 ]
     
 elif 'juqueen' in THISMACHINE:
     thismachine = 'juqueen'
@@ -155,6 +157,10 @@ elif 'juqueen' in THISMACHINE:
     limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00'
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
+    MaxIter = 5000
+
+    #Taken from 
+    RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
 
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
@@ -225,9 +231,6 @@ GFFormat = 'SZINQIO'
 #Taken from /home/accounts/jdragos/scripts/PythonAnalysis/REvecSave/k12090/PoF1to16dt2LREM.txt
 # RVec = [ 76.3260613436,  -161.5448230802, 264086.1917824702, -321.4016231030, 4390.5310121576, -893677.8525444396 ]
 
-#Taken from 
-RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
-
 # #Taken mokup
 # RVec = [ 1  ]
 
@@ -257,7 +260,6 @@ REvecFlag = '' ## flag for identiftying variational method parameters (only in f
 # Prec = '1.0d-5'
 # Prec = '5.0e-11'
 Prec = '1.0e-8'
-MaxIter = 5000
 # Projector = 4
 GammaRep = 'sakurai'
 ProjectorList = [4,3]
@@ -302,6 +304,12 @@ NmaxHB = '1'
 # GFDoOr = 'false'
 # GFOrPara = '1.0'
 
+def ModuloT(itsrc):
+    if itsrc >= nt:
+        itsrc = itsrc - nt
+    return itsrc
+    
+
 def ModuloTsrc(icfg,iPoF):
     itsrc = int(SRCT[icfg])+int(iPoF)
     # if itsrc < 0:
@@ -312,7 +320,9 @@ def ModuloTsrc(icfg,iPoF):
     
 def GetSourceString(icfg,iPoF=0):
     return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(ModuloTsrc(icfg,iPoF))
+    ##DEBUGGING STUFF##
     # return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(iPoF)
+    # return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(int(iPoF)+4)
     # return str(SRCX[icfg]) + ' ' + str(SRCY[icfg]) + ' ' + str(SRCZ[icfg]) + ' ' + str(it)
 
 
