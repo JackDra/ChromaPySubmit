@@ -136,7 +136,6 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
         outlist.append(r'#!/bin/tcsh -login')
     else:        
         outlist.append(r'#! /bin/tcsh')
-    outlist.append(r'#! /bin/tcsh')
     outlist.append('')
     if quetype == 'bluegene':
         outlist.append(r'# @ job_name = '+Jstring)
