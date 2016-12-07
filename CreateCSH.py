@@ -127,16 +127,25 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
     outlist = []
     outlist.append(r'#! /bin/tcsh')
     outlist.append('')
-    outlist.append(r'# @ job_name = '+Jstring)
-    outlist.append(r'# @ error = $(job_name).$(jobid).out')
-    outlist.append(r'# @ output = $(job_name).$(jobid).out')
-    outlist.append(r'# @ environment = COPY_ALL')
-    outlist.append(r'# @ wall_clock_limit = '+time)
-    outlist.append(r'# @ notification = error')
-    outlist.append(r'# @ notify_user = '+email)
-    outlist.append(r'# @ job_type = bluegene')
-    outlist.append(r'# @ bg_size = '+str(nproc))
-    outlist.append(r'# @ queue')
+    if quetype == 'bluegene':
+        outlist.append(r'# @ job_name = '+Jstring)
+        outlist.append(r'# @ error = $(job_name).$(jobid).out')
+        outlist.append(r'# @ output = $(job_name).$(jobid).out')
+        outlist.append(r'# @ environment = COPY_ALL')
+        outlist.append(r'# @ wall_clock_limit = '+time)
+        outlist.append(r'# @ notification = error')
+        outlist.append(r'# @ notify_user = '+email)
+        outlist.append(r'# @ job_type = bluegene')
+        outlist.append(r'# @ bg_size = '+str(nproc))
+        outlist.append(r'# @ queue')
+    else:
+        outlist.append(r'#SBATCH -p '+quetype)
+        outlist.append(r'#SBATCH -n '+str(nproc))
+        outlist.append(r'#SBATCH --time='+time)
+        if GPU != False:
+            outlist.append(r'#SBATCH --gres=gpu:'+GPU)
+        outlist.append(r'#SBATCH --mem='+mem)
+        
     outlist.append('')
     if not Submit:
         for imod in ModuleList:
@@ -149,8 +158,12 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
         if os.path.isfile(outputfile):os.remove(outputfile)
         if os.path.isfile(logfile):os.remove(logfile)
         outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
-        outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
-                       ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+        if quetype == 'bluegene':
+            outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+                           ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+        else:
+            outlist.append(r'    mpirun -np '+str(totproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+                           ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
 
     outlist.append(r'    echo "finished "`date`')
     # outlist.append(r'    if ($? != 0) then')

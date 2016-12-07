@@ -162,6 +162,38 @@ elif 'juqueen' in THISMACHINE:
     #Taken from 
     RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
 
+elif 'dev-intel' in THISMACHINE or 'gateway-' in THISMACHINE:
+    thismachine = 'hpcc'
+    basedir = '/mnt/home/dragosja/'
+    scratchdir = '/mnt/scratch/dragosja/data/'
+    codedir = '/mnt/home/dragosja/Chroma/install/chroma/'
+    gfdir = '/mnt/scratch/dragosja/data/gfields/Nf2p1/b1.9kl0.13754ks0.1364/'
+    Scom = 'qsub'
+    quetype = 'dev-intel16'
+    mem = '128GB'
+    time = '23:50:00'
+    GPU = False
+    # GPU = '4'
+    nproc = 10
+    RPN = 28 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
+    # nproc = 16
+    totproc = nproc*RPN ## number of nodes
+    # if RPN not in [16,32,64]: raise  EnvironmentError('RPN (ranks per node) must be 16 (physical), 32 or 64/ RPN='+str(RPN))
+    # if totproc % RPN != 0: raise  EnvironmentError('nproc must be multiple of RPN/ nproc/RPN='+str(nproc)+'/'+str(RPN)+'='+str(nproc/float(RPN)))
+    nx = 32
+    nt = 64
+    limefolder = 'qdp++'
+    chromafolder = 'chroma'
+    chromaGPUfolder = ''
+    kud = 1375400 # kappa (quark hopping) params
+    ks = 1364000
+    kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
+    # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
+    limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00'
+    Submit = True ## submits the script to the que, disable to run on local machine
+    it_sst = [13] ## ahnialation parameters (momenta)
+    MaxIter = 5000
+
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
     # exit()
