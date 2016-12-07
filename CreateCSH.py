@@ -160,7 +160,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
             outlist.append(r'#PBS -l walltime='+time+',nodes='+str(nproc)+':ppn='+str(RPN))
             if GPU != False:
                 outlist.append(r'#PBS --gres gpu:'+nGPU)
-            outlist.append(r'#PBS --mem '+mem)
+            # outlist.append(r'#PBS --mem '+mem)
             outlist.append(r'#PBS -N '+Jstring)
             if thismachine == 'hpcc':
                 if RunPTG:
