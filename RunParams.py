@@ -179,8 +179,8 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     GPU = False
     nGPU = '4'
     # GPU = '4'
-    nproc = 10
-    RPN = 28 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
+    nproc = 32
+    RPN = 16 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     # nproc = 16
     totproc = nproc*RPN ## number of nodes
     # if RPN not in [16,32,64]: raise  EnvironmentError('RPN (ranks per node) must be 16 (physical), 32 or 64/ RPN='+str(RPN))
