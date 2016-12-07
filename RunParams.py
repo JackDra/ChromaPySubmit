@@ -165,7 +165,7 @@ elif 'juqueen' in THISMACHINE:
     #Taken from 
     RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
 
-elif 'dev-intel' in THISMACHINE or 'gateway-' in THISMACHINE:
+elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     thismachine = 'hpcc'
     RunPTG = True ## Runs on our partition or not
     basedir = '/mnt/home/dragosja/'
