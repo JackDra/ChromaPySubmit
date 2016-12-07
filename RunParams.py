@@ -29,12 +29,12 @@ if not os.path.isdir(JackLibDir):
     sys.exit()
 
 sys.path.append(JackLibDir)
+print 'Running on ' , THISMACHINE
 
 import errno
 from MiscFuns import mkdir_p
 import cPickle as pickle
 import numpy as np
-
 
 email = 'jack.dragos@gmail.com'
 
