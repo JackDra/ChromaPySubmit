@@ -80,7 +80,10 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
     Jstring = stage+'-'+str(icfg)+'-'+str(fcfg)
         
     outlist = []
-    outlist.append(r'#! /bin/tcsh')
+    if thismachine == 'hpcc':
+        outlist.append(r'#!/bin/tcsh -login')
+    else:        
+        outlist.append(r'#! /bin/tcsh')
     outlist.append('')
     outlist.append(r'#SBATCH -p '+quetype)
     outlist.append(r'#SBATCH -n '+str(nproc))
@@ -125,6 +128,10 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
     icfg,fcfg = str(icfg),str(fcfg)
     Jstring = stage+'-'+str(icfg)+'-'+str(fcfg)
     outlist = []
+    if thismachine == 'hpcc':
+        outlist.append(r'#!/bin/tcsh -login')
+    else:        
+        outlist.append(r'#! /bin/tcsh')
     outlist.append(r'#! /bin/tcsh')
     outlist.append('')
     if quetype == 'bluegene':
@@ -139,13 +146,24 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
         outlist.append(r'# @ bg_size = '+str(nproc))
         outlist.append(r'# @ queue')
     else:
-        outlist.append(r'#SBATCH -p '+quetype)
-        outlist.append(r'#SBATCH -n '+str(nproc))
-        outlist.append(r'#SBATCH --time='+time)
-        if GPU != False:
-            outlist.append(r'#SBATCH --gres=gpu:'+GPU)
-        outlist.append(r'#SBATCH --mem='+mem)
-        
+        if Scom == 'sbatch':
+            outlist.append(r'#SBATCH -p '+quetype)
+            outlist.append(r'#SBATCH -n '+str(nproc))
+            outlist.append(r'#SBATCH --time='+time)
+            if GPU != False:
+                outlist.append(r'#SBATCH --gres=gpu:'+GPU)
+            outlist.append(r'#SBATCH --mem='+mem)
+        elif Scom == 'qsub':
+            outlist.append(r'#PBS -l walltime='+time+',nodes='+str(nproc)+':ppn='+str(RPN))
+            if GPU != False:
+                outlist.append(r'#PBS --gres gpu:'+nGPU)
+            outlist.append(r'#PBS --mem '+mem)
+            outlist.append(r'#PBS -N '+Jstring)
+            if thismachine == 'hpcc':
+                if RunPTG:
+                    outlist.append(r'#PBS -A ptg')
+                else:
+                    outlist.append(r'#PBS -A hpccdefault')
     outlist.append('')
     if not Submit:
         for imod in ModuleList:

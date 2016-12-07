@@ -164,6 +164,7 @@ elif 'juqueen' in THISMACHINE:
 
 elif 'dev-intel' in THISMACHINE or 'gateway-' in THISMACHINE:
     thismachine = 'hpcc'
+    RunPTG = True ## Runs on our partition or not
     basedir = '/mnt/home/dragosja/'
     scratchdir = '/mnt/scratch/dragosja/data/'
     codedir = '/mnt/home/dragosja/Chroma/install/chroma/'
@@ -173,6 +174,7 @@ elif 'dev-intel' in THISMACHINE or 'gateway-' in THISMACHINE:
     mem = '128GB'
     time = '23:50:00'
     GPU = False
+    nGPU = '4'
     # GPU = '4'
     nproc = 10
     RPN = 28 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
@@ -194,6 +196,7 @@ elif 'dev-intel' in THISMACHINE or 'gateway-' in THISMACHINE:
     it_sst = [13] ## ahnialation parameters (momenta)
     MaxIter = 5000
 
+    
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
     # exit()
