@@ -212,7 +212,7 @@ def CreateCSHWrap(cfgindicies,icfg,fcfg,jobid,stage):
         outfile = cshdir+'Run'+stage+'.csh'
     else:
         outfile = cshdir+'Run'+stage+'cfg'+icfg+'fcfg'+fcfg+'.csh'
-    if 'juqueen' in thismachine:
+    if 'juqueen' in thismachine or 'hpcc' in thismachine:
         outlist = CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobid,stage)
     else:
         outlist = CreateCSHList(cfgindicies,icfg,fcfg,jobid,stage)
