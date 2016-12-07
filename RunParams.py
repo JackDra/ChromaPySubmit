@@ -533,7 +533,7 @@ def CreateGFnum(icfg):
         raise IOError(filelists+cfgfile + ' not found, run cfglist creation script')
     with open(filelists+cfgfile,'r') as f:
         thisfile = f.readlines()
-        if len(thisfile) == 0: return 'Null'
+        if len(thisfile) == 0: return 'Null','_xsrc-1'
         if len(thisfile) < icfg:
             icfg = len(thisfile)
         thisgfnum = thisfile[icfg].replace('\n','')

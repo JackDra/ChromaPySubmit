@@ -44,7 +44,9 @@ def GetGeomInput(Split=GeomPicked):
                     if in_t*in_x*in_y*in_z == totproc:
                         geomlist.append((in_x,in_y,in_z,in_t))
     # print geomlist
-    if len(geomlist) == 0: raise IOError('No Geometries are allowable by the choice of nx, nt, nproc and RPN')
+    if len(geomlist) == 0:
+        return '1 1 1 1'
+        # raise IOError('No Geometries are allowable by the choice of nx, nt, nproc and RPN')
     # if len(geomlist) == 1 and geomlist[0] == (1,1): print 'WARNING, no geometry has been found'
     npx,npy,npz,npt = PickGeom(geomlist,Split=Split)
     npxtvec = [npx,npy,npz,npt]
@@ -58,7 +60,9 @@ def GetIOGeomInput():
         for in_t in range(1,npt+1):
             if totproc % in_t*in_x == 0 and nx % npx == 0 and nt % npt == 0:
                 geomlist.append((in_x,in_t))
-    if len(geomlist) == 1: raise IOError('ParaIO cannot be done on this choise of nx, nt, nproc and RPN')
+    if len(geomlist) == 1:
+        print '1 1 1 1'
+        # raise IOError('ParaIO cannot be done on this choise of nx, nt, nproc and RPN')
     multlist = [ix*it for ix,it in geomlist]
     npx,npt = geomlist[multlist.index(max(multlist))]
     npxtvec = [1,1,npx,npt]
