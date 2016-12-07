@@ -8,10 +8,13 @@ THISMACHINE = socket.gethostname()
 
 if 'juqueen' in THISMACHINE:
     JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
-elif 'JackLappy':
+elif 'JackLappy' in THISMACHINE:
     # JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
     JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
-
+else:
+    JackLibDir = '../LQCDPythonAnalysis'
+    
+    
 import os, sys
 from shutil import copyfile
 cwd = os.getcwd()
