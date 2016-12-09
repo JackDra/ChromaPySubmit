@@ -13,6 +13,7 @@ nproc = -1
 forcecfg = False
 ncfg = False
 nsrc = DupCfgs
+nroll = 0
 for iin in sys.argv[1:]:
     if '-np=' in iin:
         nproc = int(iin.replace('-np=',''))
@@ -22,6 +23,8 @@ for iin in sys.argv[1:]:
         ncfg = int(iin.replace('-ncfg=',''))
     elif '-nsrc=' in iin:
         nsrc = int(iin.replace('-nsrc=',''))
+    elif '-nroll=' in iin:
+        nroll = int(iin.replace('-nroll=',''))
         
         
 if nproc == -1:
@@ -36,13 +39,14 @@ print 'Number of processors = ' , nproc
 # nproc = int(sys.argv[1])
 
 
-thiscfglist,totncfg = CreateCfgList()
 # np.array([ithisc+'\n' for ithisc in thiscfglist]).tofile(cfgfile)
+
+thiscfglist,totncfg = CreateCfgList(nroll=nroll)
+
 if ncfg == False:
     ncfg = totncfg
-
-
 cfgindicies = GetCfgIndicies(totncfg,ncfg,nsrc)
+
 
 
 if forcecfg == False:

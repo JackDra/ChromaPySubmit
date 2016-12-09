@@ -14,7 +14,7 @@ def SortConfigs(setfilelist):
     else:
         return np.sort(setfilelist)
 
-def CreateCfgList(thisDupCfgs=DupCfgs,ncfg=0):
+def CreateCfgList(ncfg,thisDupCfgs=DupCfgs):
     # filelist = os.listdir(rdsigfdir)
     if OnlyGauge:
         # setfilelist = map(str,range(1,NumGFCreate+1))
@@ -32,8 +32,9 @@ def CreateCfgList(thisDupCfgs=DupCfgs,ncfg=0):
             # setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
         setfilelist = SortConfigs(setfilelist)
         totncfg = len(setfilelist)
-        if ncfg != 0 and ncfg <= len(setfilelist):
-            setfilelist = setfilelist[:ncfg]
+        setfilelist = np.roll(setfilelist,machineroll*(totncfg/ncfg)/(totroll))
+        # if ncfg != 0 and ncfg <= len(setfilelist):
+        #     setfilelist = setfilelist[:ncfg]
     outfile = []
     for iDup in range(1,int(thisDupCfgs)+1):
         outfile += [iset+'_xsrc'+str(iDup)+'\n' for iset in setfilelist]

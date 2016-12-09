@@ -100,6 +100,7 @@ elif 'isaac' in THISMACHINE:
     it_sst = [13] ## ahnialation parameters (momenta)
 
 elif 'JackLappy' in THISMACHINE:
+    machineroll = 0
     thismachine = 'JackLappy'
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
     scratchdir = '/home/jackdra/PHD/CHROMA/TestVar/scratch/'
@@ -131,6 +132,7 @@ elif 'JackLappy' in THISMACHINE:
     RVec = [ 0.5,0.5,0.5 ]
     
 elif 'juqueen' in THISMACHINE:
+    machineroll = 1
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
@@ -167,6 +169,7 @@ elif 'juqueen' in THISMACHINE:
     RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
 
 elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
+    machineroll = 1
     thismachine = 'hpcc'
     RunPTG = True ## Runs on our partition or not
     basedir = '/mnt/home/dragosja/'
@@ -224,6 +227,7 @@ DupCfgs = 20 ## 5 random sources per gauge field
 # Submit = True
 #james prop gf source index parameter
 
+totroll = 2
 
 
 
@@ -257,7 +261,6 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 ##### WARNING, if OnlyTwoPt = True, please set DoJsm3pt = False #####
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
 OnlyTwoPt = False ## Only calculates two-point correlation functions.
-OnlyThreePt = False ## Only calculates two-point correlation functions.
 if OnlyTwoPt: DoJsm3pt = False
 
 OnlyGauge = False ## Only calculates Gauge field
