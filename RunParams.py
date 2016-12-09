@@ -210,6 +210,9 @@ if len(codedir) == 0:
 
 print 'Corresonds to thismachine',thismachine
 ChromaFileFlag = 'params_runTwoPt_'
+# runflag = '' ## Old run
+runflag = 'PChroma'
+
 
 ExitOnFail = True ## Reimplemented: exits if there was a failed run (on for debugging?)
 DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
@@ -473,8 +476,8 @@ OutputFolder = scriptdir+OutputFolderPref+'/'
 # rdsigfdir = scratchdir+'/gaugefields/qcdsf.655/'
 # gfdir = '/rdsi/PACS-CS/ensemble+'/'
 qpdir = scratchdir+'/qprops/'+kappastr+'/'
-cfdir = scratchdir+'/cfun/'+kappastr+'/twoptRandT/'
-cf3ptdir = scratchdir+'/cfun/'+kappastr+'/threept/'
+cfdir = scratchdir+'/cfun'+runflag+'/'+kappastr+'/twoptRandT/'
+cf3ptdir = scratchdir+'/cfun'+runflag+'/'+kappastr+'/threept/'
 debugdir = scratchdir+'/debug/'+kappastr+'/'
 tempdir = '/tmp/'
 filelists = paramdir
