@@ -134,7 +134,8 @@ elif 'juqueen' in THISMACHINE:
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
-    codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma/install_bgq_clang/'
+    # codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma/install_bgq_clang/'
+    codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma_bup/install/'
     gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.13754ks0.1364/'
     Scom = 'llsubmit'
     quetype = 'bluegene'
@@ -253,6 +254,7 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 ##### WARNING, if OnlyTwoPt = True, please set DoJsm3pt = False #####
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
 OnlyTwoPt = False ## Only calculates two-point correlation functions.
+OnlyThreePt = False ## Only calculates two-point correlation functions.
 if OnlyTwoPt: DoJsm3pt = False
 
 OnlyGauge = False ## Only calculates Gauge field
