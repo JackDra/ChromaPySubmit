@@ -543,8 +543,8 @@ def CreateGFnum(icfg):
     with open(filelists+cfgfile,'r') as f:
         thisfile = f.readlines()
         if len(thisfile) == 0: return 'Null','_xsrc-1'
-        if len(thisfile) < icfg:
-            icfg = len(thisfile)
+        if len(thisfile) <= icfg:
+            icfg = icfg - len(thisfile)
         thisgfnum = thisfile[icfg].replace('\n','')
     return re.sub(r'_xsrc.*','',thisgfnum),re.findall(r'_xsrc.*',thisgfnum)[0]
 
