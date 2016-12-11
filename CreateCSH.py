@@ -84,10 +84,7 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
     Jstring = stage+'-'+str(icfg)+'-'+str(fcfg)
         
     outlist = []
-    if thismachine == 'hpcc':
-        outlist.append(r'#!/bin/tcsh -login')
-    else:        
-        outlist.append(r'#! /bin/tcsh')
+    outlist.append(r'#! /bin/tcsh')
     outlist.append('')
     outlist.append(r'#SBATCH -p '+quetype)
     outlist.append(r'#SBATCH -n '+str(nproc))
@@ -132,10 +129,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
     icfg,fcfg = str(icfg),str(fcfg)
     Jstring = stage+'-'+str(icfg)+'-'+str(fcfg)
     outlist = []
-    if thismachine == 'hpcc':
-        outlist.append(r'#!/bin/tcsh -login')
-    else:        
-        outlist.append(r'#! /bin/tcsh')
+    outlist.append(r'#! /bin/tcsh')
     outlist.append('')
     if quetype == 'bluegene':
         outlist.append(r'# @ job_name = '+Jstring)
