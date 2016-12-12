@@ -174,7 +174,7 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     RunPTG = True ## Runs on our partition or not
     basedir = '/mnt/home/dragosja/'
     scratchdir = '/mnt/scratch/dragosja/data/'
-    codedir = '/mnt/home/dragosja/Chroma/install/chroma/'
+    codedir = '/mnt/home/dragosja/Chroma/install/'
     # gfdir = '/mnt/scratch/dragosja/data/gfields/Nf2p1/b1.9kl0.13754ks0.1364/'
     gfdir = '/mnt/scratch/shindle7/'
     Scom = 'qsub'
