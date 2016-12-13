@@ -168,9 +168,9 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
     outlist.append('')
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
-    if 'hpcc' in thismachine:
-        outlist.append('export OMP_NUM_THREADS='+str(RPN))
-        outlist.append('')
+    # if 'hpcc' in thismachine:
+    #     outlist.append('export OMP_NUM_THREADS='+str(RPN))
+    #     outlist.append('')
         
     outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
     for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies):
