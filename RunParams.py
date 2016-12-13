@@ -179,7 +179,7 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     gfdir = '/mnt/scratch/shindle7/'
     Scom = 'qsub'
     quetype = 'dev-intel16'
-    mem = '128GB'
+    mem = '120GB'
     time = '5:00:00'
     GPU = False
     nGPU = '4'
