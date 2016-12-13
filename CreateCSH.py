@@ -151,7 +151,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
                 outlist.append(r'#SBATCH --gres=gpu:'+GPU)
             outlist.append(r'#SBATCH --mem='+mem)
         elif Scom == 'qsub':
-            outlist.append(r'#PBS -l walltime='+time+',nodes='+str(nproc)+':ppn='+str(RPN)',mem='+mem)
+            outlist.append(r'#PBS -l walltime='+time+',nodes='+str(nproc)+':ppn='+str(RPN)+',mem='+mem)
             if GPU != False:
                 outlist.append(r'#PBS --gres gpu:'+nGPU)
             outlist.append(r'#PBS -N '+Jstring)
