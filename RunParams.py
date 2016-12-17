@@ -204,6 +204,8 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     it_sst = [13] ## ahnialation parameters (momenta)
     MaxIter = 5000
 
+    #Taken from 
+    RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
     
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
