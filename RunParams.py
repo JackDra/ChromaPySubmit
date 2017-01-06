@@ -179,12 +179,12 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     gfdir = '/mnt/scratch/shindle7/'
     Scom = 'qsub'
     quetype = 'dev-intel16'
-    mem = '128GB'
+    mem = '512GB'
     time = '23:50:00'
     GPU = False
     nGPU = '4'
     # GPU = '4'
-    nproc = 32
+    nproc = 64
     RPN = 16 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     # nproc = 16
     totproc = nproc*RPN ## number of nodes
