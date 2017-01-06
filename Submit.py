@@ -38,7 +38,7 @@ print 'Number of processors = ' , nproc
 
 # np.array([ithisc+'\n' for ithisc in thiscfglist]).tofile(cfgfile)
 
-thiscfglist,totncfg = CreateCfgList(nproc)
+thiscfglist,totncfg = CreateCfgList(nproc,forcecfg)
 
 if ncfg == False:
     ncfg = totncfg

@@ -14,7 +14,7 @@ def SortConfigs(setfilelist):
     else:
         return np.sort(setfilelist)
 
-def CreateCfgList(ncfg,thisDupCfgs=DupCfgs):
+def CreateCfgList(ncfg,forcecfg,thisDupCfgs=DupCfgs):
     # filelist = os.listdir(rdsigfdir)
     if OnlyGauge:
         # setfilelist = map(str,range(1,NumGFCreate+1))
@@ -24,8 +24,12 @@ def CreateCfgList(ncfg,thisDupCfgs=DupCfgs):
         filelist = os.listdir(gfdir)
         # print filelist
         setfilelist = []
-        for ifile in filelist:
-            if limename in ifile:
+        if forcecfg == False:
+            forcecfg = 1,len(filelist)
+        else:
+            if forcecfg[-1] == -1: forcecfg[-1] = len(filelist)
+        for icf,ifile in enumerate(filelist):
+            if limename in ifile and icf+1 >= forcecfg[0] and icf+1 <= forcecfg[0]:
                 setfilelist.append(ifile.replace(limename,''))
             # if '.lime' in ifile:
                 # setfilelist.append('.'+'.'.join(ifile.split('.')[1:3]))
