@@ -46,11 +46,11 @@ cfgindicies = GetCfgIndicies(totncfg,ncfg,nsrc)
 
 
 
-if forcecfg == False:
-    cfgintervals = GetIcfgTOFcfg(nproc,ncfg*nsrc )
-    for icfg,fcfg in cfgintervals:
-        print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)
-        RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies)
-else:
-    RunNext(forcecfg[0],forcecfg[1],Start=True,cfgindicies=cfgindicies)
+# if forcecfg == False:
+cfgintervals = GetIcfgTOFcfg(nproc,ncfg*nsrc )
+for icfg,fcfg in cfgintervals:
+    print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)
+    RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies)
+# else:
+#     RunNext(forcecfg[0],forcecfg[1],Start=True,cfgindicies=cfgindicies)
         
