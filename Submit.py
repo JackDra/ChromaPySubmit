@@ -48,9 +48,6 @@ cfgindicies = GetCfgIndicies(totncfg,ncfg,nsrc)
 
 # if forcecfg == False:
 cfgintervals = GetIcfgTOFcfg(nproc,ncfg*nsrc )
-print thiscfglist
-print cfgindicies
-print 
 for icfg,fcfg in cfgintervals:
     print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)    
     RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies)
