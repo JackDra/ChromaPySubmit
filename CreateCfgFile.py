@@ -23,7 +23,7 @@ def CreateCfgList(ncfg,forcecfg,thisDupCfgs=DupCfgs):
     else:
         filelist = os.listdir(gfdir)
         
-        # print filelist
+        print filelist
         setfilelist = []
         if forcecfg == False:
             forcecfg = 1,len(filelist)
