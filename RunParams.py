@@ -100,7 +100,6 @@ elif 'isaac' in THISMACHINE:
     it_sst = [13] ## ahnialation parameters (momenta)
 
 elif 'JackLappy' in THISMACHINE:
-    machineroll = 0
     thismachine = 'JackLappy'
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
     scratchdir = '/home/jackdra/PHD/CHROMA/TestVar/scratch/'
@@ -132,7 +131,6 @@ elif 'JackLappy' in THISMACHINE:
     RVec = [ 0.5,0.5,0.5 ]
     
 elif 'juqueen' in THISMACHINE:
-    machineroll = 1
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
@@ -169,7 +167,6 @@ elif 'juqueen' in THISMACHINE:
     RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
 
 elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
-    machineroll = 1
     thismachine = 'hpcc'
     RunPTG = True ## Runs on our partition or not
     basedir = '/mnt/home/dragosja/'

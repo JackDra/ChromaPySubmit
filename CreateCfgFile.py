@@ -36,7 +36,7 @@ def CreateCfgList(ncfg,forcecfg,thisDupCfgs=DupCfgs):
             # setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
         setfilelist = SortConfigs(setfilelist)
         totncfg = len(setfilelist)
-        setfilelist = np.roll(setfilelist,machineroll*(totncfg/ncfg)/(totroll))
+        # setfilelist = np.roll(setfilelist,machineroll*(totncfg/ncfg)/(totroll))
         # if ncfg != 0 and ncfg <= len(setfilelist):
         #     setfilelist = setfilelist[:ncfg]
     outfile = []
