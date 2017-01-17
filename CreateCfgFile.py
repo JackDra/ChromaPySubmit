@@ -30,12 +30,12 @@ def CreateCfgList(ncfg,forcecfg,thisDupCfgs=DupCfgs):
         else:
             if forcecfg[-1] == -1: forcecfg[-1] = len(filelist)
         for icf,ifile in enumerate(filelist):
-            if (limename in ifile) and (icf+1 >= forcecfg[0]) and (icf+1 <= forcecfg[-1]):
+            if limename in ifile:
                 setfilelist.append(ifile.replace(limename,''))
             # if '.lime' in ifile:
                 # setfilelist.append('.'+'.'.join(ifile.split('.')[1:3]))
             # setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
-        setfilelist = SortConfigs(setfilelist)
+        setfilelist = SortConfigs(setfilelist)[forcecfg[0]-1:forcecfg[-1]]
         totncfg = len(setfilelist)
         # setfilelist = np.roll(setfilelist,machineroll*(totncfg/ncfg)/(totroll))
         # if ncfg != 0 and ncfg <= len(setfilelist):

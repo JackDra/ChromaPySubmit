@@ -154,11 +154,13 @@ elif 'juqueen' in THISMACHINE:
     limefolder = 'qdp++'
     chromafolder = 'chroma'
     chromaGPUfolder = ''
-    kud = 1375400 # kappa (quark hopping) params
+    kud = 1370000
+    # kud = 1375400 # kappa (quark hopping) params
     ks = 1364000
     kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
     # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
-    limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00'
+    # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00'
+    limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-b-00'
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
     MaxIter = 5000
