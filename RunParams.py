@@ -164,6 +164,7 @@ elif 'juqueen' in THISMACHINE:
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
     MaxIter = 5000
+    OnlyTwoPt = True ## Only calculates two-point correlation functions.
 
     #Taken from 
     RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
@@ -202,6 +203,7 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
     MaxIter = 5000
+    OnlyTwoPt = False ## Only calculates two-point correlation functions.
 
     #Taken from 
     RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
@@ -262,7 +264,6 @@ Seed1,Seed2,Seed3,Seed4 = 11,11,11,0
 
 ##### WARNING, if OnlyTwoPt = True, please set DoJsm3pt = False #####
 # OnlyTwoPt = True ## Only calculates two-point correlation functions.
-OnlyTwoPt = False ## Only calculates two-point correlation functions.
 if OnlyTwoPt: DoJsm3pt = False
 
 OnlyGauge = False ## Only calculates Gauge field
