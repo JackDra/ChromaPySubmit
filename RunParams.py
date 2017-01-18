@@ -11,6 +11,8 @@ if 'juqueen' in THISMACHINE:
 elif 'JackLappy' in THISMACHINE:
     # JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
     JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
+elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
+    JackLibDir = '/mnt/home/dragosja/Scripts/LQCDPythonAnalysis'
 else:
     JackLibDir = '../LQCDPythonAnalysis'
     
