@@ -143,7 +143,8 @@ elif 'juqueen' in THISMACHINE:
     Scom = 'llsubmit'
     quetype = 'bluegene'
     mem = ''
-    time = '23:50:00'
+    # time = '23:50:00'
+    time = '05:50:00'
     GPU = False
     # GPU = '4'
     nproc = 512
