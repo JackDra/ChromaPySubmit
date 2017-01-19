@@ -137,9 +137,15 @@ elif 'juqueen' in THISMACHINE:
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
+    kud = 1370000
+    # kud = 1375400 # kappa (quark hopping) params
+    kudgf = str(kud/100)
+    ks = 1364000
+    ksgf = str(ks/100)
     # codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma/install_bgq_clang/'
     codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma_bup/install/'
-    gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.13754ks0.1364/'
+    # gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.13754ks0.1364/'
+    gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.'+kudgf+'ks0.'+ksgf+'/'
     Scom = 'llsubmit'
     quetype = 'bluegene'
     mem = ''
@@ -158,9 +164,6 @@ elif 'juqueen' in THISMACHINE:
     limefolder = 'qdp++'
     chromafolder = 'chroma'
     chromaGPUfolder = ''
-    kud = 1370000
-    # kud = 1375400 # kappa (quark hopping) params
-    ks = 1364000
     kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
     # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
     # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00' ## for kud = 1375400
@@ -180,7 +183,12 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     scratchdir = '/mnt/scratch/dragosja/data/'
     codedir = '/mnt/home/dragosja/Chroma/install/'
     # gfdir = '/mnt/scratch/dragosja/data/gfields/Nf2p1/b1.9kl0.13754ks0.1364/'
-    gfdir = '/mnt/scratch/shindle7/'
+    kud = 1370000
+    # kud = 1375400 # kappa (quark hopping) params
+    kudgf = str(kud/100)
+    ks = 1364000
+    ksgf = str(ks/100)
+    gfdir = '/mnt/research/lqcd/conf/Nf2p1/b1.9kl0.'+kudgf+'ks0.'+ksgf
     Scom = 'qsub'
     quetype = 'dev-intel16'
     mem = '512GB'
@@ -199,9 +207,6 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     limefolder = 'qdp++'
     chromafolder = 'chroma'
     chromaGPUfolder = ''
-    kud = 1370000
-    # kud = 1375400 # kappa (quark hopping) params
-    ks = 1364000
     kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
     # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
     # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00' ## for kud = 1375400
@@ -433,7 +438,8 @@ smu0 = 1.0
 smvalues = [16, 32, 64, 'V0']
 # ismlist = smvalues[:-1]
 # jsmlist = smvalues[:-1]
-ismlist = smvalues[:-1]
+# ismlist = smvalues[:-1]
+ismlist = [smvalues[-2]] ## largest smearing at source
 jsmlist = smvalues[:-1]
 
 
