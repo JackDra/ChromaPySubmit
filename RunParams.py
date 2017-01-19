@@ -141,7 +141,7 @@ elif 'juqueen' in THISMACHINE:
     # kud = 1375400 # kappa (quark hopping) params
     kudgf = str(kud/100)
     ks = 1364000
-    ksgf = str(ks/100)
+    ksgf = str(ks/1000)
     # codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma/install_bgq_clang/'
     codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma_bup/install/'
     # gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.13754ks0.1364/'
@@ -187,7 +187,7 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     # kud = 1375400 # kappa (quark hopping) params
     kudgf = str(kud/100)
     ks = 1364000
-    ksgf = str(ks/100)
+    ksgf = str(ks/1000)
     gfdir = '/mnt/research/lqcd/conf/Nf2p1/b1.9kl0.'+kudgf+'ks0.'+ksgf
     Scom = 'qsub'
     quetype = 'dev-intel16'
