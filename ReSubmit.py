@@ -21,7 +21,8 @@ def IncrementRun(stage):
         return 'Done'
 
 def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',thisnproc=nproc,Start=False,cfgindicies='FromFile'):
-    
+
+    thisnproc = int(thisnproc)
     icfg,fcfg = map(int,[icfg,fcfg])
     if cfgindicies == 'FromFile':
         with open(paramdir+indexfilename,'r') as f:

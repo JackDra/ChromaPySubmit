@@ -197,7 +197,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
     # if 'gfield' in stage: nextcfg = str(int(icfg)+1)
     if 'twopt' in stage and not OnlyTwoPt:
         outlist.append('')
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,'Complete',thisnproc])+"'")
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,'Complete',str(thisnproc)])+"'")
     return outlist
 
 
