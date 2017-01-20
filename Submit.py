@@ -13,6 +13,7 @@ njobs = -1
 forcecfg = False
 ncfg = False
 nsrc = DupCfgs
+FromFile = False
 for iin in sys.argv[1:]:
     if '-np=' in iin:
         njobs = int(iin.replace('-np=',''))
@@ -23,7 +24,8 @@ for iin in sys.argv[1:]:
         ncfg = int(iin.replace('-ncfg=',''))
     elif '-nsrc=' in iin:
         nsrc = int(iin.replace('-nsrc=',''))
-        
+    elif '-fromfile' in iin:
+        FromFile = True
         
 if njobs == -1:
     raise IOError('please give number of processors as -np=## ')
@@ -39,7 +41,7 @@ print 'Number of jobs = ' , njobs
 
 # np.array([ithisc+'\n' for ithisc in thiscfglist]).tofile(cfgfile)
 
-thiscfglist,totncfg = CreateCfgList(njobs,forcecfg)
+thiscfglist,totncfg = CreateCfgList(njobs,forcecfg,FromFile=FromFile)
 
 if ncfg == False:
     ncfg = totncfg

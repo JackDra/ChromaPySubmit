@@ -14,8 +14,14 @@ def SortConfigs(setfilelist):
     else:
         return np.sort(setfilelist)
 
-def CreateCfgList(ncfg,forcecfg,thisDupCfgs=DupCfgs):
+def CreateCfgList(ncfg,forcecfg,thisDupCfgs=DupCfgs,FromFile=False):
     # filelist = os.listdir(rdsigfdir)
+    if FromFile:
+        with open(filelists+cfgfile,'r') as f:
+            outfile = f.readlines()
+        outfile = [x.strip() for x in outfile]
+        totncfg = len(outfile)
+        return outfile,totncfg
     if OnlyGauge:
         # setfilelist = map(str,range(1,NumGFCreate+1))
         # setfilelist = [n.zfill(5) for n in setfilelist]

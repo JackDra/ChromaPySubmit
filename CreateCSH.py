@@ -138,7 +138,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
         outlist.append(r'# @ environment = COPY_ALL')
         outlist.append(r'# @ wall_clock_limit = '+time)
         outlist.append(r'# @ notification = error')
-        outlist.append(r'# @ notify_user = '+email)
+        outlist.append(r'# @ notify_user = '+EmailAddress)
         outlist.append(r'# @ job_type = bluegene')
         outlist.append(r'# @ bg_size = '+str(thisnproc))
         outlist.append(r'# @ queue')
@@ -151,6 +151,9 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
                 outlist.append(r'#SBATCH --gres=gpu:'+GPU)
             outlist.append(r'#SBATCH --mem='+mem)
         elif Scom == 'qsub':
+            if Email != False:
+                outlist.append(r'#PBS -m '+Email)
+                outlist.append(r'#PBS -M '+EmailAddress)
             outlist.append(r'#PBS -l walltime='+time+',nodes='+str(thisnproc)+':ppn='+str(RPN)+',mem='+mem)
             if GPU != False:
                 outlist.append(r'#PBS --gres gpu:'+nGPU)

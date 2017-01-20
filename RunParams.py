@@ -38,8 +38,9 @@ from MiscFuns import mkdir_p
 import cPickle as pickle
 import numpy as np
 
-email = 'jack.dragos@gmail.com'
 halfishalf = False ## runs half the jobs on half the number of nodes
+Email = 'bea' ## b = begin, e = end , a = abort, Email = False Non
+EmailAddress = 'jack.dragos@gmail.com'
 
 
 if 'phoenix.rc' in THISMACHINE:
@@ -194,7 +195,7 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     Scom = 'qsub'
     quetype = 'dev-intel16'
     mem = '512GB'
-    time = '11:50:00'
+    time = '3:59:00'
     GPU = False
     nGPU = '4'
     # GPU = '4'
@@ -217,7 +218,7 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
     MaxIter = 5000
-    OnlyTwoPt = False ## Only calculates two-point correlation functions.
+    OnlyTwoPt = True ## Only calculates two-point correlation functions.
 
     #Taken from 
     RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
