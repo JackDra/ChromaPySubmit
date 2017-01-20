@@ -9,13 +9,13 @@ import sys
 import subprocess
 import numpy as np
 
-nproc = -1
+njobs = -1
 forcecfg = False
 ncfg = False
 nsrc = DupCfgs
 for iin in sys.argv[1:]:
     if '-np=' in iin:
-        nproc = int(iin.replace('-np=',''))
+        njobs = int(iin.replace('-np=',''))
     elif '-forcecfg=' in iin:
         forcecfg = map(int,iin.replace('-forcecfg=','').split(','))
         print 'WARNING: currenlty forcecfg stuffs up the random list, need to be fixed'
@@ -25,10 +25,10 @@ for iin in sys.argv[1:]:
         nsrc = int(iin.replace('-nsrc=',''))
         
         
-if nproc == -1:
+if njobs == -1:
     raise IOError('please give number of processors as -np=## ')
     
-print 'Number of processors = ' , nproc
+print 'Number of jobs = ' , njobs
 
 # if sys.argv[2] == 'a':
 #     thisgfosnum = range(1,10)
@@ -39,7 +39,7 @@ print 'Number of processors = ' , nproc
 
 # np.array([ithisc+'\n' for ithisc in thiscfglist]).tofile(cfgfile)
 
-thiscfglist,totncfg = CreateCfgList(nproc,forcecfg)
+thiscfglist,totncfg = CreateCfgList(njobs,forcecfg)
 
 if ncfg == False:
     ncfg = totncfg
@@ -48,7 +48,7 @@ cfgindicies = GetCfgIndicies(totncfg,ncfg,nsrc)
 
 
 # if forcecfg == False:
-cfgintervals = GetIcfgTOFcfg(nproc,ncfg*nsrc )
+cfgintervals = GetIcfgTOFcfg(njobs,ncfg*nsrc )
 for iin,(icfg,fcfg) in enumerate(cfgintervals):
     thisnproc = nproc
     if iin > len(cfgintervals) and halfishalf: thisnproc=nproc/2
