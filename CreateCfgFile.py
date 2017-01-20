@@ -14,7 +14,7 @@ def SortConfigs(setfilelist):
     else:
         return np.sort(setfilelist)
 
-def CreateCfgList(ncfg,forcecfg,thisDupCfgs=DupCfgs,FromFile=False):
+def CreateCfgList(ncfg,thisDupCfgs=DupCfgs,FromFile=False):
     # filelist = os.listdir(rdsigfdir)
     if FromFile:
         with open(filelists+cfgfile,'r') as f:
@@ -31,17 +31,13 @@ def CreateCfgList(ncfg,forcecfg,thisDupCfgs=DupCfgs,FromFile=False):
         
         print filelist
         setfilelist = []
-        if forcecfg == False:
-            forcecfg = 1,len(filelist)
-        else:
-            if forcecfg[-1] == -1: forcecfg[-1] = len(filelist)
         for icf,ifile in enumerate(filelist):
             if limename in ifile:
                 setfilelist.append(ifile.replace(limename,''))
             # if '.lime' in ifile:
                 # setfilelist.append('.'+'.'.join(ifile.split('.')[1:3]))
             # setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
-        setfilelist = SortConfigs(setfilelist)[forcecfg[0]-1:forcecfg[-1]]
+        setfilelist = SortConfigs(setfilelist)
         totncfg = len(setfilelist)
         # setfilelist = np.roll(setfilelist,machineroll*(totncfg/ncfg)/(totroll))
         # if ncfg != 0 and ncfg <= len(setfilelist):
@@ -56,10 +52,10 @@ def CreateCfgList(ncfg,forcecfg,thisDupCfgs=DupCfgs,FromFile=False):
 
 
 
-def GetCfgIndicies(totncfg,ncfg,nsrc):
+def GetCfgIndicies(totncfg,ncfg,nsrc,squashcfg):
     outindicies = []
-    for isrc in range(nsrc):
-        outindicies += map(int,map(round,np.linspace(start=isrc*totncfg, stop=(isrc+1)*totncfg, num=ncfg+1).tolist())[:-1])
+    for isrc in range(nsrc):        
+        outindicies += map(int,map(round,np.linspace(start=squashcfg+(isrc*totncfg), stop=(isrc+1)*totncfg, num=ncfg+1).tolist())[:-1])
     with open(paramdir+indexfilename,'w') as f:
         for iout in outindicies:
             f.write(str(iout)+'\n')

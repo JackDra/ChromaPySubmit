@@ -14,12 +14,12 @@ forcecfg = False
 ncfg = False
 nsrc = DupCfgs
 FromFile = False
+startcfg = 0
 for iin in sys.argv[1:]:
     if '-np=' in iin:
         njobs = int(iin.replace('-np=',''))
-    elif '-forcecfg=' in iin:
-        forcecfg = map(int,iin.replace('-forcecfg=','').split(','))
-        print 'WARNING: currenlty forcecfg stuffs up the random list, need to be fixed'
+    elif '-startcfg=' in iin:
+        startcfg = int(iin.replace('-startcfg=',''))
     elif '-ncfg=' in iin:
         ncfg = int(iin.replace('-ncfg=',''))
     elif '-nsrc=' in iin:
@@ -41,11 +41,11 @@ print 'Number of jobs = ' , njobs
 
 # np.array([ithisc+'\n' for ithisc in thiscfglist]).tofile(cfgfile)
 
-thiscfglist,totncfg = CreateCfgList(njobs,forcecfg,FromFile=FromFile)
+thiscfglist,totncfg = CreateCfgList(njobs,FromFile=FromFile)
 
 if ncfg == False:
     ncfg = totncfg
-cfgindicies = GetCfgIndicies(totncfg,ncfg,nsrc)
+cfgindicies = GetCfgIndicies(totncfg,ncfg,nsrc,startcfg)
 
 
 
