@@ -51,7 +51,7 @@ cfgindicies = GetCfgIndicies(totncfg,ncfg,nsrc)
 cfgintervals = GetIcfgTOFcfg(njobs,ncfg*nsrc )
 for iin,(icfg,fcfg) in enumerate(cfgintervals):
     thisnproc = nproc
-    if iin > len(cfgintervals) and halfishalf: thisnproc=nproc/2
+    if iin >= len(cfgintervals)/2 and halfishalf: thisnproc=nproc/2
     print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)    
     RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies,thisnproc=thisnproc)
 # else:
