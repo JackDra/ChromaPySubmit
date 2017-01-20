@@ -195,11 +195,11 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     Scom = 'qsub'
     quetype = 'dev-intel16'
     mem = '512GB'
-    time = '3:59:00'
+    time = '23:59:00'
     GPU = False
     nGPU = '4'
     # GPU = '4'
-    nproc = 64
+    nproc = 32
     halfishalf = True ## runs half the jobs on half the number of nodes
     RPN = 16 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     # nproc = 16
