@@ -18,6 +18,7 @@ for iin in sys.argv[1:]:
         nproc = int(iin.replace('-np=',''))
     elif '-forcecfg=' in iin:
         forcecfg = map(int,iin.replace('-forcecfg=','').split(','))
+        print 'WARNING: currenlty forcecfg stuffs up the random list, need to be fixed'
     elif '-ncfg=' in iin:
         ncfg = int(iin.replace('-ncfg=',''))
     elif '-nsrc=' in iin:
@@ -48,9 +49,11 @@ cfgindicies = GetCfgIndicies(totncfg,ncfg,nsrc)
 
 # if forcecfg == False:
 cfgintervals = GetIcfgTOFcfg(nproc,ncfg*nsrc )
-for icfg,fcfg in cfgintervals:
+for iin,(icfg,fcfg) in enumerate(cfgintervals):
+    thisnproc = nproc
+    if iin > len(cfgintervals) and halfishalf: thisnproc=nproc/2
     print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)    
-    RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies)
+    RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies,thisnproc=thisnproc)
 # else:
 #     RunNext(forcecfg[0],forcecfg[1],Start=True,cfgindicies=cfgindicies)
         

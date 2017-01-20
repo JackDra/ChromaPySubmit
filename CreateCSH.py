@@ -122,7 +122,7 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
     return outlist
 
 
-def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
+def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
@@ -140,18 +140,18 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
         outlist.append(r'# @ notification = error')
         outlist.append(r'# @ notify_user = '+email)
         outlist.append(r'# @ job_type = bluegene')
-        outlist.append(r'# @ bg_size = '+str(nproc))
+        outlist.append(r'# @ bg_size = '+str(thisnproc))
         outlist.append(r'# @ queue')
     else:
         if Scom == 'sbatch':
             outlist.append(r'#SBATCH -p '+quetype)
-            outlist.append(r'#SBATCH -n '+str(nproc))
+            outlist.append(r'#SBATCH -n '+str(thisnproc))
             outlist.append(r'#SBATCH --time='+time)
             if GPU != False:
                 outlist.append(r'#SBATCH --gres=gpu:'+GPU)
             outlist.append(r'#SBATCH --mem='+mem)
         elif Scom == 'qsub':
-            outlist.append(r'#PBS -l walltime='+time+',nodes='+str(nproc)+':ppn='+str(RPN)+',mem='+mem)
+            outlist.append(r'#PBS -l walltime='+time+',nodes='+str(thisnproc)+':ppn='+str(RPN)+',mem='+mem)
             if GPU != False:
                 outlist.append(r'#PBS --gres gpu:'+nGPU)
             outlist.append(r'#PBS -N '+Jstring)
@@ -180,7 +180,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
             outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                            ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
         else:
-            outlist.append(r'    mpirun -np '+str(totproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+            outlist.append(r'    mpirun -np '+str(RPN*thisnproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                            ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
 
     outlist.append(r'    echo "finished "`date`')
@@ -197,19 +197,19 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage):
     # if 'gfield' in stage: nextcfg = str(int(icfg)+1)
     if 'twopt' in stage and not OnlyTwoPt:
         outlist.append('')
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,'Complete'])+"'")
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,'Complete',thisnproc])+"'")
     return outlist
 
 
 
-def CreateCSHWrap(cfgindicies,icfg,fcfg,jobid,stage):
+def CreateCSHWrap(cfgindicies,icfg,fcfg,jobid,stage,thisnproc):
     icfg,fcfg = str(icfg),str(fcfg)
     if 'gfield' in stage:
         outfile = cshdir+'Run'+stage+'.csh'
     else:
         outfile = cshdir+'Run'+stage+'cfg'+icfg+'fcfg'+fcfg+'.csh'
     if 'juqueen' in thismachine or 'hpcc' in thismachine:
-        outlist = CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobid,stage)
+        outlist = CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobid,stage,thisnproc)
     else:
         outlist = CreateCSHList(cfgindicies,icfg,fcfg,jobid,stage)
     CreateCSHFile(outfile,outlist)

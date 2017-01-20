@@ -20,7 +20,7 @@ def IncrementRun(stage):
     if 'threeptcorr' in stage:
         return 'Done'
 
-def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False,cfgindicies='FromFile'):
+def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',thisnproc=nproc,Start=False,cfgindicies='FromFile'):
     
     icfg,fcfg = map(int,[icfg,fcfg])
     if cfgindicies == 'FromFile':
@@ -106,18 +106,18 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False,cfgindici
             for curricfg in NewCfgList:
                 map(mkdir_p,Get3ptCorrFolderjsmList(curricfg,ism))
         if Submit:
-            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb')
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb',thisnproc=thisnproc)
         else:
-            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb')
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb',thisnproc)
         print runfile
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
     elif 'twopt' in stage:        
         thisjoblist = Create2ptCorrWrap(InputFolder,ChromaFileFlag,NewCfgList)
         if Submit:
-            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage)
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc)
         else:
-            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage)
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc)
         print runfile
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
@@ -127,9 +127,9 @@ def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',Start=False,cfgindici
             for curricfg in NewCfgList:
                 map(mkdir_p,Get3ptCorrFolderList(curricfg,ism))
         if Submit:
-            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage)
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc)
         else:
-            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage)
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc)
         print runfile
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
