@@ -194,7 +194,7 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     Scom = 'qsub'
     quetype = 'dev-intel16'
     mem = '512GB'
-    time = '23:50:00'
+    time = '11:50:00'
     GPU = False
     nGPU = '4'
     # GPU = '4'
