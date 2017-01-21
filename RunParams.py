@@ -218,10 +218,10 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
     MaxIter = 5000
-    OnlyTwoPt = True ## Only calculates two-point correlation functions.
+    OnlyTwoPt = False ## Only calculates two-point correlation functions.
 
-    #Taken from 
-    RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
+    #set to sm64
+    RVec = [ 0.0000,0.000,1.0 ]
     
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
