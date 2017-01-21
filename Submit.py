@@ -15,6 +15,7 @@ ncfg = False
 nsrc = DupCfgs
 FromFile = False
 startcfg = 0
+nppick = False
 for iin in sys.argv[1:]:
     if '-np=' in iin:
         njobs = int(iin.replace('-np=',''))
@@ -26,9 +27,13 @@ for iin in sys.argv[1:]:
         nsrc = int(iin.replace('-nsrc=',''))
     elif '-fromfile' in iin:
         FromFile = True
+    elif '-nppick' in iin:
+        nppick = map(int,iin.replace('-nppick=','').split(','))
+        
         
 if njobs == -1:
     raise IOError('please give number of processors as -np=## ')
+if nppick == False: nppick = range(1,njobs+1)
     
 print 'Number of jobs = ' , njobs
 
@@ -52,10 +57,11 @@ cfgindicies = GetCfgIndicies(totncfg,ncfg,nsrc,startcfg)
 # if forcecfg == False:
 cfgintervals = GetIcfgTOFcfg(njobs,ncfg*nsrc )
 for iin,(icfg,fcfg) in enumerate(cfgintervals):
-    thisnproc = nproc
-    if iin >= len(cfgintervals)/2 and halfishalf: thisnproc=nproc/2
-    print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)    
-    RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies,thisnproc=thisnproc)
+    if iin+1 in nppick:
+        thisnproc = nproc
+        if iin >= len(cfgintervals)/2 and halfishalf: thisnproc=nproc/2
+        print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)    
+        RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies,thisnproc=thisnproc)
 # else:
 #     RunNext(forcecfg[0],forcecfg[1],Start=True,cfgindicies=cfgindicies)
         
