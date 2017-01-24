@@ -28,8 +28,11 @@ def CreateCfgList(ncfg,thisDupCfgs=DupCfgs,FromFile=False):
         setfilelist = ['']
     else:
         filelist = os.listdir(gfdir)
+
+        print 'configurations found:'
+        for ifile in filelist: print ifile
+        print
         
-        print filelist
         setfilelist = []
         for icf,ifile in enumerate(filelist):
             if limename in ifile:
