@@ -20,7 +20,7 @@ def IncrementRun(stage):
     if 'threeptcorr' in stage:
         return 'Done'
 
-def RunNext(icfg,fcfg,stage='twoptcorr',Errored='Complete',thisnproc=nproc,Start=False,cfgindicies='FromFile'):
+def RunNext(icfg,fcfg,stage='twoptcorr',thisnproc=nproc,Start=False,cfgindicies='FromFile'):
 
     thisnproc = int(thisnproc)
     icfg,fcfg = map(int,[icfg,fcfg])

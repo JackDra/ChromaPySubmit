@@ -106,21 +106,20 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
         outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
         outlist.append(r'    mpirun -np '+str(nproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                        ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+        outlist.append(r'    if ($? == -11) then')
+        outlist.append(r'        echo "Time ran out, resubmitting same script "')
+        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,True])+"'")
+        outlist.append(r'        exit 1')
+        outlist.append(r'    endif')
+        outlist.append(r'')
+    
     outlist.append(r'    echo "finished "`date`')
-    # outlist.append(r'    if ($? != 0) then')
-    # outlist.append(r'        echo "Error with: '+inputfile+r'"')
-    # outlist.append(r'        echo ""')
-    # outlist.append(r'cat <<EOF >> '+paramdir+r'errlist.'+stage)
-    # outlist.append(r''+inputfile)
-    # outlist.append(r'EOF')
-    # outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([nextcfg,fcfg,stage,ism,'Error'])+"'")
-    # outlist.append(r'        exit 1')
-    # outlist.append(r'    endif')
     if 'twopt' in stage and not OnlyTwoPt:
         outlist.append('')
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,'Complete'])+"'")
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,])+"'")
     return outlist
 
+        
 
 def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
@@ -200,7 +199,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
     # if 'gfield' in stage: nextcfg = str(int(icfg)+1)
     if 'twopt' in stage and not OnlyTwoPt:
         outlist.append('')
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,'Complete',str(thisnproc)])+"'")
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,str(thisnproc)])+"'")
     return outlist
 
 
