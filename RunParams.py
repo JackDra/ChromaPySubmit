@@ -169,8 +169,8 @@ elif 'juqueen' in THISMACHINE:
     chromaGPUfolder = ''
     kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
     # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
-    # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00' ## for kud = 1375400
-    limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-b-00'
+    limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00' ## for kud = 1375400
+    # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-b-00'
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
     MaxIter = 5000
