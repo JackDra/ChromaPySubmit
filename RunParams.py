@@ -186,8 +186,8 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     scratchdir = '/mnt/scratch/dragosja/data/'
     codedir = '/mnt/home/dragosja/Chroma/install/'
     # gfdir = '/mnt/scratch/dragosja/data/gfields/Nf2p1/b1.9kl0.13754ks0.1364/'
-    kud = 1370000
-    # kud = 1375400 # kappa (quark hopping) params
+    # kud = 1370000
+    kud = 1375400 # kappa (quark hopping) params
     kudgf = str(kud/100)
     ks = 1364000
     ksgf = str(ks/1000)
