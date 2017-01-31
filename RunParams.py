@@ -140,8 +140,8 @@ elif 'juqueen' in THISMACHINE:
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
-    kud = 1370000
-    # kud = 1375400 # kappa (quark hopping) params
+    # kud = 1370000
+    kud = 1375400 # kappa (quark hopping) params
     kudgf = str(kud/100)
     ks = 1364000
     ksgf = str(ks/1000)
@@ -177,7 +177,12 @@ elif 'juqueen' in THISMACHINE:
     OnlyTwoPt = True ## Only calculates two-point correlation functions.
 
     #Taken from 
-    RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
+    if kud == 1375400:
+        RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
+        limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00' ## for kud = 1375400
+    else:
+        RVec = [ 0.0000,0.000,1.0 ]
+        limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-b-00'
 
 elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     thismachine = 'hpcc'
@@ -213,15 +218,18 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     chromaGPUfolder = ''
     kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
     # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
-    # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00' ## for kud = 1375400
-    limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-b-00'
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
     MaxIter = 5000
     OnlyTwoPt = False ## Only calculates two-point correlation functions.
 
     #set to sm64
-    RVec = [ 0.0000,0.000,1.0 ]
+    if kud == 1375400:
+        RVec = [ 0.0000005522,-0.0001589143,0.9999999874 ]
+        limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00' ## for kud = 1375400
+    else:
+        RVec = [ 0.0000,0.000,1.0 ]
+        limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-b-00'
     
 else:
     raise EnvironmentError(THISMACHINE + ' is not recognised, add to RunParams.py if statement')
