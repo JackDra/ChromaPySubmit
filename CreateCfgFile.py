@@ -29,9 +29,6 @@ def CreateCfgList(ncfg,thisDupCfgs=DupCfgs,FromFile=False):
     else:
         filelist = os.listdir(gfdir)
 
-        print 'configurations found:'
-        for ifile in filelist: print ifile
-        print
         
         setfilelist = []
         for icf,ifile in enumerate(filelist):
@@ -41,6 +38,9 @@ def CreateCfgList(ncfg,thisDupCfgs=DupCfgs,FromFile=False):
                 # setfilelist.append('.'+'.'.join(ifile.split('.')[1:3]))
             # setfilelist.append(str(int(re.sub(r'.*lime','',ifile))))
         setfilelist = SortConfigs(setfilelist)
+        print 'configurations found:'
+        for ifile in setfilelist: print ifile
+        print
         totncfg = len(setfilelist)
         # setfilelist = np.roll(setfilelist,machineroll*(totncfg/ncfg)/(totroll))
         # if ncfg != 0 and ncfg <= len(setfilelist):
