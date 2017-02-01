@@ -152,8 +152,8 @@ elif 'juqueen' in THISMACHINE:
     Scom = 'llsubmit'
     quetype = 'bluegene'
     mem = ''
-    # time = '23:50:00'
-    time = '05:50:00'
+    time = '23:50:00'
+    # time = '05:50:00'
     GPU = False
     # GPU = '4'
     nproc = 512
@@ -174,7 +174,7 @@ elif 'juqueen' in THISMACHINE:
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
     MaxIter = 5000
-    OnlyTwoPt = True ## Only calculates two-point correlation functions.
+    OnlyTwoPt = False ## Only calculates two-point correlation functions.
 
     #Taken from 
     if kud == 1375400:
