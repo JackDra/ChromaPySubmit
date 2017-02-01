@@ -76,13 +76,19 @@ def CreateCSHFile(thisfile,outputlist):
         f.write('\n')
     os.system("chmod u+x "+thisfile)
 
+def MakeName(stage,icfg,fcfg):
+    if 'twopt' in stage:
+        return '2p-'+str(icfg)+'-'+str(fcfg)
+    elif 'threept' in stage:
+        return '3p-'+str(icfg)+'-'+str(fcfg)
+        
+    
 def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
     icfg,fcfg = str(icfg),str(fcfg)
-    Jstring = stage+'-'+str(icfg)+'-'+str(fcfg)
-        
+    Jstring = MakeName(stage,icfg,fcfg)
     outlist = []
     outlist.append(r'#! /bin/tcsh')
     outlist.append('')
@@ -126,7 +132,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
     icfg,fcfg = str(icfg),str(fcfg)
-    Jstring = stage+'-'+str(icfg)+'-'+str(fcfg)
+    Jstring = MakeName(stage,icfg,fcfg)
     outlist = []
     outlist.append(r'#! /bin/tcsh')
     outlist.append('')
