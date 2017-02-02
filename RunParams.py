@@ -196,7 +196,11 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
     kudgf = str(kud/100)
     ks = 1364000
     ksgf = str(ks/1000)
-    gfdir = '/mnt/research/lqcd/conf/Nf2p1/b1.9kl0.'+kudgf+'ks0.'+ksgf+'/'
+    # gfdir = '/mnt/research/lqcd/conf/Nf2p1/b1.9kl0.'+kudgf+'ks0.'+ksgf+'/'
+    if kud == 1375400:
+        gfdir = '/mnt/scratch/shindle7'
+    else:
+        gfdir = '/mnt/research/lqcd/conf/Nf2p1/b1.9kl0.'+kudgf+'ks0.'+ksgf+'/'
     Scom = 'qsub'
     quetype = 'dev-intel16'
     mem = '512GB'
