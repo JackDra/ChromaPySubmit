@@ -22,6 +22,7 @@ from shutil import copyfile
 cwd = os.getcwd()
 
 if os.path.isfile(JackLibDir+'/setup.cfg'):copyfile(JackLibDir+'/setup.cfg', cwd+'/setup.cfg')
+print 'Running on ' , THISMACHINE
 
 if not os.path.isdir(JackLibDir):
     print JackLibDir , 'not found, please set in PararmsGAM.py to point to jacks libary'
@@ -31,7 +32,6 @@ if not os.path.isdir(JackLibDir):
     sys.exit()
 
 sys.path.append(JackLibDir)
-print 'Running on ' , THISMACHINE
 
 import errno
 from MiscFuns import mkdir_p
