@@ -112,6 +112,7 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
         outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
         outlist.append(r'    mpirun -np '+str(nproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                        ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+        outlist.append(r'    echo "last command had return value: $?"')
         outlist.append(r'    if ($? == -11) then')
         outlist.append(r'        echo "Time ran out, resubmitting same script "')
         outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,True])+"'")
