@@ -191,6 +191,12 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
         else:
             outlist.append(r'    mpirun -np '+str(RPN*thisnproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                            ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+        outlist.append(r'    if ($? == -11) then')
+        outlist.append(r'        echo "Time ran out, resubmitting same script "')
+        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,True])+"'")
+        outlist.append(r'        exit 1')
+        outlist.append(r'    endif')
+        outlist.append(r'')
 
     outlist.append(r'    echo "finished "`date`')
     # outlist.append(r'    if ($? != 0) then')
