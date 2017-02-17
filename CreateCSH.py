@@ -196,6 +196,10 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
         outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,True])+"'")
         outlist.append(r'        exit 1')
         outlist.append(r'    endif')
+        outlist.append(r'    if ($? != 0) then')
+        outlist.append(r'        echo "Job Crashed, error code $? , exiting"')
+        outlist.append(r'        exit 1')
+        outlist.append(r'    endif')
         outlist.append(r'')
 
     outlist.append(r'    echo "finished "`date`')
