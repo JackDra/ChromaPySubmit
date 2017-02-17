@@ -115,7 +115,7 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
         outlist.append(r'    echo "last command had return value: $?"')
         outlist.append(r'    if ($? == -11) then')
         outlist.append(r'        echo "Time ran out, resubmitting same script "')
-        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,True])+"'")
+        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage])+"'")
         outlist.append(r'        exit 1')
         outlist.append(r'    endif')
         outlist.append(r'    if ($? != 0) then')
@@ -127,7 +127,7 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
     outlist.append(r'    echo "finished "`date`')
     if 'twopt' in stage and not OnlyTwoPt:
         outlist.append('')
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,])+"'")
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage])+"'")
     return outlist
 
         
@@ -197,7 +197,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
                            ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
         outlist.append(r'    if ($? == -11) then')
         outlist.append(r'        echo "Time ran out, resubmitting same script "')
-        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,True])+"'")
+        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,,str(thisnproc)])+"'")
         outlist.append(r'        exit 1')
         outlist.append(r'    endif')
         outlist.append(r'    if ($? != 0) then')
