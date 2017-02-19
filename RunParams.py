@@ -11,7 +11,7 @@ if 'juqueen' in THISMACHINE:
 elif 'JackLappy' in THISMACHINE:
     # JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
     JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
-elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
+elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE or 'lac-' in THISMACHINE:
     JackLibDir = '/mnt/home/dragosja/Scripts/LQCDPythonAnalysis'
 else:
     JackLibDir = '../LQCDPythonAnalysis'
@@ -184,7 +184,7 @@ elif 'juqueen' in THISMACHINE:
         RVec = [ 0.0000,0.000,1.0 ]
         limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-b-00'
 
-elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE:
+elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE or 'lac-' in THISMACHINE:
     thismachine = 'hpcc'
     RunPTG = True ## Runs on our partition or not
     basedir = '/mnt/home/dragosja/'
