@@ -6,7 +6,7 @@ from RunParams import *
 def CheckFlowDoneList(icfg):
     with open(FlowDoneList,'r') as f:
         for lines in f:
-            if str(icfg) in lines:
+            if str(icfg) == lines.replace('\n',''):
                 return True
     return False
 

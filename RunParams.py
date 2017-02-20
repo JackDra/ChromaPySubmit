@@ -383,8 +383,8 @@ NmaxHB = '1'
 
 #### Flow Parameters ###
 
-flow_steps = 1000
-totflow_time = 10
+flow_steps = 2
+totflow_time = 2
 
 FlowOrderWein = 6
 kflowWein = '0.0'
