@@ -11,6 +11,7 @@ def CheckFlowDoneList(icfg):
     return False
 
 def GetFlowDir(icfg):
+    mkdir_p(flowdirout+'cfg'+str(icfg)+'/')
     return flowdirout+'cfg'+str(icfg)+'/'
 
 def Get2ptProp(icfg,ism,iPoF=0):
