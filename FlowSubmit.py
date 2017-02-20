@@ -30,6 +30,8 @@ else:
 thisjoblist = CreateFlowFilesWrap(InputFolder,ChromaFileFlag,runcfglist)
 
 runfile = CreateFlowCSHWrap(runcfglist,thisjoblist,nproc)
+if Submit:
+    runfile = Scom+' '+runfile
 
 print runfile
 # if not DontRun: subprocess.call([runfile],cwd=basedir)
