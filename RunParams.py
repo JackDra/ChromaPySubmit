@@ -9,8 +9,8 @@ THISMACHINE = socket.gethostname()
 if 'juqueen' in THISMACHINE:
     JackLibDir = '/homeb/jias40/jias4002/juqueen/Scripts/LQCDPythonAnalysis'
 elif 'JackLappy' in THISMACHINE:
-    # JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
-    JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
+    JackLibDir = '/home/jackdra/PHD/CHROMA/TestVar/Scripts/LQCDPythonAnalysis'
+    # JackLibDir = '/home/jackdra/PHD/DataAnalysis/LQCDPythonAnalysis'
 elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE or 'lac-' in THISMACHINE:
     JackLibDir = '/mnt/home/dragosja/Scripts/LQCDPythonAnalysis'
 else:
@@ -109,6 +109,7 @@ elif 'JackLappy' in THISMACHINE:
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
     scratchdir = '/home/jackdra/PHD/CHROMA/TestVar/scratch/'
     codedir = '/home/jackdra/PHD/CHROMA/install/'
+    flowdir = '/home/jackdra/PHD/CHROMA/flowOps/'
     gfdir = scratchdir+'/gaugefields/TestWeak/'
     Scom = 'sbatch'
     quetype = 'batch'
@@ -147,6 +148,7 @@ elif 'juqueen' in THISMACHINE:
     ksgf = str(ks/1000)
     # codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma/install_bgq_clang/'
     codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma_bup/install/'
+    flowdir = '/homeb/jias40/jias4002/juqueen/Chroma/flowOps/'
     # gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.13754ks0.1364/'
     gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.'+kudgf+'ks0.'+ksgf+'/'
     Scom = 'llsubmit'
@@ -190,6 +192,7 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE or 'lac-' in THISMACHINE:
     basedir = '/mnt/home/dragosja/'
     scratchdir = '/mnt/scratch/dragosja/data/'
     codedir = '/mnt/home/dragosja/Chroma/install/'
+    flowdir = '/mnt/home/dragosja/flowOps/'
     # gfdir = '/mnt/scratch/dragosja/data/gfields/Nf2p1/b1.9kl0.13754ks0.1364/'
     # kud = 1370000
     kud = 1375400 # kappa (quark hopping) params
@@ -349,6 +352,7 @@ ParaIO = 'true'
 
 GaugeType = 'purgaug'
 GFexe = GaugeType
+Flowexe = 'flowChroma'
 
 if OnlyGauge:
     exe = GFexe
@@ -375,6 +379,18 @@ GFnu = '1.0'
 GaugeBC = 'PERIODIC_GAUGEBC'
 nOver = '3'
 NmaxHB = '1'
+
+
+#### Flow Parameters ###
+
+flow_steps = 2
+totflow_time = 4
+
+FlowOrderWein = 6
+kflowWein = '0.0'
+
+FlowOrderQtop = 6
+kflowQtop = '0.0'
 
 # GFPrec = '5.0e-5'
 # GFMaxIter = 200
@@ -496,6 +512,7 @@ if scriptdir[:-1] not in os.getcwd():
 nodeoutputdir = scriptdir+ 'NodeOutput/'+ChromaFileFlag+'/'
 cshdir = scriptdir+'CSHFiles/'
 paramdir = scriptdir+'ParamFiles/'
+FlowDoneList = paramdir+limename+'_DoneList.txt'
 indexfilename = 'cfgindicies.list'
 datadir = scratchdir
 InputFolderPref = 'InputFiles'
@@ -510,6 +527,7 @@ OutputFolder = scriptdir+OutputFolderPref+'/'
 # rdsigfdir = scratchdir+'/gaugefields/qcdsf.655/'
 # gfdir = '/rdsi/PACS-CS/ensemble+'/'
 qpdir = scratchdir+'/qprops/'+kappastr+'/'
+flowdirout = scratchdir+'/Flow/'+kappastr+'/'
 cfdir = scratchdir+'/cfun'+runflag+'/'+kappastr+'/twoptRandT/'
 cf3ptdir = scratchdir+'/cfun'+runflag+'/'+kappastr+'/threept/'
 debugdir = scratchdir+'/debug/'+kappastr+'/'
@@ -517,6 +535,7 @@ tempdir = '/tmp/'
 filelists = paramdir
 chromacpu = codedir+'/'+chromafolder+'/bin/'
 chromagpu = codedir+'/'+chromaGPUfolder+'/bin/'
+Flowchromacpu = flowdir+'/'
 limedir = codedir+'/'+limefolder+'/bin/'
 
 # gfnum = `head -n $icfg ${filelists}${cfglist} | tail -n 1`
@@ -578,19 +597,21 @@ def CreateGFnum(icfg):
             icfg = icfg - len(thisfile)
         thisgfnum = thisfile[icfg].replace('\n','')
     return re.sub(r'_xsrc.*','',thisgfnum),re.findall(r'_xsrc.*',thisgfnum)[0]
-
 # def CreateCfg(icfg):
 #     return ensemble+CreateGFnum(icfg)
 
 # def CreateLimeCfg(icfg):
 #     return limename+CreateGFnum(icfg)+'.lime'
 
-def CreateCfg(icfg,DelLime=False):
+def CreateCfg(icfg,DelLime=False,Flow=False):
     # return limename+CreateGFnum(icfg)+'.lime'
     # return limename+'.lime'+CreateGFnum(icfg)
-    gfnum,xsrc = CreateGFnum(icfg)
-    return limename+gfnum,xsrc
-        
+    if Flow:
+        return limename+str(icfg),''
+    else:
+        gfnum,xsrc = CreateGFnum(icfg)
+        return limename+gfnum,xsrc
+
     
 
 

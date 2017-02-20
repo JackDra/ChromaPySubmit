@@ -51,6 +51,36 @@ def Add_Displacement():
     thisdict['DisplacementType'] = 'NONE'
     return thisdict
 
+def Add_Weinberg():
+    thisdict = OrdDict()
+    thisdict['order'] = FlowOrderWein
+    thisdict['k'] = kflowWein
+    thisdict['calc_Wt'] = 'true'
+    return thisdict
+
+def Add_Qtop():
+    thisdict = OrdDict()
+    thisdict['order'] = FlowOrderQtop
+    thisdict['k'] = kflowQtop
+    thisdict['calc_Qt'] = 'true'
+    return thisdict
+
+def Add_Flow(gauge_id,icfg):
+    thisdict = OrdDict()
+    thisdict['Name'] = 'FLOW_OPERATORS'
+    thisdict['Frequency'] = 1
+    thisdict['Param'] = OrdDict()
+    thisdict['Param']['file_dir'] = GetFlowDir(icfg)
+    thisdict['Param']['wf_nsteps'] = flow_steps
+    thisdict['Param']['wf_time'] = totflow_time
+    thisdict['Param']['Nt'] = nt
+    thisdict['Param']['Weinberg'] = Add_Weinberg()
+    thisdict['Param']['Qtop'] = Add_Qtop()
+    thisdict['NamedObject'] = OrdDict()
+    thisdict['NamedObject']['gauge_id'] = gauge_id
+    thisdict['xml_file'] = ''
+    return thisdict
+
 
 def Add_Source(gauge_id,source_id,icfg,sm,iPoF=0):
     thisdict = OrdDict()
@@ -367,7 +397,7 @@ def Add_RNG():
     thisdict['RNG']['Seed']['elem4'] = Seed4
     return thisdict
 
-def Add_cfg(icfg):
+def Add_cfg(icfg,Flow=False):
     thisdict = OrdDict()
     thisdict['Cfg'] = OrdDict()
     thisdict['Cfg']['cfg_type'] = GFFormat
@@ -378,7 +408,7 @@ def Add_cfg(icfg):
     if GFFormat == 'UNIT' :
         thisdict['Cfg']['cfg_file'] = 'dummy'
     else:
-        thisdict['Cfg']['cfg_file'] = GetGaugeField(icfg)
+        thisdict['Cfg']['cfg_file'] = GetGaugeField(icfg,Flow=Flow)
     thisdict['Cfg']['parallel_io'] = ParaIO
     return thisdict
 

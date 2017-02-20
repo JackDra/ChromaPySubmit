@@ -46,6 +46,32 @@ def CreateGaugeFieldFiles(folder,fileprefix):
     return filelist
 
 
+def RemoveFlowFiles(folder):
+    thisfolder = folder+'/flow'
+    if os.path.isdir(thisfolder):shutil.rmtree(thisfolder)
+
+
+
+def CreateFlowFilesWrap(folder,fileprefix,cfgindicies):
+    filelist = []
+    for thecfg in cfgindicies:
+        filelist += CreateFlowFiles(folder,fileprefix,thecfg)
+    return filelist
+        
+def CreateFlowFiles(folder,fileprefix,icfg):
+    filelist = []
+    mkdir_p(folder+'/flow/')
+    mkdir_p(folder.replace('Input','Output')+'/flow/')
+    thisfile = folder+'/flow/'+fileprefix+str(icfg)
+    filelist.append(thisfile.replace(folder+'/','')+'.xml')
+    DictOut = SetupDict()
+    DictOut = AddToIM(DictOut,iterlist.next(),Add_Flow,['default_gauge_field',icfg])
+    DictOut['chroma']['RNG'] = Add_RNG()['RNG']
+    DictOut['chroma']['Cfg'] = Add_cfg(icfg,Flow=True)['Cfg']
+    WriteChromaXml(thisfile,DictOut)
+    return filelist
+
+
 # def Remove2ptPropFiles(folder,fileprefix,icfg,thisismlist):
 #     for ism in map(str,thisismlist):
 #         thisfile = folder+'/prop2pt'+ism+'/'+fileprefix+str(icfg)

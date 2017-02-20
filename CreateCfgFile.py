@@ -14,7 +14,7 @@ def SortConfigs(setfilelist):
     else:
         return np.sort(setfilelist)
 
-def CreateCfgList(ncfg,thisDupCfgs=DupCfgs,FromFile=False):
+def CreateCfgList(ncfg,thisDupCfgs=DupCfgs,FromFile=False,Src=True):
     # filelist = os.listdir(rdsigfdir)
     if FromFile:
         with open(filelists+cfgfile,'r') as f:
@@ -45,9 +45,12 @@ def CreateCfgList(ncfg,thisDupCfgs=DupCfgs,FromFile=False):
         # setfilelist = np.roll(setfilelist,machineroll*(totncfg/ncfg)/(totroll))
         # if ncfg != 0 and ncfg <= len(setfilelist):
         #     setfilelist = setfilelist[:ncfg]
-    outfile = []
-    for iDup in range(1,int(thisDupCfgs)+1):
-        outfile += [iset+'_xsrc'+str(iDup)+'\n' for iset in setfilelist]
+    if Src:
+        outfile = []
+        for iDup in range(1,int(thisDupCfgs)+1):
+            outfile += [iset+'_xsrc'+str(iDup)+'\n' for iset in setfilelist]
+    else:
+        outfile = [iset+'\n' for iset in setfilelist]
     with open(filelists+cfgfile,'w') as f:
         f.writelines(outfile)
     # np.array([iset+'\n' for iset in setfilelist]).tofile(filelists+cfgfile)

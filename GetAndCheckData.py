@@ -6,8 +6,8 @@ from shutil import copyfile,move,rmtree
 import subprocess
 from FilenameFuns import *
 
-def GetGaugeField(icfg):
-    return gfdir+CreateCfg(icfg)[0]
+def GetGaugeField(icfg,Flow=False):
+    return gfdir+CreateCfg(icfg,Flow=Flow)[0]
     
     
 # def RemoveGaugeField(icfg):

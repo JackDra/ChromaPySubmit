@@ -82,6 +82,48 @@ def MakeName(stage,icfg,fcfg):
     elif 'threept' in stage:
         return '3p-'+str(icfg)+'-'+str(fcfg)
         
+def GetCSHHeader(Jstring,thisnproc):
+    outlist = []
+    outlist.append(r'#! /bin/tcsh')
+    outlist.append('')
+    if quetype == 'bluegene':
+        outlist.append(r'# @ job_name = '+Jstring)
+        outlist.append(r'# @ error = $(job_name).$(jobid).out')
+        outlist.append(r'# @ output = $(job_name).$(jobid).out')
+        outlist.append(r'# @ environment = COPY_ALL')
+        outlist.append(r'# @ wall_clock_limit = '+time)
+        outlist.append(r'# @ notification = error')
+        outlist.append(r'# @ notify_user = '+EmailAddress)
+        outlist.append(r'# @ job_type = bluegene')
+        outlist.append(r'# @ bg_size = '+str(thisnproc))
+        outlist.append(r'# @ queue')
+    else:
+        if Scom == 'sbatch':
+            outlist.append(r'#SBATCH -p '+quetype)
+            outlist.append(r'#SBATCH -n '+str(thisnproc))
+            outlist.append(r'#SBATCH --time='+time)
+            if GPU != False:
+                outlist.append(r'#SBATCH --gres=gpu:'+GPU)
+            outlist.append(r'#SBATCH --mem='+mem)
+        elif Scom == 'qsub':
+            if Email != False:
+                outlist.append(r'#PBS -m '+Email)
+                outlist.append(r'#PBS -M '+EmailAddress)
+            outlist.append(r'#PBS -l walltime='+time+',nodes='+str(thisnproc)+':ppn='+str(RPN)+',mem='+mem)
+            if GPU != False:
+                outlist.append(r'#PBS --gres gpu:'+nGPU)
+            outlist.append(r'#PBS -N '+Jstring)
+            if thismachine == 'hpcc':
+                if RunPTG:
+                    outlist.append(r'#PBS -A ptg')
+                else:
+                    outlist.append(r'#PBS -A hpccdefault')
+    outlist.append('')
+    if not Submit:
+        for imod in ModuleList:
+            outlist.append(r'module load '+imod)
+    outlist.append('')
+    return outlist
     
 def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
@@ -138,46 +180,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
     icfg,fcfg = str(icfg),str(fcfg)
     Jstring = MakeName(stage,icfg,fcfg)
-    outlist = []
-    outlist.append(r'#! /bin/tcsh')
-    outlist.append('')
-    if quetype == 'bluegene':
-        outlist.append(r'# @ job_name = '+Jstring)
-        outlist.append(r'# @ error = $(job_name).$(jobid).out')
-        outlist.append(r'# @ output = $(job_name).$(jobid).out')
-        outlist.append(r'# @ environment = COPY_ALL')
-        outlist.append(r'# @ wall_clock_limit = '+time)
-        outlist.append(r'# @ notification = error')
-        outlist.append(r'# @ notify_user = '+EmailAddress)
-        outlist.append(r'# @ job_type = bluegene')
-        outlist.append(r'# @ bg_size = '+str(thisnproc))
-        outlist.append(r'# @ queue')
-    else:
-        if Scom == 'sbatch':
-            outlist.append(r'#SBATCH -p '+quetype)
-            outlist.append(r'#SBATCH -n '+str(thisnproc))
-            outlist.append(r'#SBATCH --time='+time)
-            if GPU != False:
-                outlist.append(r'#SBATCH --gres=gpu:'+GPU)
-            outlist.append(r'#SBATCH --mem='+mem)
-        elif Scom == 'qsub':
-            if Email != False:
-                outlist.append(r'#PBS -m '+Email)
-                outlist.append(r'#PBS -M '+EmailAddress)
-            outlist.append(r'#PBS -l walltime='+time+',nodes='+str(thisnproc)+':ppn='+str(RPN)+',mem='+mem)
-            if GPU != False:
-                outlist.append(r'#PBS --gres gpu:'+nGPU)
-            outlist.append(r'#PBS -N '+Jstring)
-            if thismachine == 'hpcc':
-                if RunPTG:
-                    outlist.append(r'#PBS -A ptg')
-                else:
-                    outlist.append(r'#PBS -A hpccdefault')
-    outlist.append('')
-    if not Submit:
-        for imod in ModuleList:
-            outlist.append(r'module load '+imod)
-    outlist.append('')
+    outlist = GetCSHHeader(Jstring,thisnproc)
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
     # if 'hpcc' in thismachine:
@@ -245,3 +248,51 @@ def RemoveCSH(icfg,ism,stage):
     else:
         outfile = cshdir+'Run'+stage+'cfg'+icfg+'sm'+ism+'.csh'
     if os.path.isfile(outfile): os.remove(outfile)
+
+
+
+
+
+def CreateFlowCSHWrap(cfgindicies,jobid,thisnproc):
+    outfile = cshdir+'RunFlow.csh'
+    outlist = CreateFlowCSH(cfgindicies,outfile,jobid,thisnproc)
+    CreateCSHFile(outfile,outlist)
+    return outfile
+
+
+def CreateFlowCSH(cfgindicies,outfile,jobidlist,thisnproc):
+    inputfilelist = [InputFolder+jobid for jobid in jobidlist]
+    outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
+    logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
+    Jstring = 'FlowJob'
+    outlist = GetCSHHeader(Jstring,thisnproc)
+    outlist.append(r'cd '+nodeoutputdir)
+    outlist.append('')
+    # if 'hpcc' in thismachine:
+    #     outlist.append('export OMP_NUM_THREADS='+str(RPN))
+    #     outlist.append('')
+        
+    for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies):
+        if os.path.isfile(outputfile):os.remove(outputfile)
+        if os.path.isfile(logfile):os.remove(logfile)
+        outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
+        if quetype == 'bluegene':
+            outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+Flowchromacpu+Flowexe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+                           ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+        else:
+            outlist.append(r'    mpirun -np '+str(RPN*thisnproc)+' '+Flowchromacpu+Flowexe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+                           ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+        outlist.append(r'    if ($? == -11) then')
+        outlist.append(r'        echo "Time ran out, resubmitting same script "')
+        outlist.append(r'        python '+scriptdir+'FlowSubmit.py ')
+        outlist.append(r'        exit 1')
+        outlist.append(r'    endif')
+        outlist.append(r'    if ($? != 0) then')
+        outlist.append(r'        echo "Job Crashed, error code $? , exiting"')
+        outlist.append(r'        exit 1')
+        outlist.append(r'    endif')
+        outlist.append(r'')
+        outlist.append('echo "'+str(thiscfg)+'" >> '+FlowDoneList)
+    outlist.append(r'    echo "finished "`date`')
+    return outlist
+

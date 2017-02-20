@@ -3,6 +3,16 @@
 from RunParams import *
 
 
+def CheckFlowDoneList(icfg):
+    with open(FlowDoneList,'r') as f:
+        for lines in f:
+            if str(icfg) in lines:
+                return True
+    return False
+
+def GetFlowDir(icfg):
+    return flowdirout+'cfg'+str(icfg)+'/'
+
 def Get2ptProp(icfg,ism,iPoF=0):
     return qpdir+''.join(CreateCfg(icfg,DelLime=True))+'_tsrc'+str(iPoF)+'_sm'+str(ism)+'.prop'
 
