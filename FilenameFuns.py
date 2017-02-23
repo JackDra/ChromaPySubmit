@@ -20,7 +20,9 @@ def CheckFlowDoneList(icfglist):
 def CheckFlowDoneListFF(icfglist):
     listout = []
     for icfg in icfglist:
-        thisdir = GetFlowDir(icfg)
+        thisdir = GetFlowDir(icfg.replace('\n',''))
+        # print glob.glob(thisdir)
+        # print icfg.replace('\n','') , len(glob.glob(thisdir+'*')), 2*(flow_steps+1)
         if len(glob.glob(thisdir+'*')) == 2*(flow_steps+1):
             listout.append(icfg)
     return listout
