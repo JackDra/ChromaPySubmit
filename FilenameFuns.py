@@ -1,18 +1,31 @@
 #!/usr/bin/env python 
 
 from RunParams import *
-
-
-def CheckFlowDoneList(icfg):
-    with open(FlowDoneList,'r') as f:
-        for lines in f:
-            if str(icfg) == lines.replace('\n',''):
-                return True
-    return False
+import glob
 
 def GetFlowDir(icfg):
     mkdir_p(flowdirout+'cfg'+str(icfg)+'/')
     return flowdirout+'cfg'+str(icfg)+'/'
+
+
+def CheckFlowDoneList(icfglist):
+    listout = []
+    for icfg in icfglist:
+        with open(FlowDoneList,'r') as f:
+            for lines in f:
+                if str(icfg) == lines.replace('\n',''):
+                    listout.append(icfg)
+    return listout
+
+def CheckFlowDoneListFF(icfglist):
+    listout = []
+    for icfg in icfglist:
+        thisdir = GetFlowDir(icfg)
+        if len(glob.glob(thisdir+'*')) == 2*(flow_steps+1):
+            listout.append(icfg)
+    return listout
+            
+               
 
 def Get2ptProp(icfg,ism,iPoF=0):
     return qpdir+''.join(CreateCfg(icfg,DelLime=True))+'_tsrc'+str(iPoF)+'_sm'+str(ism)+'.prop'

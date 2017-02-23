@@ -17,13 +17,9 @@ import numpy as np
 thiscfglist,totncfg = CreateCfgList(1,Src=False)
 
 
-if os.path.isfile(FlowDoneList):
-    runcfglist = []
-    for icfg in thiscfglist:
-        if not CheckFlowDoneList(icfg.replace('\n','')):
-            runcfglist.append(int(icfg.replace('\n','')))
-else:
-    runcfglist = [int(icfg.replace('\n','')) for icfg in thiscfglist]
+runcfglist = []
+for icfg in CheckFlowDoneListFF(thiscfglist):
+    runcfglist.append(int(icfg.replace('\n','')))
 
 # for icfg in runcfglist:
 #     print icfg
