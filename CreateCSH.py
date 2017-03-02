@@ -264,7 +264,7 @@ def CreateFlowCSH(cfgindicies,outfile,jobidlist,thisnproc):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
-    Jstring = 'FlowJob'
+    Jstring = 'QandWJob'
     outlist = GetCSHHeader(Jstring,thisnproc)
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
