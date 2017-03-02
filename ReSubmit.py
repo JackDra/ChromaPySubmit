@@ -20,7 +20,7 @@ def IncrementRun(stage):
     if 'threeptcorr' in stage:
         return 'Done'
 
-def RunNext(icfg,fcfg,stage='twoptcorr',thisnproc=nproc,Start=False,cfgindicies='FromFile'):
+def RunNext(icfg,fcfg,stage='twoptcorr',thisnproc=nproc,Start=False,cfgindicies='FromFile',othree=False):
 
     thisnproc = int(thisnproc)
     icfg,fcfg = map(int,[icfg,fcfg])
@@ -75,6 +75,7 @@ def RunNext(icfg,fcfg,stage='twoptcorr',thisnproc=nproc,Start=False,cfgindicies=
     # GetGaugeField(icfg)
         
     if not Start: stage = IncrementRun(stage)
+    if othree: stage = 'threeptcorr'
     newstage = stage
     NewCfgList = []
     while len(NewCfgList) == 0:
@@ -87,10 +88,12 @@ def RunNext(icfg,fcfg,stage='twoptcorr',thisnproc=nproc,Start=False,cfgindicies=
             elif 'threeptcorr' in stage:
                 if DoJsm3pt:
                     if not Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList):
-                        NewCfgList.append(thecfg)
+                        if not othree or Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
+                            NewCfgList.append(thecfg)
                 else:
                     if not Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList):
-                        NewCfgList.append(thecfg)
+                        if not othree or Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
+                            NewCfgList.append(thecfg)
             elif 'Done' in stage:
                 break
         newstage = IncrementRun(stage)

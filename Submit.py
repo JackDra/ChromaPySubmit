@@ -16,6 +16,7 @@ nsrc = DupCfgs
 FromFile = False
 startcfg = 0
 nppick = False
+OnlyThree = False
 for iin in sys.argv[1:]:
     if '-np=' in iin:
         njobs = int(iin.replace('-np=',''))
@@ -29,6 +30,8 @@ for iin in sys.argv[1:]:
         FromFile = True
     elif '-nppick' in iin:
         nppick = map(int,iin.replace('-nppick=','').split(','))
+    elif '-onlythree' in iin:
+        OnlyThree = True
         
         
 if njobs == -1:
@@ -61,7 +64,7 @@ for iin,(icfg,fcfg) in enumerate(cfgintervals):
         thisnproc = nproc
         if iin >= len(cfgintervals)/2 and halfishalf: thisnproc=nproc/2
         print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)    
-        RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies,thisnproc=thisnproc)
+        RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies,thisnproc=thisnproc,othree=OnlyThree)
 # else:
 #     RunNext(forcecfg[0],forcecfg[1],Start=True,cfgindicies=cfgindicies)
         
