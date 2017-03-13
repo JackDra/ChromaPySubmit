@@ -4,6 +4,8 @@
 import socket
 import re
 
+Debug = True ## Debugging flag.... finnaly put it in
+
 THISMACHINE = socket.gethostname()
 
 if 'juqueen' in THISMACHINE:
@@ -42,7 +44,7 @@ halfishalf = False ## runs half the jobs on half the number of nodes
 Email = 'bea' ## b = begin, e = end , a = abort, Email = False Non
 EmailAddress = 'jack.dragos@gmail.com'
 
-
+mpirun_comm = 'mpirun'
 if 'phoenix.rc' in THISMACHINE:
     thismachine = 'phoenixold'
     basedir = '/home/a1193348/'
@@ -105,6 +107,7 @@ elif 'isaac' in THISMACHINE:
     it_sst = [13] ## ahnialation parameters (momenta)
 
 elif 'JackLappy' in THISMACHINE:
+    mpirun_comm = 'mpirun.openmpi'
     thismachine = 'JackLappy'
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
     scratchdir = '/home/jackdra/PHD/CHROMA/TestVar/scratch/'
@@ -114,10 +117,11 @@ elif 'JackLappy' in THISMACHINE:
     Scom = 'sbatch'
     quetype = 'batch'
     mem = '120GB'
-    time = '5:00:00'
+    # time = '5:00:00'
+    time = '00:03:25'
     GPU = False
     # GPU = '4'
-    nproc = 2
+    nproc = 4
     # nproc = 4
     RPN = 1 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     totproc = nproc*RPN
@@ -434,6 +438,23 @@ def ProjToPol(Proj):
         return 'UNPOL'
     else:
         return ''
+
+
+def TimeInSeconds(time,as_str=True):
+    hours,minutes,seconds = map(int,time.split(':'))
+    secondtime = seconds + minutes*60 + hours*3600
+    if as_str:
+        return str(secondtime)
+    else:
+        return secondtime
+    
+jobtimebuffer2pt = 200 ## overestimate of length of time to complete one set of inverisons for 2 point correlators (use output files to deturmine this)
+jobtimebuffer3pt = 4000 ## overestimate of length of time to complete one set of inverisons for 3 point correlators (use output files to deturmine this)
+
+secondstime = TimeInSeconds(time,as_str=False)
+jobseconds2pt = str(secondstime - jobtimebuffer2pt)
+jobseconds3pt = str(secondstime - jobtimebuffer3pt)
+
 
 # FermAct = 'UNPRECONDITIONED_SLRC'
 FermAct = 'CLOVER'

@@ -8,7 +8,6 @@ import subprocess
 import commands
 from CreateCSH import CreateCSHWrap,RemoveCSH
 
-DefParams = [it_sst[0],ProjectorList[0],DSList[0]]
 
 def IncrementRun(stage):
     if OnlyGauge: return 'Done'
@@ -19,14 +18,26 @@ def IncrementRun(stage):
             return  'threeptcorr'
     if 'threeptcorr' in stage:
         return 'Done'
+    if 'Done' in stage:
+        return 'Done'
+    
+def RunNext(icfg,fcfg,stage,othree,thisnproc,cfgindicies='FromFile'):
 
-def RunNext(icfg,fcfg,stage='twoptcorr',thisnproc=nproc,Start=False,cfgindicies='FromFile',othree=False):
-
+    if isinstance(othree,str):
+        if 'True' in othree:
+            othree = True
+        else:
+            othree = False
+            
     thisnproc = int(thisnproc)
     icfg,fcfg = map(int,[icfg,fcfg])
     if cfgindicies == 'FromFile':
         with open(paramdir+indexfilename,'r') as f:
+            # cfgindicies = map(int,f.readlines())
             cfgindicies = map(int,f.readlines())
+
+
+
     # for ism in ismlist:
     #     for thecfg in cfgindicies[icfg-1:fcfg]:
     #         RemoveCSH(thecfg,ism,stage)
@@ -74,13 +85,14 @@ def RunNext(icfg,fcfg,stage='twoptcorr',thisnproc=nproc,Start=False,cfgindicies=
 
     # GetGaugeField(icfg)
         
-    if not Start: stage = IncrementRun(stage)
     if othree: stage = 'threeptcorr'
     newstage = stage
     NewCfgList = []
     while len(NewCfgList) == 0:
-        NewCfgList = []
         stage = newstage
+        if 'Done' in newstage:
+            break
+        NewCfgList = []
         for thecfg in cfgindicies[icfg-1:fcfg]:
             if 'twoptcorr' in stage:
                 if not Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
@@ -88,16 +100,14 @@ def RunNext(icfg,fcfg,stage='twoptcorr',thisnproc=nproc,Start=False,cfgindicies=
             elif 'threeptcorr' in stage:
                 if DoJsm3pt:
                     if not Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList):
-                        if not othree or Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
+                        if (not othree) or Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
                             NewCfgList.append(thecfg)
                 else:
                     if not Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList):
-                        if not othree or Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
+                        if (not othree) or Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
                             NewCfgList.append(thecfg)
-            elif 'Done' in stage:
-                break
         newstage = IncrementRun(stage)
-            
+
     if len(NewCfgList) == 0:
         print 'All Done'
         return
@@ -110,18 +120,18 @@ def RunNext(icfg,fcfg,stage='twoptcorr',thisnproc=nproc,Start=False,cfgindicies=
             for curricfg in NewCfgList:
                 map(mkdir_p,Get3ptCorrFolderjsmList(curricfg,ism))
         if Submit:
-            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb',thisnproc=thisnproc)
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb',thisnproc,othree)
         else:
-            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb',thisnproc)
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb',thisnproc,othree)
         print runfile
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
     elif 'twopt' in stage:        
         thisjoblist = Create2ptCorrWrap(InputFolder,ChromaFileFlag,NewCfgList)
         if Submit:
-            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc)
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc,othree)
         else:
-            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc)
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc,othree)
         print runfile
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)
@@ -131,9 +141,9 @@ def RunNext(icfg,fcfg,stage='twoptcorr',thisnproc=nproc,Start=False,cfgindicies=
             for curricfg in NewCfgList:
                 map(mkdir_p,Get3ptCorrFolderList(curricfg,ism))
         if Submit:
-            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc)
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc,othree)
         else:
-            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc)
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc,othree)
         print runfile
         # if not DontRun: subprocess.call([runfile],cwd=basedir)
         if not DontRun: os.system(runfile)

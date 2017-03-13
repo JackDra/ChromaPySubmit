@@ -125,12 +125,16 @@ def GetCSHHeader(Jstring,thisnproc):
     outlist.append('')
     return outlist
     
-def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
+def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage,thisnproc,othree):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
     icfg,fcfg = str(icfg),str(fcfg)
     Jstring = MakeName(stage,icfg,fcfg)
+    if 'twopt' in stage:
+        jobseconds = jobseconds2pt
+    else:
+        jobseconds = jobseconds3pt
     outlist = []
     outlist.append(r'#! /bin/tcsh')
     outlist.append('')
@@ -147,39 +151,52 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage):
     outlist.append('')
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
-    outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
+        
+    outlist.append(r'echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
+
+    outlist.append(r'set start = `date +%s`')
     for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies):
         if os.path.isfile(outputfile):os.remove(outputfile)
         if os.path.isfile(logfile):os.remove(logfile)
         outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
-        outlist.append(r'    mpirun -np '+str(nproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+        outlist.append(r'    '+mpirun_comm+' -np '+str(nproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                        ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+        
+        outlist.append(r'    echo ""')
         outlist.append(r'    echo "last command had return value: $?"')
-        outlist.append(r'    if ($? == -11) then')
+        outlist.append(r'    set end = `date +%s`')
+        outlist.append(r'    set curr = `expr $end - $start`')
+        outlist.append(r'    echo "been running for $curr seconds"')
+        outlist.append(r'    if ( `echo "$curr > '+jobseconds+'" | bc` ) then')
         outlist.append(r'        echo "Time ran out, resubmitting same script "')
-        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage])+"'")
-        outlist.append(r'        exit 1')
+        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,str(othree),str(thisnproc)])+"'")
+        outlist.append(r'        exit 2')
         outlist.append(r'    endif')
         outlist.append(r'    if ($? != 0) then')
         outlist.append(r'        echo "Job Crashed, error code $? , exiting"')
         outlist.append(r'        exit 1')
         outlist.append(r'    endif')
+        outlist.append(r'    echo ""')
         outlist.append(r'')
     
     outlist.append(r'    echo "finished "`date`')
     if 'twopt' in stage and not OnlyTwoPt:
         outlist.append('')
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage])+"'")
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,'threeptcorr',str(othree),str(thisnproc)])+"'")
     return outlist
 
         
 
-def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
+def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc,othree):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
     icfg,fcfg = str(icfg),str(fcfg)
     Jstring = MakeName(stage,icfg,fcfg)
+    if 'twopt' in stage:
+        jobseconds = jobseconds2pt
+    else:
+        jobseconds = jobseconds3pt
     outlist = GetCSHHeader(Jstring,thisnproc)
     outlist.append(r'cd '+nodeoutputdir)
     outlist.append('')
@@ -187,7 +204,9 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
     #     outlist.append('export OMP_NUM_THREADS='+str(RPN))
     #     outlist.append('')
         
-    outlist.append(r'    echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
+    outlist.append(r'echo "icfg='+icfg+', fcfg='+fcfg+', '+stage+' "')
+
+    outlist.append(r'set start = `date +%s`')
     for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies):
         if os.path.isfile(outputfile):os.remove(outputfile)
         if os.path.isfile(logfile):os.remove(logfile)
@@ -196,13 +215,16 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
             outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                            ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
         else:
-            outlist.append(r'    mpirun -np '+str(RPN*thisnproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+            outlist.append(r'    '+mpirun_comm+' -np '+str(RPN*thisnproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                            ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
-        outlist.append(r'    if ($? == -11) then')
+        outlist.append(r'    set end = `date +%s`')
+        outlist.append(r'    set curr = `expr $end - $start`')
+        outlist.append(r'    echo "been running for $curr seconds"')
+        outlist.append(r'    if ( `echo "$curr > '+jobseconds+'" | bc` ) then')
         outlist.append(r'        echo "Time ran out, resubmitting same script "')
-        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,str(thisnproc)])+"'")
-        outlist.append(r'        exit 1')
-        outlist.append(r'    endif')
+        outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,str(othree),str(thisnproc)])+"'")
+        outlist.append(r'        exit 2')
+        outlist.append(r'    endif')        
         outlist.append(r'    if ($? != 0) then')
         outlist.append(r'        echo "Job Crashed, error code $? , exiting"')
         outlist.append(r'        exit 1')
@@ -223,21 +245,21 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc):
     # if 'gfield' in stage: nextcfg = str(int(icfg)+1)
     if 'twopt' in stage and not OnlyTwoPt:
         outlist.append('')
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,str(thisnproc)])+"'")
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,'threeptcorr',str(othree),str(thisnproc)])+"'")
     return outlist
 
 
 
-def CreateCSHWrap(cfgindicies,icfg,fcfg,jobid,stage,thisnproc):
+def CreateCSHWrap(cfgindicies,icfg,fcfg,jobid,stage,thisnproc,othree):
     icfg,fcfg = str(icfg),str(fcfg)
     if 'gfield' in stage:
         outfile = cshdir+'Run'+stage+'.csh'
     else:
         outfile = cshdir+'Run'+stage+'cfg'+icfg+'fcfg'+fcfg+'.csh'
     if 'juqueen' in thismachine or 'hpcc' in thismachine:
-        outlist = CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobid,stage,thisnproc)
+        outlist = CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobid,stage,thisnproc,othree)
     else:
-        outlist = CreateCSHList(cfgindicies,icfg,fcfg,jobid,stage)
+        outlist = CreateCSHList(cfgindicies,icfg,fcfg,jobid,stage,thisnproc,othree)
     CreateCSHFile(outfile,outlist)
     return outfile
 
@@ -280,7 +302,7 @@ def CreateFlowCSH(cfgindicies,outfile,jobidlist,thisnproc):
             outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+Flowchromacpu+Flowexe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                            ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
         else:
-            outlist.append(r'    mpirun -np '+str(RPN*thisnproc)+' '+Flowchromacpu+Flowexe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+            outlist.append(r'    '+mpirun_comm+' -np '+str(RPN*thisnproc)+' '+Flowchromacpu+Flowexe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                            ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
         outlist.append(r'    if ($? == -11) then')
         outlist.append(r'        echo "Time ran out, resubmitting same script "')

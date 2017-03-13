@@ -64,7 +64,7 @@ for iin,(icfg,fcfg) in enumerate(cfgintervals):
         thisnproc = nproc
         if iin >= len(cfgintervals)/2 and halfishalf: thisnproc=nproc/2
         print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)    
-        RunNext(icfg,fcfg,Start=True,cfgindicies=cfgindicies,thisnproc=thisnproc,othree=OnlyThree)
+        RunNext(icfg,fcfg,'twoptcorr',OnlyThree,thisnproc,cfgindicies=cfgindicies)
 # else:
 #     RunNext(forcecfg[0],forcecfg[1],Start=True,cfgindicies=cfgindicies)
         
