@@ -182,7 +182,7 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage,thisnproc,othree):
     outlist.append(r'    echo "finished "`date`')
     if 'twopt' in stage and not OnlyTwoPt:
         outlist.append('')
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,'threeptcorr',str(othree),str(thisnproc)])+"'")
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,str(othree),str(thisnproc)])+"'")
     return outlist
 
         
@@ -245,7 +245,7 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc,oth
     # if 'gfield' in stage: nextcfg = str(int(icfg)+1)
     if 'twopt' in stage and not OnlyTwoPt:
         outlist.append('')
-        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,'threeptcorr',str(othree),str(thisnproc)])+"'")
+        outlist.append(r'python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,str(othree),str(thisnproc)])+"'")
     return outlist
 
 
