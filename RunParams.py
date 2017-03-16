@@ -4,7 +4,7 @@
 import socket
 import re
 
-Debug = False ## Debugging flag.... finnaly put it in
+Debug = True ## Debugging flag.... finnaly put it in
 
 THISMACHINE = socket.gethostname()
 
@@ -151,7 +151,7 @@ elif 'juqueen' in THISMACHINE:
     ks = 1364000
     ksgf = str(ks/1000)
     # codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma/install_bgq_clang/'
-    codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma_bup/install/'
+    codedir = '/homeb/jias40/jias4002/juqueen/Chroma/chroma_bup_recomplie/install/'
     flowdir = '/homeb/jias40/jias4002/juqueen/Chroma/flowOps/'
     # gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.13754ks0.1364/'
     gfdir = '/work/jias40/jias4000/conf/Nf2p1/b1.9kl0.'+kudgf+'ks0.'+ksgf+'/'
@@ -159,11 +159,17 @@ elif 'juqueen' in THISMACHINE:
     quetype = 'bluegene'
     mem = ''
     time = '23:50:00'
+        
     # time = '05:50:00'
     GPU = False
     # GPU = '4'
     nproc = 512
     RPN = 64 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
+    if Debug:
+        time = '01:00:00'
+        nproc = 128
+        RPN = 64 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
+        
     # nproc = 16
     totproc = nproc*RPN ## number of nodes
     if RPN not in [16,32,64]: raise  EnvironmentError('RPN (ranks per node) must be 16 (physical), 32 or 64/ RPN='+str(RPN))

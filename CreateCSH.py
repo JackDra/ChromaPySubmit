@@ -212,8 +212,12 @@ def CreateCSHJuqueen(cfgindicies,outfile,icfg,fcfg,jobidlist,stage,thisnproc,oth
         if os.path.isfile(logfile):os.remove(logfile)
         outlist.append(r'    echo "thiscfg='+str(thiscfg)+' starting "`date`')
         if quetype == 'bluegene':
-            outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
-                           ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+            if Debug:
+                outlist.append(r'    runjob --verbose 4 --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+                               ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
+            else:
+                outlist.append(r'    runjob --ranks-per-node '+str(RPN)+' : '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
+                               ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())                
         else:
             outlist.append(r'    '+mpirun_comm+' -np '+str(RPN*thisnproc)+' '+chromacpu+exe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                            ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
