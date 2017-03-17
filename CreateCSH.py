@@ -166,7 +166,7 @@ def CreateCSHList(cfgindicies,icfg,fcfg,jobidlist,stage,thisnproc,othree):
         outlist.append(r'    echo "last command had return value: $?"')
         outlist.append(r'    set end = `date +%s`')
         outlist.append(r'    set curr = `expr $end - $start`')
-        outlist.append(r'    echo "been running for $curr seconds"')
+        outlist.append(r'    echo "been running for $curr seconds, cut off time is '+jobseconds+'"')
         outlist.append(r'    if ( `echo "$curr > '+jobseconds+'" | bc` ) then')
         outlist.append(r'        echo "Time ran out, resubmitting same script "')
         outlist.append(r'        python '+scriptdir+r'ReSubmit.py '+"'"+"' '".join([icfg,fcfg,stage,str(othree),str(thisnproc)])+"'")

@@ -4,7 +4,7 @@
 import socket
 import re
 
-Debug = True ## Debugging flag.... finnaly put it in
+Debug = False ## Debugging flag.... finnaly put it in
 
 THISMACHINE = socket.gethostname()
 
