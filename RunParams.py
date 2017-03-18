@@ -167,8 +167,8 @@ elif 'juqueen' in THISMACHINE:
     RPN = 64 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
     if Debug:
         time = '01:00:00'
-        nproc = 128
-        RPN = 64 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
+        nproc = 256
+        RPN = 32 ## 16,32,64 threads per node, NOTE: only 16 physical cores per node.
         
     # nproc = 16
     totproc = nproc*RPN ## number of nodes
