@@ -30,7 +30,7 @@ for iin in sys.argv[1:]:
         FromFile = True
     elif '-nppick' in iin:
         nppick = map(int,iin.replace('-nppick=','').split(','))
-    elif '-onlythree' in iin:
+    elif '-onlythree' in iin or '-justthree' in iin:
         OnlyThree = True
         
         
