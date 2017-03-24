@@ -145,8 +145,8 @@ elif 'juqueen' in THISMACHINE:
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
-    # kud = 1370000
-    kud = 1375400 # kappa (quark hopping) params
+    kud = 1370000
+    # kud = 1375400 # kappa (quark hopping) params
     kudgf = str(kud/100)
     ks = 1364000
     ksgf = str(ks/1000)
@@ -182,7 +182,7 @@ elif 'juqueen' in THISMACHINE:
     chromaGPUfolder = ''
     kappastr = 'Kud0'+str(kud)+'Ks0'+str(ks)
     # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715'
-    limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00' ## for kud = 1375400
+    # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-a-00' ## for kud = 1375400
     # limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-b-00'
     Submit = True ## submits the script to the que, disable to run on local machine
     it_sst = [13] ## ahnialation parameters (momenta)
