@@ -263,7 +263,7 @@ runflag = 'PChroma'
 
 
 ExitOnFail = True ## Reimplemented: exits if there was a failed run (on for debugging?)
-DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
+DontRun = True ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 AveMom2pt = True ## Averages over all 2 point propagator momenta for a Q^2
@@ -457,10 +457,12 @@ def TimeInSeconds(time,as_str=True):
     
 jobtimebuffer2pt = 200 ## overestimate of length of time to complete one set of inverisons for 2 point correlators (use output files to deturmine this)
 jobtimebuffer3pt = 4000 ## overestimate of length of time to complete one set of inverisons for 3 point correlators (use output files to deturmine this)
+jobtimebufferflow = 1200 ## as above for flow jobs
 
 secondstime = TimeInSeconds(time,as_str=False)
 jobseconds2pt = str(secondstime - jobtimebuffer2pt)
 jobseconds3pt = str(secondstime - jobtimebuffer3pt)
+flowjobseconds = str(secondstime - jobtimebufferflow)
 
 
 # FermAct = 'UNPRECONDITIONED_SLRC'

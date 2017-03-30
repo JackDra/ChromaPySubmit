@@ -279,14 +279,14 @@ def RemoveCSH(icfg,ism,stage):
 
 
 
-def CreateFlowCSHWrap(cfgindicies,jobid,thisnproc):
-    outfile = cshdir+'RunFlow.csh'
-    outlist = CreateFlowCSH(cfgindicies,outfile,jobid,thisnproc)
+def CreateFlowCSHWrap(cfgindicies,jobid,thisnproc,ijob,njobs):
+    outfile = cshdir+'RunFlow'+str(cfgindicies[0])+'-'+str(cfgindicies[-1])+'.csh'
+    outlist = CreateFlowCSH(cfgindicies,outfile,jobid,thisnproc,ijob,njobs)
     CreateCSHFile(outfile,outlist)
     return outfile
 
 
-def CreateFlowCSH(cfgindicies,outfile,jobidlist,thisnproc):
+def CreateFlowCSH(cfgindicies,outfile,jobidlist,thisnproc,ijob,njobs):
     inputfilelist = [InputFolder+jobid for jobid in jobidlist]
     outputfilelist = [OutputFolder+jobid.replace('.xml','.out') for jobid in jobidlist]
     logfilelist = [OutputFolder+jobid.replace('.xml','.log') for jobid in jobidlist]
@@ -297,6 +297,7 @@ def CreateFlowCSH(cfgindicies,outfile,jobidlist,thisnproc):
     # if 'hpcc' in thismachine:
     #     outlist.append('export OMP_NUM_THREADS='+str(RPN))
     #     outlist.append('')
+    outlist.append(r'set start = `date +%s`')
         
     for inputfile,outputfile,logfile,thiscfg in zip(inputfilelist,outputfilelist,logfilelist,cfgindicies):
         if os.path.isfile(outputfile):os.remove(outputfile)
@@ -308,9 +309,12 @@ def CreateFlowCSH(cfgindicies,outfile,jobidlist,thisnproc):
         else:
             outlist.append(r'    '+mpirun_comm+' -np '+str(RPN*thisnproc)+' '+Flowchromacpu+Flowexe+r' -i '+inputfile+r' -o '+outputfile+r' -l '+logfile+
                            ' -geom '+GetGeomInput()+' -iogeom '+GetIOGeomInput())
-        outlist.append(r'    if ($? == -11) then')
+        outlist.append(r'    set end = `date +%s`')
+        outlist.append(r'    set curr = `expr $end - $start`')
+        outlist.append(r'    echo "been running for $curr seconds"')
+        outlist.append(r'    if ( `echo "$curr > '+flowjobseconds+'" | bc` ) then')
         outlist.append(r'        echo "Time ran out, resubmitting same script "')
-        outlist.append(r'        python '+scriptdir+'FlowSubmit.py ')
+        outlist.append(r'        python '+scriptdir+'FlowSubmit.py -np='+str(njobs)+' -ijob='+str(ijob))
         outlist.append(r'        exit 1')
         outlist.append(r'    endif')
         outlist.append(r'    if ($? != 0) then')
