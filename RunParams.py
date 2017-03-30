@@ -263,7 +263,7 @@ runflag = 'PChroma'
 
 
 ExitOnFail = True ## Reimplemented: exits if there was a failed run (on for debugging?)
-DontRun = True ## creates input files but does not run (for looking at .csh and .xml files
+DontRun = False ## creates input files but does not run (for looking at .csh and .xml files
 SaveMem = True ## saves memory in run by deleting sources and propagators when not needed.
 Save2ptProp = False ## Saves 2 point propagators for use in the 3 point correlator construction
 AveMom2pt = True ## Averages over all 2 point propagator momenta for a Q^2
