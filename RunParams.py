@@ -159,8 +159,9 @@ elif 'juqueen' in THISMACHINE:
     quetype = 'bluegene'
     mem = ''
     # time = '23:50:00'
-    time = '11:50:00'
-        
+    # time = '11:50:00'
+    time = '01:55:00'
+    
     # time = '05:50:00'
     GPU = False
     # GPU = '4'
