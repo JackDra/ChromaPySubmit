@@ -145,8 +145,8 @@ elif 'juqueen' in THISMACHINE:
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
-    kud = 1370000
-    # kud = 1375400 # kappa (quark hopping) params
+    # kud = 1370000
+    kud = 1375400 # kappa (quark hopping) params
     kudgf = str(kud/100)
     ks = 1364000
     ksgf = str(ks/1000)
@@ -205,8 +205,8 @@ elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE or 'lac-' in THISMACHINE:
     codedir = '/mnt/home/dragosja/Chroma/install/'
     flowdir = '/mnt/home/dragosja/flowOps/'
     # gfdir = '/mnt/scratch/dragosja/data/gfields/Nf2p1/b1.9kl0.13754ks0.1364/'
-    kud = 1370000
-    # kud = 1375400 # kappa (quark hopping) params
+    # kud = 1370000
+    kud = 1375400 # kappa (quark hopping) params
     kudgf = str(kud/100)
     ks = 1364000
     ksgf = str(ks/1000)
