@@ -15,15 +15,29 @@ import numpy as np
 
 njobs = 1
 SingJobIndex = False
+
 for iin in sys.argv[1:]:
     if '-np=' in iin:
         njobs = int(iin.replace('-np=',''))
     if '-ijob=' in iin:
         SingJobIndex = int(iin.replace('-ijob=',''))
+    if '-SplitJob=' in iin:
+        mach_jobs = int(iin.replace('-SplitJob=',''))
+    if '-ThisJob=' in iin:
+        this_mach_job = int(iin.replace('-ThisJob=',''))
+    if '-help' in iin:
+        print 
+        print ' -np=#        Specifies how many jobs to submit to the machine'
+        print " -ijob=#      Used for re-running. Picks the ijob'th job out of np jobs"
+        print ' -SplitJob=#  Used when running over multiple machines. Specifies total number of machines to run over'
+        print ' -ThisJob=#   Used when running over multiple machines. Specifies which machine number this is (e.g. juqueen=1, laconia=2 etc..)'
+        print 
+        exit()
         
         
 thiscfglist,totncfg = CreateCfgList(njobs,Src=False)
 
+thiscfglist = np.array_split(thiscfglist,mach_jobs)[this_mach_job-1]
 
 runcfglist = []
 for icfg in CheckFlowDoneListFF(thiscfglist):
