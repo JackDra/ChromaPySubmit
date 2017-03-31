@@ -15,6 +15,8 @@ import numpy as np
 
 njobs = 1
 SingJobIndex = False
+mach_jobs = 1
+this_mach_job = 1
 
 for iin in sys.argv[1:]:
     if '-np=' in iin:
@@ -37,7 +39,8 @@ for iin in sys.argv[1:]:
         
 thiscfglist,totncfg = CreateCfgList(njobs,Src=False)
 
-thiscfglist = np.array_split(thiscfglist,mach_jobs)[this_mach_job-1]
+if mach_jobs > 1:
+    thiscfglist = np.array_split(thiscfglist,mach_jobs)[this_mach_job-1]
 
 runcfglist = []
 for icfg in CheckFlowDoneListFF(thiscfglist):
