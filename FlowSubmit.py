@@ -14,7 +14,7 @@ import numpy as np
 
 
 njobs = 1
-SingJobIndex = False
+SingJobIndex = 'None'
 mach_jobs = 1
 this_mach_job = 1
 
@@ -37,9 +37,9 @@ for iin in sys.argv[1:]:
         exit()
         
 
-for ics,isys in enumerate(sys.argv[1:]):
-    if '-np=' in isys:
-        del sys.argv[ics+1]
+# for ics,isys in enumerate(sys.argv[1:]):
+#     if '-np=' in isys:
+#         del sys.argv[ics+1]
 resubflags = ' '.join(sys.argv[1:])
 
 
@@ -57,9 +57,9 @@ for icfg in CheckFlowDoneListFF(thiscfglist):
 #     print icfg
 thisjoblist = CreateFlowFilesWrap(InputFolder,ChromaFileFlag,runcfglist)
 
-if SingJobIndex != False:
+if SingJobIndex != 'None':
     icfglist,ijoblist = np.array_split(np.array(runcfglist),njobs)[SingJobIndex],np.array_split(np.array(thisjoblist),njobs)[SingJobIndex]
-    runfile = CreateFlowCSHWrap(icfglist,ijoblist,nproc,SingJobIndex,njobs)
+    runfile = CreateFlowCSHWrap(icfglist,ijoblist,nproc,resubflags,njobs)
     if Submit:
         runfile = Scom+' '+runfile
     print runfile
