@@ -36,7 +36,14 @@ for iin in sys.argv[1:]:
         print 
         exit()
         
-        
+
+for ics,isys in enumerate(sys.argv[1:]):
+    if '-np=' in isys:
+        del sys.argv[ics+1]
+resubflags = ' '.join(sys.argv[1:])
+
+
+
 thiscfglist,totncfg = CreateCfgList(njobs,Src=False)
 
 if mach_jobs > 1:
@@ -60,7 +67,8 @@ if SingJobIndex != False:
     if not DontRun: os.system(runfile)
 else:
     for ijob,(icfglist,ijoblist) in enumerate(zip(np.array_split(np.array(runcfglist),njobs),np.array_split(np.array(thisjoblist),njobs))):
-        runfile = CreateFlowCSHWrap(icfglist,ijoblist,nproc,ijob,njobs)
+        thisresub = resubflags+' -ijob='+str(ijob)
+        runfile = CreateFlowCSHWrap(icfglist,ijoblist,nproc,thisresub,njobs)
         if Submit:
             runfile = Scom+' '+runfile
         print runfile

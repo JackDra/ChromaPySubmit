@@ -314,7 +314,7 @@ def CreateFlowCSH(cfgindicies,outfile,jobidlist,thisnproc,ijob,njobs):
         outlist.append(r'    echo "been running for $curr seconds"')
         outlist.append(r'    if ( `echo "$curr > '+flowjobseconds+'" | bc` ) then')
         outlist.append(r'        echo "Time ran out, resubmitting same script "')
-        outlist.append(r'        python '+scriptdir+'FlowSubmit.py -np='+str(njobs)+' -ijob='+str(ijob))
+        outlist.append(r'        python '+scriptdir+'FlowSubmit.py '+ijob)
         outlist.append(r'        exit 1')
         outlist.append(r'    endif')
         outlist.append(r'    if ($? != 0) then')
