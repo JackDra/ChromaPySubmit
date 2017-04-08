@@ -107,6 +107,9 @@ elif 'isaac' in THISMACHINE:
     it_sst = [13] ## ahnialation parameters (momenta)
 
 elif 'JackLappy' in THISMACHINE:
+    jobtimebuffer2pt = 200 ## overestimate of length of time to complete one set of inverisons for 2 point correlators (use output files to deturmine this)
+    jobtimebuffer3pt = 4000 ## overestimate of length of time to complete one set of inverisons for 3 point correlators (use output files to deturmine this)
+    jobtimebufferflow = 1200 ## as above for flow jobs
     mpirun_comm = 'mpirun.openmpi'
     thismachine = 'JackLappy'
     basedir = '/home/jackdra/PHD/CHROMA/TestVar/'
@@ -142,6 +145,10 @@ elif 'JackLappy' in THISMACHINE:
     OnlyTwoPt = False ## Only calculates two-point correlation functions.
     
 elif 'juqueen' in THISMACHINE:
+    jobtimebuffer2pt = 200 ## overestimate of length of time to complete one set of inverisons for 2 point correlators (use output files to deturmine this)
+    jobtimebuffer3pt = 4000 ## overestimate of length of time to complete one set of inverisons for 3 point correlators (use output files to deturmine this)
+    jobtimebufferflow = 1200 ## as above for flow jobs
+
     thismachine = 'juqueen'
     basedir = '/homeb/jias40/jias4002/juqueen/'
     scratchdir = '/work/jias40/jias4002/juqueen/'
@@ -199,6 +206,9 @@ elif 'juqueen' in THISMACHINE:
         limename = 'RC'+str(nx)+'x'+str(nt)+'_B1900'+kappastr+'C1715-b-00'
 
 elif 'dev' in THISMACHINE or 'gateway' in THISMACHINE or 'lac-' in THISMACHINE:
+    jobtimebuffer2pt = 200 ## overestimate of length of time to complete one set of inverisons for 2 point correlators (use output files to deturmine this)
+    jobtimebuffer3pt = 4000 ## overestimate of length of time to complete one set of inverisons for 3 point correlators (use output files to deturmine this)
+    jobtimebufferflow = 30000 ## as above for flow jobs
     thismachine = 'hpcc'
     RunPTG = True ## Runs on our partition or not
     basedir = '/mnt/home/dragosja/'
@@ -456,9 +466,6 @@ def TimeInSeconds(time,as_str=True):
     else:
         return secondtime
     
-jobtimebuffer2pt = 200 ## overestimate of length of time to complete one set of inverisons for 2 point correlators (use output files to deturmine this)
-jobtimebuffer3pt = 4000 ## overestimate of length of time to complete one set of inverisons for 3 point correlators (use output files to deturmine this)
-jobtimebufferflow = 1200 ## as above for flow jobs
 
 secondstime = TimeInSeconds(time,as_str=False)
 jobseconds2pt = str(secondstime - jobtimebuffer2pt)
