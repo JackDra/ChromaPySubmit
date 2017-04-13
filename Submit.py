@@ -19,13 +19,18 @@ nppick = False
 OnlyThree = False
 for iin in sys.argv[1:]:
     if '-h' in iin:
-        print '-np= #            Specifies number of jobs to submit to the cluster'
-        print '-startcfg= #      Can be used to set the start configuration (default =0)'
-        print '-ncfg= #          Can be used to specifiy the max number of configs to use (default set to all gauge fields)'
-        print '-nsrc= #          Number of sources to calculate per gauge field (default is 100 which is max supported [change DupCfgs in ./RunParams.py to larger if need])'
-        print '-fromfile         Can be specified to be True to use the already generated configuration list in ./ParamFiles/cfglistMACHINENAME.txt'
+        print ''
+        print 'Example:  ./Submit.py -np=10 -nsrc='
+        print '-np=#             Specifies number of jobs to submit to the cluster'
+        print '-ncfg=#           Specify number of gauge fields (default behaviour is to use all gauge fields)'
+        print '                  NOTE: code does maximal distance between numbered gauge fields, i.e. -ncfg=100 for total 200 skips every second gauge field.'   
+        print '-nsrc=#           Number of sources to calculate per gauge field (default is 100 which is max supported [change DupCfgs in ./RunParams.py to larger if need])'
+        print ''
         print '-nppick=#,#,...   Only submit jobs # to the cluster (used for resubmitting single jobs that crash'
         print '-OnlyThree        Flag to only calculate the remaining 3-point correlators (usefull for finishing off runs early)'
+        print '-startcfg=#       Can be used to set the start configuration (default =0)'
+        print '-fromfile         Can be specified to be True to use the already generated configuration list in ./ParamFiles/cfglistMACHINENAME.txt'
+        print ''
         sys.exit()
     if '-np=' in iin:
         njobs = int(iin.replace('-np=',''))
