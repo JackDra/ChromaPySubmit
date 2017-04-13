@@ -26,6 +26,7 @@ for iin in sys.argv[1:]:
         print '-fromfile         Can be specified to be True to use the already generated configuration list in ./ParamFiles/cfglistMACHINENAME.txt'
         print '-nppick=#,#,...   Only submit jobs # to the cluster (used for resubmitting single jobs that crash'
         print '-OnlyThree        Flag to only calculate the remaining 3-point correlators (usefull for finishing off runs early)'
+        sys.exit()
     if '-np=' in iin:
         njobs = int(iin.replace('-np=',''))
     elif '-startcfg=' in iin:
