@@ -20,7 +20,6 @@ OnlyThree = False
 for iin in sys.argv[1:]:
     if '-h' in iin:
         print ''
-        print 'Example:  ./Submit.py -np=10 -nsrc='
         print '-np=#             Specifies number of jobs to submit to the cluster'
         print '-ncfg=#           Specify number of gauge fields (default behaviour is to use all gauge fields)'
         print '                  NOTE: code does maximal distance between numbered gauge fields, i.e. -ncfg=100 for total 200 skips every second gauge field.'   
@@ -30,6 +29,9 @@ for iin in sys.argv[1:]:
         print '-OnlyThree        Flag to only calculate the remaining 3-point correlators (usefull for finishing off runs early)'
         print '-startcfg=#       Can be used to set the start configuration (default =0)'
         print '-fromfile         Can be specified to be True to use the already generated configuration list in ./ParamFiles/cfglistMACHINENAME.txt'
+        print ''
+        print 'Example:  ./Submit.py -np=10 -nsrc=20 -ncfg=100'
+        print 'Will produce 20 sources for all of 100 cfgs. The total 2000 measurements will then be split up over 10 jobs'
         print ''
         sys.exit()
     if '-np=' in iin:
