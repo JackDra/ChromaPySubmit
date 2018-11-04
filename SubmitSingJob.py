@@ -1,12 +1,10 @@
 #!/usr/bin/env python
+
 from RunParams import DupCfgs,nproc,halfishalf
 from CreateCfgFile import CreateCfgList,GetCfgIndicies,GetIcfgTOFcfg
-#
-# from RunParams import *
-# from CreateCfgFile import *
 # from CreateChromaFiles import *
 # from GetAndCheckData import *
-from ReSubmit import RunNext
+from ReSubmitSing import RunNextComb
 import sys
 # import subprocess
 # import numpy as np
@@ -18,7 +16,6 @@ nsrc = DupCfgs
 FromFile = False
 startcfg = 0
 nppick = False
-OnlyThree = False
 for iin in sys.argv[1:]:
     if '-h' in iin:
         print ''
@@ -28,7 +25,6 @@ for iin in sys.argv[1:]:
         print '-nsrc=#           Number of sources to calculate per gauge field (default is 100 which is max supported [change DupCfgs in ./RunParams.py to larger if need])'
         print ''
         print '-nppick=#,#,...   Only submit jobs # to the cluster (used for resubmitting single jobs that crash'
-        print '-OnlyThree        Flag to only calculate the remaining 3-point correlators (usefull for finishing off runs early)'
         print '-startcfg=#       Can be used to set the start configuration (default =0)'
         print '-fromfile         Can be specified to be True to use the already generated configuration list in ./ParamFiles/cfglistMACHINENAME.txt'
         print ''
@@ -48,8 +44,6 @@ for iin in sys.argv[1:]:
         FromFile = True
     elif '-nppick' in iin:
         nppick = map(int,iin.replace('-nppick=','').split(','))
-    elif '-onlythree' in iin or '-justthree' in iin:
-        OnlyThree = True
 
 
 if njobs == -1:
@@ -82,6 +76,6 @@ for iin,(icfg,fcfg) in enumerate(cfgintervals):
         thisnproc = nproc
         if iin >= len(cfgintervals)/2 and halfishalf: thisnproc=nproc/2
         print 'Submitting icfg='+str(icfg)+' fcfg='+str(fcfg)
-        RunNext(icfg,fcfg,'twoptcorr',OnlyThree,thisnproc,cfgindicies=cfgindicies)
+        RunNextComb(icfg,fcfg,thisnproc,cfgindicies=cfgindicies)
 # else:
 #     RunNext(forcecfg[0],forcecfg[1],Start=True,cfgindicies=cfgindicies)

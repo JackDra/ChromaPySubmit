@@ -1,12 +1,29 @@
 #!/usr/bin/env python
 
-from RunParams import *
-from FilenameFuns import *
+# from RunParams import *
+from FilenameFuns import GetFlowDir,Get2ptCorrFolders,Get2ptCorr
+from FilenameFuns import Get3ptCorr,Get3ptCorrjsm
+from GetAndCheckData import GetGaugeField
+from RunParams import nxtstr,SmKind,FlowOrderWein,nx
+from RunParams import kflowWein,FlowOrderQtop,kflowQtop
+from RunParams import flow_steps,totflow_time,nt,SmSourceType
+from RunParams import GetSourceString,alpha,SmSinkType,FermBC
+from RunParams import boundstr,phases,phasedirs,anisoP,t_dir
+from RunParams import xi_0,GFnu,nstout,rho,FermAct,csw,invType
+from RunParams import Prec,MaxIter,anti_t,GetSmSeqSourceType
+from RunParams import ppstr,qmax,AveMom2pt,OutXml,NDer
+from RunParams import Seed1,Seed2,Seed3,Seed4,GFFormat,ParaIO
+from RunParams import GFPrec,GFMaxIter,GFDoOr,GFOrPara,StartUpdateNum
+from RunParams import NWarmUpUpdates,NProductionUpdates,NUpdatesThisRun
+from RunParams import SaveInterval,GActName,beta,GaugeBC,nOver,NmaxHB
+from RunParams import flowed_meson_Gamma,calc_freq,calc_Adj,mes_flow_nb,mes_flow_ns
+from RunParams import Do_Wflow,Do_Qflow,Do_Eflow,kflowE,FlowOrderE,flow_fermions
+
+from MiscFuns import mkdir_p
 from collections import OrderedDict as OrdDict
-from GetAndCheckData import *
 import numpy as np
 
-iterlistchunk = iter(range(50))
+iterlistchunk = iter(range(50000))
 
 def SetupDict():
     outputdict = {'chroma':OrdDict()}
@@ -15,16 +32,16 @@ def SetupDict():
     outputdict['chroma']['Param']['nrow'] = nxtstr
     return outputdict
 
-def SetupGaugeDict(thistype,icfg):
+def SetupGaugeDict(thistype):
     outputdict = {thistype:OrdDict()}
     if 'purgaug' in thistype:
-        outputdict[thistype] = Add_cfg(icfg)
-        hold = Add_MCControl(GetGaugeField(icfg).replace('.lime',''))
+        outputdict[thistype] = Add_cfg(1)
+        hold = Add_MCControl(GetGaugeField(1).replace('.lime',''))
         outputdict[thistype]['MCControl'] = hold['MCControl']
         hold = Add_HBItr()
         outputdict[thistype]['HBItr'] = hold['HBItr']
     return outputdict
-    
+
 
 
 def AddToIM(thisdict,elemnum,AddFun,AddParams):
@@ -34,15 +51,16 @@ def AddToIM(thisdict,elemnum,AddFun,AddParams):
 def AlphaToChromaWidth(alpha,nsmear):
     return np.sqrt(2*int(nsmear)*float(alpha)/3)
 
-def Add_SmearingParam(wvf_param,wvfIntPar,no_smear_dir,IsAlpha=True):
+def Add_SmearingParam(smear_type,wvf_param,wvfIntPar,no_smear_dir,IsAlpha=True):
     thisdict = OrdDict()
-    thisdict['wvf_kind'] = SmKind
-    if IsAlpha:
-        thisdict['wvf_param'] = AlphaToChromaWidth(float(wvf_param),int(wvfIntPar))
-    else:
-        thisdict['wvf_param'] = wvf_param
-    thisdict['wvfIntPar'] = wvfIntPar
-    thisdict['no_smear_dir'] = no_smear_dir
+    thisdict['wvf_kind'] = smear_type
+    if smear_type != 'NONE':
+        if IsAlpha:
+            thisdict['wvf_param'] = AlphaToChromaWidth(float(wvf_param),int(wvfIntPar))
+        else:
+            thisdict['wvf_param'] = wvf_param
+        thisdict['wvfIntPar'] = wvfIntPar
+        thisdict['no_smear_dir'] = no_smear_dir
     return thisdict
 
 def Add_Displacement():
@@ -51,26 +69,81 @@ def Add_Displacement():
     thisdict['DisplacementType'] = 'NONE'
     return thisdict
 
+def Add_Weinberg():
+    thisdict = OrdDict()
+    thisdict['order'] = FlowOrderWein
+    thisdict['k'] = kflowWein
+    thisdict['calc_Wt'] = Do_Wflow
+    return thisdict
 
-def Add_Source(gauge_id,source_id,icfg,sm):
+def Add_Qtop():
+    thisdict = OrdDict()
+    thisdict['order'] = FlowOrderQtop
+    thisdict['k'] = kflowQtop
+    thisdict['calc_Qt'] = Do_Qflow
+    return thisdict
+
+def Add_Eflow():
+    thisdict = OrdDict()
+    thisdict['order'] = FlowOrderE
+    thisdict['k'] = kflowE
+    thisdict['calc_E'] = Do_Eflow
+    return thisdict
+
+
+def Add_FlowQuarks(icfg):
+    thisdict = OrdDict()
+    thisdict['flow_Quarks'] = str(flow_fermions).lower()
+    thisdict['Gamma'] = flowed_meson_Gamma
+    thisdict['calcFreq'] = calc_freq
+    thisdict['t_source'] = GetSourceString(icfg).split(' ')[-1]
+    thisdict['Adjoint'] = OrdDict()
+    thisdict['Adjoint']['calcAdjoint'] = calc_Adj
+    thisdict['Adjoint']['nb'] = mes_flow_nb
+    thisdict['Adjoint']['ns'] = mes_flow_ns
+    return thisdict
+
+def Add_Flow(gauge_id,icfg,prop_id='default_prop'):
+    thisdict = OrdDict()
+    thisdict['Name'] = 'FLOW_OPERATORS'
+    thisdict['Frequency'] = 1
+    thisdict['Param'] = OrdDict()
+    thisdict['Param']['file_dir'] = GetFlowDir(icfg)
+    thisdict['Param']['wf_nsteps'] = flow_steps
+    thisdict['Param']['wf_time'] = totflow_time
+    thisdict['Param']['Nt'] = nt
+    thisdict['Param']['Ns'] = nx
+    thisdict['Param']['Weinberg'] = Add_Weinberg()
+    thisdict['Param']['Qtop'] = Add_Qtop()
+    thisdict['Param']['Energy'] = Add_Eflow()
+    # if flow_fermions:
+    thisdict['Param']['Quarks'] = Add_FlowQuarks(icfg)
+    thisdict['NamedObject'] = OrdDict()
+    thisdict['NamedObject']['gauge_id'] = gauge_id
+    thisdict['NamedObject']['prop_id'] = prop_id
+    thisdict['xml_file'] = ''
+    return thisdict
+
+
+def Add_Source(gauge_id,source_id,icfg,sm,iPoF=0,smear_type=SmKind):
     thisdict = OrdDict()
     thisdict['Name'] = 'MAKE_SOURCE'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
     thisdict['Param']['version'] = 6
-    thisdict['Param']['Source'] = OrdDict()    
-    thisdict['Param']['Source']['version'] = 3
+    thisdict['Param']['Source'] = OrdDict()
+    thisdict['Param']['Source']['version'] = 1
     thisdict['Param']['Source']['SourceType'] = SmSourceType
     thisdict['Param']['Source']['j_decay'] = 3
-    thisdict['Param']['Source']['t_srce'] = GetSourceString(icfg)
-    thisdict['Param']['Source']['quark_smear_lastP'] = 'false'
-    thisdict['Param']['Source']['SmearingParam'] = Add_SmearingParam(alpha,sm,3)
+    thisdict['Param']['Source']['t_srce'] = GetSourceString(icfg,iPoF=iPoF)
+    # thisdict['Param']['Source']['quark_smear_lastP'] = 'false'
+    thisdict['Param']['Source']['SmearingParam'] = Add_SmearingParam(smear_type,alpha,sm,3)
     thisdict['Param']['Source']['Displacement'] = Add_Displacement()
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['source_id'] = source_id
     return thisdict
-    
+
 
 
 def Add_Sink(gauge_id,prop_id,smeared_prop_id,sm):
@@ -79,11 +152,11 @@ def Add_Sink(gauge_id,prop_id,smeared_prop_id,sm):
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
     thisdict['Param']['version'] = 5
-    thisdict['Param']['Sink'] = OrdDict()    
+    thisdict['Param']['Sink'] = OrdDict()
     thisdict['Param']['Sink']['version'] = 2
     thisdict['Param']['Sink']['SinkType'] = SmSinkType
     thisdict['Param']['Sink']['j_decay'] = 3
-    thisdict['Param']['Sink']['SmearingParam'] = Add_SmearingParam(alpha,sm,3)
+    thisdict['Param']['Sink']['SmearingParam'] = Add_SmearingParam(SmKind,alpha,sm,3)
     thisdict['Param']['Sink']['Displacement'] = Add_Displacement()
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
@@ -96,12 +169,24 @@ def Add_FermionBC():
     thisdict = OrdDict()
     thisdict['FermBC'] = FermBC
     thisdict['boundary'] = boundstr
+    if 'TWISTED' in FermBC:
+        thisdict['phases_by_pi'] = phases
+        thisdict['phases_dir'] = phasedirs
+    return thisdict
+
+
+def Add_AnisoParam():
+    thisdict = OrdDict()
+    thisdict['anisoP'] = anisoP
+    thisdict['t_dir'] = t_dir
+    thisdict['xi_0'] = xi_0
+    thisdict['nu'] = GFnu
     return thisdict
 
 
 def Add_FermState():
     thisdict = OrdDict()
-    thisdict['Name'] = 'SLIC_FERM_STATE'
+    thisdict['Name'] = 'CLOVER'
     thisdict['n_smear'] = nstout
     thisdict['rho'] = rho
     thisdict['orthog_dir'] = 5
@@ -114,15 +199,25 @@ def Add_FermionAction(kin):
     thisdict['FermAct'] = FermAct
     thisdict['Kappa'] = '0.'+str(kin)
     thisdict['clovCoeff'] = csw
-    thisdict['FermState'] = Add_FermState()
+    thisdict['AnisoParam'] = Add_AnisoParam()
+    thisdict['FermionBC'] = Add_FermionBC()
     return thisdict
 
 
-def Add_InvertParam():
+def Add_CloverParams(kin):
+    thisdict = OrdDict()
+    thisdict['Kappa'] = '0.'+str(kin)
+    thisdict['clovCoeff'] = csw
+    return thisdict
+
+
+def Add_InvertParam(kin):
     thisdict = OrdDict()
     thisdict['invType'] = invType
     thisdict['RsdBiCGStab'] = Prec
     thisdict['MaxBiCGStab'] = MaxIter
+    thisdict['CloverParams'] = Add_CloverParams(kin)
+    thisdict['AntiPeriodicT'] = anti_t
     return thisdict
 
 
@@ -131,22 +226,21 @@ def Add_Propagator(kin,gauge_id,source_id,prop_id,SeqSource=False):
     thisdict['Name'] = 'PROPAGATOR'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
-    thisdict['Param']['version'] = 9
-    if SeqSource:
-        thisdict['Param']['quarkSpinType'] = 'UPPER'
-    else:
-        thisdict['Param']['quarkSpinType'] = 'FULL'
+    thisdict['Param']['version'] = 10
+    # if SeqSource:
+    #     thisdict['Param']['quarkSpinType'] = 'UPPER'
+    # else:
+    thisdict['Param']['quarkSpinType'] = 'FULL'
     thisdict['Param']['obsvP'] = 'false'
-    thisdict['Param']['numRetries'] = 1
+    # thisdict['Param']['numRetries'] = 1
     thisdict['Param']['FermionAction'] = Add_FermionAction(kin)
-    thisdict['Param']['InvertParam'] = Add_InvertParam()
-    
+    thisdict['Param']['InvertParam'] = Add_InvertParam(kin)
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['source_id'] = source_id
     thisdict['NamedObject']['prop_id'] = prop_id
     return thisdict
-    
+
 
 def Add_WriteNamedObject(object_id,object_type,file_name,file_volfmt):
     thisdict = OrdDict()
@@ -180,27 +274,24 @@ def Add_EraseNamedObject(object_id):
 
 def Add_SeqSource(gauge_id,prop_id1,prop_id2,seqsource_id,DS,Proj,Interp,t_sink,sm):
     thisdict = OrdDict()
-    thisdict['Name'] = 'SEQSOURCE-QCDSF'
+    thisdict['Name'] = 'SEQSOURCE'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
-    thisdict['Param']['version'] = 2
-    thisdict['Param']['SeqSource'] = OrdDict()    
-    thisdict['Param']['SeqSource']['version'] = 1
-    thisdict['Param']['SeqSource']['SeqSourceType'] = GetSmSeqSourceType(Interp,DS,Proj)
-    thisdict['Param']['SeqSource']['t_sink'] = t_sink
-    thisdict['Param']['SeqSource']['sink_mom'] = ppstr
-    thisdict['Param']['SeqSource']['j_decay'] = 3
+    thisdict['Param']['version'] = 1
+    thisdict['Param']['seq_src'] = GetSmSeqSourceType(Interp,DS,Proj)
+    thisdict['Param']['t_sink'] = str(t_sink)
+    thisdict['Param']['sink_mom'] = ppstr
     thisdict['PropSink'] = OrdDict()
     thisdict['PropSink']['version'] = 5
-    thisdict['PropSink']['Sink'] = OrdDict()    
+    thisdict['PropSink']['Sink'] = OrdDict()
     thisdict['PropSink']['Sink']['version'] = 2
     thisdict['PropSink']['Sink']['SinkType'] = SmSinkType
     thisdict['PropSink']['Sink']['j_decay'] = 3
-    thisdict['PropSink']['Sink']['SmearingParam'] = Add_SmearingParam(alpha,sm,3)
+    thisdict['PropSink']['Sink']['SmearingParam'] = Add_SmearingParam(SmKind,alpha,sm,3)
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['prop_ids'] = OrdDict()
-    if 'sing' in DS: 
+    if 'sing' in DS:
         thisdict['NamedObject']['prop_ids']['elem'] = prop_id1
     else:
         thisdict['NamedObject']['prop_ids']['elem1'] = prop_id1
@@ -209,91 +300,104 @@ def Add_SeqSource(gauge_id,prop_id1,prop_id2,seqsource_id,DS,Proj,Interp,t_sink,
     return thisdict
 
 
-def Add_BarSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp):
+def Add_HadSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp,iPoF=0):
     thisdict = OrdDict()
-    thisdict['Name'] = 'BARYON_SPECTRUM-QCDSF'
+    thisdict['Name'] = 'HADRON_SPECTRUM'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
     thisdict['Param']['version'] = 1
-    thisdict['Param']['fwdbwd_average'] = 'false'
-    thisdict['Param']['time_rev'] = 'false'    
-    thisdict['Param']['mom2_max'] = qmax    
-    thisdict['Param']['avg_equiv_mom'] = 'false'    
+    thisdict['Param']['MesonP'] = 'true'
+    thisdict['Param']['CurrentP'] = 'true'
+    thisdict['Param']['BaryonP'] = 'true'
+    thisdict['Param']['time_rev'] = 'false'
+    thisdict['Param']['mom2_max'] = qmax
+    if AveMom2pt:
+        thisdict['Param']['avg_equiv_mom'] = 'true'
+    else:
+        thisdict['Param']['avg_equiv_mom'] = 'false'
     if OutXml:
         thisdict['Param']['xml'] = 'true'
+        thisdict['Param']['lime'] = 'false'
     else:
         thisdict['Param']['xml'] = 'false'
-    thisdict['Param']['lime'] = 'true'        
+        thisdict['Param']['lime'] = 'true'
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['sink_pairs'] = {'elem':OrdDict()}
     thisdict['NamedObject']['sink_pairs']['elem']['first_id'] = k1_prop_id
     thisdict['NamedObject']['sink_pairs']['elem']['second_id'] = k2_prop_id
-    thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp)
-    thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp).replace('.lime','.xml')
+    mkdir_p(Get2ptCorrFolders(icfg,ism,[jsm])[0])
+    # if OutXml:
+    thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF)
+    # else:
+    #     thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp,iPoF=iPoF).replace('.xml','.lime')
     return thisdict
 
 
-def Add_MesSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp):
-    thisdict = OrdDict()
-    thisdict['Name'] = 'MESON_SPECTRUM-QCDSF'
-    thisdict['Frequency'] = 1
-    thisdict['Param'] = OrdDict()
-    thisdict['Param']['version'] = 1
-    thisdict['Param']['fwdbwd_average'] = 'false'
-    thisdict['Param']['time_rev'] = 'false'    
-    thisdict['Param']['mom2_max'] = qmax    
-    thisdict['Param']['avg_equiv_mom'] = 'false'    
-    if XmlOut:
-        thisdict['Param']['xml'] = 'true'
-    else:
-        thisdict['Param']['xml'] = 'false'
-    thisdict['Param']['lime'] = 'true'        
-    thisdict['NamedObject'] = OrdDict()
-    thisdict['NamedObject']['gauge_id'] = gauge_id
-    thisdict['NamedObject']['sink_pairs'] = {'elem':OrdDict()}
-    thisdict['NamedObject']['sink_pairs']['elem']['first_id'] = k1_prop_id
-    thisdict['NamedObject']['sink_pairs']['elem']['second_id'] = k2_prop_id
-    thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp)
-    thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp).replace('.lime','.xml')
-    return thisdict
+# def Add_MesSpec(gauge_id,k1_prop_id,k2_prop_id,icfg,ism,jsm,interp):
+#     thisdict = OrdDict()
+#     thisdict['Name'] = 'MESON_SPECTRUM-QCDSF'
+#     thisdict['Frequency'] = 1
+#     thisdict['Param'] = OrdDict()
+#     thisdict['Param']['version'] = 1
+#     thisdict['Param']['fwdbwd_average'] = 'false'
+#     thisdict['Param']['time_rev'] = 'false'
+#     thisdict['Param']['mom2_max'] = qmax
+#     thisdict['Param']['avg_equiv_mom'] = 'false'
+#     if XmlOut:
+#         thisdict['Param']['xml'] = 'true'
+#     else:
+#         thisdict['Param']['xml'] = 'false'
+#     thisdict['Param']['lime'] = 'true'
+#     thisdict['NamedObject'] = OrdDict()
+#     thisdict['NamedObject']['gauge_id'] = gauge_id
+#     thisdict['NamedObject']['sink_pairs'] = {'elem':OrdDict()}
+#     thisdict['NamedObject']['sink_pairs']['elem']['first_id'] = k1_prop_id
+#     thisdict['NamedObject']['sink_pairs']['elem']['second_id'] = k2_prop_id
+#     thisdict['lime_file'] = Get2ptCorr(icfg,ism,jsm,interp)
+#     thisdict['xml_file'] = Get2ptCorr(icfg,ism,jsm,interp).replace('.lime','.xml')
+#     return thisdict
 
 
-def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS):
+def Add_Bar3ptTieUp(gauge_id,prop_id,seqprop_id,icfg,ism,tsink,Proj,DS,iPoF=0):
     thisdict = OrdDict()
-    thisdict['Name'] = 'BAR3PTFN-QCDSF'
+    thisdict['Name'] = 'BAR3PTFN'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
-    thisdict['Param']['version'] = 8
-    thisdict['Param']['j_decay'] = 3    
-    thisdict['Param']['mom2_max'] = qmax    
+    thisdict['Param']['version'] = 7
+    thisdict['Param']['j_decay'] = 3
+    thisdict['Param']['mom2_max'] = qmax
     thisdict['Param']['deriv'] = NDer
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['prop_id'] = prop_id
-    thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer0')
-    thisdict['NamedObject']['bar3ptfn_1D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer1')
-    thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer2')
+    thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer0',iPoF=iPoF)
+    if NDer > 0:
+        for iDer in range(1,NDer+1):
+            thisdict['NamedObject']['bar3ptfn_'+str(iDer)+'D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer'+str(iDer),iPoF=iPoF)
+    # thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,tsink,Proj,DS,'NDer2',iPoF=iPoF)
     thisdict['NamedObject']['seqprops'] = {'elem':OrdDict()}
     thisdict['NamedObject']['seqprops']['elem']['seqprop_id'] = seqprop_id
     thisdict['NamedObject']['seqprops']['elem']['gamma_insertion'] = 0
     return thisdict
 
-def Add_Bar3ptTieUpjsm(gauge_id,prop_id,seqprop_id,icfg,ism,jsm,tsink,Proj,DS):
+def Add_Bar3ptTieUpjsm(gauge_id,prop_id,seqprop_id,icfg,ism,jsm,tsink,Proj,DS,iPoF=0):
     thisdict = OrdDict()
-    thisdict['Name'] = 'BAR3PTFN-QCDSF'
+    thisdict['Name'] = 'BAR3PTFN'
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
-    thisdict['Param']['version'] = 8
-    thisdict['Param']['j_decay'] = 3    
-    thisdict['Param']['mom2_max'] = qmax    
+    thisdict['Param']['version'] = 7
+    thisdict['Param']['j_decay'] = 3
+    thisdict['Param']['mom2_max'] = qmax
     thisdict['Param']['deriv'] = NDer
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['prop_id'] = prop_id
-    thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorr(icfg,ism,jsm,tsink,Proj,DS,'NDer0')
-    thisdict['NamedObject']['bar3ptfn_1D_file'] = Get3ptCorr(icfg,ism,jsm,tsink,Proj,DS,'NDer1')
-    thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,jsm,tsink,Proj,DS,'NDer2')
+    thisdict['NamedObject']['bar3ptfn_file'] = Get3ptCorrjsm(icfg,ism,jsm,tsink,Proj,DS,'NDer0',iPoF=iPoF)
+    if NDer > 0:
+        for iDer in range(1,NDer):
+            thisdict['NamedObject']['bar3ptfn_'+str(iDer)+'D_file'] = Get3ptCorrjsm(icfg,ism,jsm,tsink,Proj,DS,'NDer'+str(iDer),iPoF=iPoF)
+    # thisdict['NamedObject']['bar3ptfn_2D_file'] = Get3ptCorr(icfg,ism,jsm,tsink,Proj,DS,'NDer2')
     thisdict['NamedObject']['seqprops'] = {'elem':OrdDict()}
     thisdict['NamedObject']['seqprops']['elem']['seqprop_id'] = seqprop_id
     thisdict['NamedObject']['seqprops']['elem']['gamma_insertion'] = 0
@@ -306,8 +410,8 @@ def Add_RMS(gauge_id,source_id):
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
     thisdict['Param']['version'] = 1
-    thisdict['Param']['psi_wfn'] = 'true'    
-    thisdict['Param']['psi_dag_psi_wfn'] = 'true'    
+    thisdict['Param']['psi_wfn'] = 'true'
+    thisdict['Param']['psi_dag_psi_wfn'] = 'true'
     thisdict['NamedObject'] = OrdDict()
     thisdict['NamedObject']['gauge_id'] = gauge_id
     thisdict['NamedObject']['source_id'] = source_id
@@ -336,7 +440,7 @@ def Add_RNG():
     thisdict['RNG']['Seed']['elem4'] = Seed4
     return thisdict
 
-def Add_cfg(icfg):
+def Add_cfg(icfg,Flow=False):
     thisdict = OrdDict()
     thisdict['Cfg'] = OrdDict()
     thisdict['Cfg']['cfg_type'] = GFFormat
@@ -347,7 +451,7 @@ def Add_cfg(icfg):
     if GFFormat == 'UNIT' :
         thisdict['Cfg']['cfg_file'] = 'dummy'
     else:
-        thisdict['Cfg']['cfg_file'] = GetGaugeField(icfg)
+        thisdict['Cfg']['cfg_file'] = GetGaugeField(icfg,Flow=Flow)
     thisdict['Cfg']['parallel_io'] = ParaIO
     return thisdict
 
@@ -359,8 +463,8 @@ def Add_CoulombGF(gauge_id,gfix_id,grot_id):
     thisdict['Frequency'] = 1
     thisdict['Param'] = OrdDict()
     thisdict['Param']['version'] = 1
-    thisdict['Param']['GFAccu'] = GFPrec  
-    thisdict['Param']['GFMax'] = GFMaxIter    
+    thisdict['Param']['GFAccu'] = GFPrec
+    thisdict['Param']['GFMax'] = GFMaxIter
     thisdict['Param']['OrDo'] = GFDoOr
     thisdict['Param']['OrPara'] = GFOrPara
     thisdict['Param']['j_decay'] = 3
@@ -403,13 +507,3 @@ def Add_HBItr():
     thisdict['HBItr']['HBParams']['NmaxHB'] = NmaxHB
     thisdict['HBItr']['nrow'] = nxtstr
     return thisdict
-    
-    
-    
-    
-    
-    
-    
-    
-
-

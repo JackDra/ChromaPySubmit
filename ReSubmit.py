@@ -1,165 +1,163 @@
 #!/usr/bin/env python
 
-from RunParams import *
-from GetAndCheckData import *
-from CreateChromaFiles import *
-import sys
-import subprocess
-import commands
-from CreateCSH import CreateCSHWrap,RemoveCSH
+from RunParams import paramdir,indexfilename
+from RunParams import ismlist,jsmlist,twoptinterps
+from RunParams import it_sst,ProjectorList,DSList
+from RunParams import InputFolder,ChromaFileFlag
+from RunParams import Submit,Scom,DontRun,OnlyGauge
+from RunParams import OnlyTwoPt,DoJsm3pt,Save2ptProp
+from MiscFuns import mkdir_p
+from GetAndCheckData import Check2ptCorr,Check3ptCorr
+from GetAndCheckData import Check3ptCorrjsm,RemoveProp
+from CreateChromaFiles import CreateCombCorrWrap,Create2ptCorrWrap
+from CreateChromaFiles import Create3ptCorrWrap
+from FilenameFuns import Get3ptCorrFolderList,Get3ptCorrFolderjsmList
+import sys,os
+# import subprocess
+# import commands
+from CreateCSH import CreateCSHWrap
 
-DefParams = [it_sst[0],ProjectorList[0],DSList[0]]
 
-def IncrementRun(stage,ism,tsink,Projector,DS):
-    if OnlyGauge: return ['Done',ismlist[0]]+DefParams
-    if 'twoptprop' in stage:
-        stage = 'twoptcorr'
-        return [stage,ism]+DefParams
+def IncrementRun(stage):
+    if OnlyGauge: return 'Done'
     if 'twoptcorr' in stage:
         if OnlyTwoPt:
-            if ism == ismlist[-1]:
-                stage,ism,tsink,Projector,DS = ['Done',ismlist[0]]+DefParams
-            else:
-                stage,ism,tsink,Projector,DS = ['twoptprop',ismlist[ismlist.index(ism)+1]]+DefParams
-            return stage,ism,tsink,Projector,DS
+            return 'Done'
         else:
-            stage = 'threeptcorr'
-            return [stage,ism]+DefParams
+            return  'threeptcorr'
     if 'threeptcorr' in stage:
-        if tsink == it_sst[-1]:
-            if Projector == ProjectorList[-1]:
-                if DS == DSList[-1]:
-                    if ism == ismlist[-1]:
-                        stage,ism,tsink,Projector,DS = ['Done',ismlist[0]]+DefParams
-                    else:
-                        stage,ism,tsink,Projector,DS = ['twoptprop',ismlist[ismlist.index(ism)+1]]+DefParams
-                else:
-                    tsink = it_sst[0]
-                    Projector = ProjectorList[0]                    
-                    DS = DSList[DSList.index(DS)+1]
-            else:
-                tsink = it_sst[0]
-                Projector = ProjectorList[ProjectorList.index(Projector)+1]
+        return 'Done'
+    if 'Done' in stage:
+        return 'Done'
+
+def RunNext(icfg,fcfg,stage,othree,thisnproc,cfgindicies='FromFile'):
+
+    if isinstance(othree,basestring):
+        if 'True' in othree:
+            othree = True
         else:
-            tsink = it_sst[it_sst.index(tsink)+1]
-        return stage,ism,tsink,Projector,DS
+            othree = False
 
-def RunNext(icfg,fcfg,stage='twoptprop',ism=ismlist[0],Errored='Complete',tsink=it_sst[0],Projector=ProjectorList[0],DS=DSList[0],Start=False):
-    
-    icfg,fcfg,ism,tsink,Projector = map(int,[icfg,fcfg,ism,tsink,Projector])
-    RemoveCSH(icfg,ism,stage,tsink=tsink,Proj=Projector,DS=DS)
+    thisnproc = int(thisnproc)
+    icfg,fcfg = map(int,[icfg,fcfg])
+    if cfgindicies == 'FromFile':
+        with open(paramdir+indexfilename,'r') as f:
+            # cfgindicies = map(int,f.readlines())
+            cfgindicies = map(int,f.readlines())
+
+
+
+    # for ism in ismlist:
+    #     for thecfg in cfgindicies[icfg-1:fcfg]:
+    #         RemoveCSH(thecfg,ism,stage)
     #removes fort parameter files
+    # if OnlyGauge:
+    #     RemoveGaugeFieldFiles(InputFolder)
+    #     thisjoblist = CreateGaugeFieldFiles(InputFolder,ChromaFileFlag)
+    #     if Submit:
+    #         runfile = Scom+' '+CreateCSHWrap(icfg,fcfg,thisjoblist,'gfield')
+    #     else:
+    #         runfile = CreateCSHWrap(icfg,fcfg,thisjoblist,'gfield')
+    #     print runfile
+    #     # if not DontRun: subprocess.call([runfile],cwd=basedir)
+    #     if not DontRun: os.system(runfile)
+    #     return
 
-    if OnlyGauge:
-        while icfg <=fcfg:
-            if CheckGaugeField(icfg) :
-                icfg += 1
-            else:
-                [thisjobid] = CreateGaugeFieldFiles(InputFolder,ChromaFileFlag,icfg)
-                if Submit:
-                    runfile = Scom+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,'gfield')
-                else:
-                    runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,'gfield')
-                print runfile
-                if not DontRun:subprocess.call([runfile],cwd=basedir)
-                return
+
+
+    # if DoJsm3pt:
+    #     RemoveCombCorrFiles(InputFolder)
+    # elif 'twoptcorr' in stage:
+    #     Remove2ptCorrFiles(InputFolder)
+    # elif 'threeptcorr' in stage:
+    #     Remove3ptCorrFiles(InputFolder)
+
+
+            ##check if whole run is done
+    if OnlyTwoPt:
+        boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) for thecfg in cfgindicies[icfg-1:fcfg]])
+    else:
+        if DoJsm3pt:
+            boolcheck = all([Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and
+                             Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList) for thecfg in cfgindicies[icfg-1:fcfg]])
+        else:
+            boolcheck = all([(Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps) and
+                             Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList)) for thecfg in cfgindicies[icfg-1:fcfg]])
+
+
+    if boolcheck:
+        if not Save2ptProp:
+            for thecfg in cfgindicies[icfg-1:fcfg]:
+                RemoveProp(thecfg,ismlist)
         print 'All Complete'
         return
 
-
-    if 'twoptprop' in stage:
-        Remove2ptPropFiles(InputFolder,ChromaFileFlag,icfg,[ism])    
-    elif 'twoptcorr' in stage:
-        Remove2ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism])    
-    elif 'threeptcorr' in stage:
-        Remove3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism],[DS],[Projector],[tsink])    
-        
-    
-        
-    if Errored == 'Failed':
-        print 'Error on config' + icfg
-        RemoveProp(icfg,ismlist)
-        # RemoveGaugeField(icfg)
-        Remove2ptCorr(icfg,ismlist,jsmlist)
-        Remove3ptCorr(icfg,ismlist,it_sst,ProjectorList,DSList)
-        if icfg<fcfg and not ExitOnFail:
-            RunNext(icfg+1,fcfg,Start=True)
-        else:
-            print 'All Complete'
-        return
-        
-
-        #check if whole run is done
-    if OnlyTwoPt:
-        boolcheck = Check2ptCorr(icfg,[ism],jsmlist,twoptinterps[0])
-    else:
-        boolcheck = Check2ptCorr(icfg,[ism],jsmlist,twoptinterps[0]) and Check3ptCorr(icfg,[ism],it_sst,ProjectorList,DSList)
-
-    if boolcheck:
-        RemoveProp(icfg,[ism])
-        if ism == ismlist[-1]:
-            # RemoveGaugeField(icfg)
-            if icfg<fcfg:
-                RunNext(icfg+1,fcfg,Start=True)
-                return 
-            else:
-                print 'All Complete'
-                return
-        else:
-            RunNext(icfg,fcfg,ism=ismlist[ismlist.index(ism)+1],Start=True)
-            return
-
     # GetGaugeField(icfg)
-    Move2ptCorr(icfg,[ism],jsmlist,twoptinterps[0])
-    prevism = ism
-    if not Start: stage,ism,tsink,Projector,DS = IncrementRun(stage,ism,tsink,Projector,DS)
-        
-    StillInc = True
-    while StillInc:
-        StillInc = False
-        if 'twoptprop' in stage:
-            if Check2ptProp(icfg,[ism]):
-                stage,ism,tsink,Projector,DS = IncrementRun(stage,ism,tsink,Projector,DS)
-                StillInc = True
-        elif 'twoptcorr' in stage:
-            Move2ptCorr(icfg,[ism],jsmlist,twoptinterps[0])
-            if Check2ptCorr(icfg,[ism],jsmlist,twoptinterps[0]):
-                stage,ism,tsink,Projector,DS = IncrementRun(stage,ism,tsink,Projector,DS)
-                if 'Done' not in stage: StillInc = True
-        elif 'threeptcorr' in stage:
-            if Check3ptCorr(icfg,[ism],[tsink],[Projector],[DS]):
-                stage,ism,tsink,Projector,DS = IncrementRun(stage,ism,tsink,Projector,DS)
-                if 'Done' not in stage: StillInc = True
-    if prevism != ism:
-        RemoveProp(icfg,[prevism])
+
+    if othree: stage = 'threeptcorr'
+    newstage = stage
+    NewCfgList = []
+    while len(NewCfgList) == 0:
+        stage = newstage
+        if 'Done' in newstage:
+            break
+        NewCfgList = []
+        for thecfg in cfgindicies[icfg-1:fcfg]:
+            if 'twoptcorr' in stage:
+                if not Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
+                    NewCfgList.append(thecfg)
+            elif 'threeptcorr' in stage:
+                if DoJsm3pt:
+                    if not Check3ptCorrjsm(thecfg,ismlist,jsmlist,it_sst,ProjectorList,DSList):
+                        if (not othree) or Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
+                            NewCfgList.append(thecfg)
+                else:
+                    if not Check3ptCorr(thecfg,ismlist,it_sst,ProjectorList,DSList):
+                        if (not othree) or Check2ptCorr(thecfg,ismlist,jsmlist,twoptinterps):
+                            NewCfgList.append(thecfg)
+        newstage = IncrementRun(stage)
+
+    if len(NewCfgList) == 0:
+        print 'All Done'
+        return
 
 
-    if 'twopt' in stage:
-        if 'prop' in stage:
-            [thisjobid] = Create2ptPropFiles(InputFolder,ChromaFileFlag,icfg,[ism])
-        else:
-            [thisjobid] = Create2ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism])
+
+    if DoJsm3pt:
+        thisjoblist = CreateCombCorrWrap(InputFolder,ChromaFileFlag,NewCfgList)
+        for ism in ismlist:
+            for curricfg in NewCfgList:
+                map(mkdir_p,Get3ptCorrFolderjsmList(curricfg,ism))
         if Submit:
-            runfile = SubmitCommand+' '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb',thisnproc,othree)
         else:
-            runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage)
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,'Comb',thisnproc,othree)
         print runfile
-        if not DontRun: subprocess.call([runfile],cwd=basedir)
+        # if not DontRun: subprocess.call([runfile],cwd=basedir)
+        if not DontRun: os.system(runfile)
+    elif 'twopt' in stage:
+        thisjoblist = Create2ptCorrWrap(InputFolder,ChromaFileFlag,NewCfgList)
+        if Submit:
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc,othree)
+        else:
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc,othree)
+        print runfile
+        # if not DontRun: subprocess.call([runfile],cwd=basedir)
+        if not DontRun: os.system(runfile)
     elif 'three' in stage:
-        [thisjobid] = Create3ptCorrFiles(InputFolder,ChromaFileFlag,icfg,[ism],[DS],[Projector],[tsink])    
-        mkdir_p(Get3ptCorrFolder(icfg,ism,tsink,Projector,DS))
+        thisjoblist = Create3ptCorrWrap(InputFolder,ChromaFileFlag,NewCfgList)
+        for ism in ismlist:
+            for curricfg in NewCfgList:
+                map(mkdir_p,Get3ptCorrFolderList(curricfg,ism))
         if Submit:
-            runfile = 'sbatch '+CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage,tsink=tsink,Proj=Projector,DS=DS)
+            runfile = Scom+' '+CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc,False)
         else:
-            runfile = CreateCSHWrap(icfg,fcfg,ism,thisjobid,stage,tsink=tsink,Proj=Projector,DS=DS)
+            runfile = CreateCSHWrap(NewCfgList,icfg,fcfg,thisjoblist,stage,thisnproc,False)
         print runfile
-        if not DontRun: subprocess.call([runfile],cwd=basedir)
-    elif 'Done' in stage:
-        if icfg<fcfg:
-            RunNext(icfg+1,fcfg,Start=True)
-        else:
-            print 'All Complete'
-        
+        # if not DontRun: subprocess.call([runfile],cwd=basedir)
+        if not DontRun: os.system(runfile)
+
+
 
 if len(sys.argv) > 1 and 'ReSubmit' in sys.argv[0]:
     RunNext(*sys.argv[1:])
